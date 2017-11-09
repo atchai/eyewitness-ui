@@ -1,5 +1,18 @@
 {
 	"server": {
 		"port": 7000
-	}
+	},
+	"authentication": {
+		"cookie": {
+			"secret": "oUnT9pYobMpiGVFjgcYWXwSGVeJlILt0miQLhjKa"
+		},
+		"basicAuth": {
+			"users": {
+				"atchai": "d18HO8SrMbabv5Qq3KXk",
+				"battabox": "9OVx5AO15TlbtpKq0e7o",
+				"sabc": "1iAEqHN1rQWASiZnwAyr",
+				"thestar": "9M1CRyuZ2un0CIPxZdsq"
+			}
+		}
+	},
 }
