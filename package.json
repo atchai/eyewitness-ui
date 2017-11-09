@@ -3,11 +3,11 @@
  "version": "0.0.1",
  "private": true,
  "description": "User interface to allow admins to interact with their Eyewitness bot.",
- "main": "app/main.js",
+ "main": "app/backend/main.js",
  "scripts": {
   "ngrok": "ngrok http 6000 --region eu -subdomain=eyewitness",
-  "start-development": "npm install &&  npm update -S && ./node_modules/.bin/nodemon ./app/main.js",
-  "start-production": "node ./app/main.js",
+  "start-development": "npm install && npm update -S && trawler --debug --stdall",
+  "start-production": "trawler --stdall --plain",
   "test": "echo \"Placeholder tests.\""
  },
  "author": "Atchai <enquiries@atchai.com> (https://atchai.com)",
