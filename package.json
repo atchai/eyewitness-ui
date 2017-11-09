@@ -6,7 +6,7 @@
  "main": "app/backend/main.js",
  "scripts": {
   "ngrok": "ngrok http 6000 --region eu -subdomain=eyewitness",
-  "start-development": "npm install && npm update -S && trawler --debug --stdall",
+  "start-development": "npm install && npm update -S && webpack --display-error-details && trawler --debug --stdall",
   "start-production": "trawler --stdall --plain",
   "test": "echo \"Placeholder tests.\""
  },
