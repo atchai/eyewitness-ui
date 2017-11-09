@@ -4,6 +4,7 @@
  * SERVER
  */
 
+const packageJson = require(`../../../package.json`);
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
 const path = require(`path`);
@@ -68,7 +69,6 @@ function setupServerMiddleware (app) {
 		extended: true,
 	}));
 	app.use(bodyParser.json());
-	app.use(basicAuth({ users: config.authentication.basicAuth.users }));
 
 	// Static files (must come before logging to avoid logging out every request for a static file e.g. favicon).
 	const staticDirectory = path.join(__dirname, `..`, `..`, `frontend`, `build`, `static`);
@@ -82,6 +82,13 @@ function setupServerMiddleware (app) {
 
 	// Redirect to HTTPS.
 	app.use(middleware.enforceHttps);
+
+	// Authentication.
+	app.use(basicAuth({
+		users: config.authentication.basicAuth.users,
+		challenge: true,
+		realm: packageJson.name,
+	}));
 
 }
 
