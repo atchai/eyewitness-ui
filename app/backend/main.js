@@ -12,8 +12,6 @@ const config = require(`config-ninja`).init(`eyewitness-ui`, `./config`);
 const { connectToEyewitnessDatabase } = require(`eyewitness`);
 const server = require(`./modules/server`);
 
-const { PROVIDER_ID, NODE_ENV } = process.env;
-
 /*
  * The main function.
  */
@@ -21,7 +19,7 @@ async function main () {
 
 	await server.start(config.server.port);
 
-	await connectToEyewitnessDatabase(PROVIDER_ID, NODE_ENV);
+	await connectToEyewitnessDatabase();
 
 }
 
