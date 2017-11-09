@@ -2,3 +2,8 @@ node_modules
 *.log
 ssl/*
 !ssl/.gitkeep
+app/frontend/build/**
+!app/frontend/build/scripts/.gitkeep
+!app/frontend/build/static/.gitkeep
+!app/frontend/build/styles/.gitkeep
+!app/frontend/build/views/.gitkeep
