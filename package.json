@@ -12,9 +12,11 @@
  },
  "author": "Atchai <enquiries@atchai.com> (https://atchai.com)",
  "dependencies": {
+  "eyewitness": "git+ssh://git@github.com/atchai/eyewitness.git#master",
   "body-parser": "^1.18.2",
   "clean-webpack-plugin": "^0.1.17",
   "compression": "^1.7.1",
+  "config-ninja": "^1.1.0",
   "cookie-parser": "^1.4.3",
   "express": "^4.16.2",
   "express-basic-auth": "^1.1.3",
