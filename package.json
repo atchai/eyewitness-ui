@@ -1,18 +1,17 @@
 {
-  "name": "eyewitness-ui",
-  "version": "0.0.1",
-  "private": true,
-  "description": "User interface to allow admins to interact with their Eyewitness bot.",
-  "main": "app/main.js",
-  "scripts": {
-    "ngrok": "ngrok http 6000 --region eu -subdomain=eyewitness",
-    "start-development": "npm install &&  npm update -S && ./node_modules/.bin/nodemon ./app/main.js",
-    "start-production": "node ./app/main.js",
-    "test": "echo \"Placeholder tests.\""
+ "name": "eyewitness-ui",
+ "version": "0.0.1",
+ "private": true,
+ "description": "User interface to allow admins to interact with their Eyewitness bot.",
+ "main": "app/main.js",
+ "scripts": {
+  "ngrok": "ngrok http 6000 --region eu -subdomain=eyewitness",
+  "start-development": "npm install &&  npm update -S && ./node_modules/.bin/nodemon ./app/main.js",
+  "start-production": "node ./app/main.js",
+  "test": "echo \"Placeholder tests.\""
+ "author": "Atchai <enquiries@atchai.com> (https://atchai.com)",
+ "dependencies": {
   },
-  "author": "Atchai <enquiries@atchai.com> (https://atchai.com)",
-  "dependencies": {
-
   },
   "devDependencies": {
     "eslint": "latest",
@@ -23,8 +22,8 @@
     "eslint-plugin-promise": "latest",
     "ngrok": "^2.2.23",
     "nodemon": "^1.12.1"
-  },
-  "engines": {
-    "node": ">=8"
   }
+ },
+ "engines": {
+  "node": ">=8"
 }
