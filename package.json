@@ -35,10 +35,28 @@
   "ngrok": "^2.2.23",
   "nodemon": "^1.12.1"
  },
+ "trawler": {
+  "crash": {
+   "autoRestart": true,
+   "waitSourceChange": true
   },
+  "sourceChange": {
+   "autoRestart": true,
+   "environments": [
+    "development"
+   ],
+   "watched": [
+    "package.json",
+    "package-lock.json",
+    "app"
+   ]
   },
+  "console": {
+   "stdout": true,
+   "stderr": true
   }
  },
  "engines": {
   "node": ">=8"
+ }
 }
