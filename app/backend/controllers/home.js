@@ -6,20 +6,17 @@
 
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
-/*
- * Renders the home page.
- */
-function renderHomePage (req, res) {
+module.exports = class HomeController {
 
-	res.render(`home`, {
-		pageTitle: config.pageTitle,
-	});
+	/*
+	 * Renders the home page.
+	 */
+	renderHomePage (req, res) {
 
-}
+		res.render(`home`, {
+			pageTitle: config.pageTitle,
+		});
 
-/*
- * Export.
- */
-module.exports = {
-	renderHomePage,
+	}
+
 };
