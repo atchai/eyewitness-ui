@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * MAIN ENTRY POINT
+ * BACKEND ENTRY POINT
  */
 
 // Ensure we always work relative to this script.
