@@ -84,7 +84,12 @@ module.exports = {
 					}, {
 						loader: `sass-loader`,
 						options: {
+							outputStyle: config.build.sassOutputStyle,
+							precision: 3,
+							sourceComments: config.build.sassSourceComments,
 							sourceMap: true,
+							sourceMapContents: true,
+							sourceMapEmbed: true,
 						},
 					}],
 					fallback: {

@@ -16,7 +16,9 @@
 		}
 	},
 	"build": {
+		"webpackStats": "errors-only",
 		"useStyleLoader": false,
-		"webpackStats": "errors-only"
+		"sassOutputStyle": "compressed",
+		"sassSourceComments": false
 	}
 }

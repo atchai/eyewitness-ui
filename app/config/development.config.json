@@ -1,6 +1,8 @@
 {
 	"build": {
-		"useStyleLoader": false,
-		"webpackStats": "verbose"
+		"webpackStats": "verbose",
+		"useStyleLoader": true,
+		"sassOutputStyle": "expanded",
+		"sassSourceComments": true
 	}
 }
