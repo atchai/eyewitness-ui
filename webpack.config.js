@@ -5,7 +5,7 @@
  */
 
 const path = require(`path`);
-const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `backend`, `config`));
+const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `config`));
 
 const CleanWebpackPlugin = require(`clean-webpack-plugin`);
 const ExtractTextPlugin = require(`extract-text-webpack-plugin`);

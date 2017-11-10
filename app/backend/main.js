@@ -7,7 +7,8 @@
 // Ensure we always work relative to this script.
 process.chdir(__dirname);
 
-const config = require(`config-ninja`).init(`eyewitness-ui`, `./config`);
+const path = require(`path`);
+const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(`..`, `config`));
 
 const { connectToEyewitnessDatabase } = require(`eyewitness`);
 const server = require(`./modules/server`);
