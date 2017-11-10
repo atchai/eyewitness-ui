@@ -27,7 +27,6 @@ module.exports = {
 		}),
 		new CleanWebpackPlugin([`dist`]),
 		new HtmlWebpackPlugin({
-			title: `{{pageTitle}}`,
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
 			template: path.join(BASE_PATH, `source`, `views`, `home.handlebars.html`),
 			inject: true,
