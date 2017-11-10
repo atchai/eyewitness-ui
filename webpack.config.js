@@ -75,6 +75,25 @@ module.exports = {
 		rules: [
 
 			// SASS.
+			// BABEL from app.
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				use: {
+					loader: `babel-loader`,
+					options: {
+						presets: [
+							[`env`, {
+								targets: {
+									browsers: [`last 3 versions`, `> 0.5%`],
+								},
+							}],
+						],
+						minified: true,
+					},
+				},
+			},
+
 			{
 				test: /\.scss$/,
 				use: extractSass.extract({
