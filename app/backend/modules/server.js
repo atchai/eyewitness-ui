@@ -71,8 +71,8 @@ function setupServerMiddleware (app) {
 	app.use(bodyParser.json());
 
 	// Static files (must come before logging to avoid logging out every request for a static file e.g. favicon).
-	const staticDirectory = path.join(__dirname, `..`, `..`, `frontend`, `build`, `static`);
-	app.use(express.static(staticDirectory));
+	const staticDirectory = path.resolve(__dirname, `..`, `..`, `frontend`, `build`, `static`);
+	app.use(`/public`, express.static(staticDirectory));
 
 	// Temporary favicon.
 	app.use(`/favicon.ico`, (req, res) => res.status(404).end(`NOT_ADDED_YET`));
