@@ -16,6 +16,9 @@ const webpack = require(`webpack`);
 
 const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
 
+/*
+ * Config for extracting CSS text to files.
+ */
 const extractSassFromApp = new ExtractTextPlugin({
 	filename: `[name].styles.sass.css`,
 	disable: config.build.useStyleLoader,
@@ -26,6 +29,9 @@ const extractCssFromModules = new ExtractTextPlugin({
 	disable: config.build.useStyleLoader,
 });
 
+/*
+ * The Webpack configuration.
+ */
 module.exports = {
 
 	context: path.resolve(BASE_PATH),
