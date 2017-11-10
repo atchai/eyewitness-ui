@@ -3,3 +3,5 @@
 /*
  * FRONTEND ENTRY POINT
  */
+
+require(`../styles/main.scss`);

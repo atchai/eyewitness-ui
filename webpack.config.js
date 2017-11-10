@@ -5,11 +5,19 @@
  */
 
 const path = require(`path`);
-const HtmlWebpackPlugin = require(`html-webpack-plugin`);
+const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `backend`, `config`));
+
 const CleanWebpackPlugin = require(`clean-webpack-plugin`);
+const ExtractTextPlugin = require(`extract-text-webpack-plugin`);
+const HtmlWebpackPlugin = require(`html-webpack-plugin`);
 const webpack = require(`webpack`);
 
 const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
+
+const extractSass = new ExtractTextPlugin({
+	filename: `[name].bundle.css`,
+	disable: config.build.useStyleLoader,
+});
 
 module.exports = {
 
@@ -49,7 +57,33 @@ module.exports = {
 			hash: true,
 			cache: false,
 		}),
+		extractSass,
 	],
+
+	module: {
+		rules: [
+
+			// SASS.
+			{
+				test: /\.scss$/,
+				use: extractSass.extract({
+					use: [{
+						loader: `css-loader`,
+						options: {
+							sourceMap: true,
+						},
+					}, {
+						loader: `sass-loader`,
+						options: {
+							sourceMap: true,
+						},
+					}],
+					fallback: `style-loader`,  // Use style-loader in development.
+				}),
+			},
+
+		],
+	},
 
 	output: {
 		filename: `[name].bundle.js`,
