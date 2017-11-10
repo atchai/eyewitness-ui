@@ -54,7 +54,8 @@ module.exports = {
 
 	output: {
 		filename: `[name].bundle.js`,
-		path: path.join(BASE_PATH, `build`, `scripts`),
+		path: path.join(BASE_PATH, `build`, `static`),
+		publicPath: `/public`,
 	},
 
 };
