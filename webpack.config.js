@@ -21,6 +21,12 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
 
+	context: path.resolve(BASE_PATH),
+
+	target: `web`,
+
+	stats: config.build.webpackStats,
+
 	devtool: `source-map`,
 
 	entry: {
@@ -92,6 +98,14 @@ module.exports = {
 		filename: `[name].bundle.js`,
 		path: path.join(BASE_PATH, `build`, `static`),
 		publicPath: `/public`,
+	},
+
+	watchOptions: {
+		ignored: /node_modules/,
+	},
+
+	performance: {
+		hints: `warning`,
 	},
 
 };

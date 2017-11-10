@@ -16,6 +16,7 @@
 		}
 	},
 	"build": {
-		"useStyleLoader": false
+		"useStyleLoader": false,
+		"webpackStats": "errors-only"
 	}
 }
