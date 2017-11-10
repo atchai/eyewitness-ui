@@ -4,6 +4,8 @@
  * WEBPACK CONFIG
  */
 
+/* eslint-disable node/no-unpublished-require */
+
 const path = require(`path`);
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `config`));
 
