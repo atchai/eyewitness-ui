@@ -13,6 +13,8 @@ const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
 
 module.exports = {
 
+	devtool: `source-map`,
+
 	entry: {
 		app: path.join(BASE_PATH, `source`, `scripts`, `app.js`),
 	},
