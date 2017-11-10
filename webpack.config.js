@@ -33,7 +33,10 @@ module.exports = {
 				'NODE_ENV': JSON.stringify(config.env.id),
 			},
 		}),
-		new CleanWebpackPlugin([`dist`]),
+		new CleanWebpackPlugin([`./app/frontend/build/static`, `./app/frontend/build/views`], {
+			verbose: true,
+			exclude: [`.gitkeep`],
+		}),
 		new HtmlWebpackPlugin({
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
 			template: path.join(BASE_PATH, `source`, `views`, `home.handlebars.html`),
