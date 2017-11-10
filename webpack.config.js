@@ -87,7 +87,14 @@ module.exports = {
 							sourceMap: true,
 						},
 					}],
-					fallback: `style-loader`,  // Use style-loader in development.
+					fallback: {
+						loader: `style-loader`,
+						options: {
+							sourceMap: true,
+							convertToAbsoluteUrls: true,
+							hmr: true,
+						},
+					},
 				}),
 			},
 
