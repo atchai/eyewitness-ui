@@ -16,8 +16,13 @@ const webpack = require(`webpack`);
 
 const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
 
-const extractSass = new ExtractTextPlugin({
-	filename: `[name].bundle.css`,
+const extractSassFromApp = new ExtractTextPlugin({
+	filename: `[name].styles.sass.css`,
+	disable: config.build.useStyleLoader,
+});
+
+const extractCssFromModules = new ExtractTextPlugin({
+	filename: `[name].styles.modules.css`,
 	disable: config.build.useStyleLoader,
 });
 
@@ -68,13 +73,13 @@ module.exports = {
 			hash: true,
 			cache: false,
 		}),
-		extractSass,
+		extractCssFromModules,
+		extractSassFromApp,
 	],
 
 	module: {
 		rules: [
 
-			// SASS.
 			// BABEL from app.
 			{
 				test: /\.js$/,
@@ -94,9 +99,25 @@ module.exports = {
 				},
 			},
 
+			// CSS from modules.
+			{
+				test: /\.css$/,
+				// exclude: /node_modules/,  // <- Don't exclude node_modules because it contains normalise.css.
+				use: extractCssFromModules.extract({
+					use: [{
+						loader: `css-loader`,
+					}],
+					fallback: {
+						loader: `style-loader`,
+					},
+				}),
+			},
+
+			// SASS from app.
 			{
 				test: /\.scss$/,
-				use: extractSass.extract({
+				exclude: /node_modules/,
+				use: extractSassFromApp.extract({
 					use: [{
 						loader: `css-loader`,
 						options: {
