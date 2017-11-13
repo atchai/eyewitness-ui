@@ -9,6 +9,7 @@
 const path = require(`path`);
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `config`));
 
+const autoprefixer = require(`autoprefixer`);
 const CleanWebpackPlugin = require(`clean-webpack-plugin`);
 const ExtractTextPlugin = require(`extract-text-webpack-plugin`);
 const HtmlWebpackPlugin = require(`html-webpack-plugin`);
@@ -128,6 +129,17 @@ module.exports = {
 						loader: `css-loader`,
 						options: {
 							sourceMap: true,
+						},
+					}, {
+						loader: `postcss-loader`,
+						options: {
+							sourceMap: true,
+							plugins: [
+								autoprefixer({
+									env: config.env.id,
+									remove: false,
+								}),
+							],
 						},
 					}, {
 						loader: `sass-loader`,
