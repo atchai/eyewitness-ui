@@ -110,6 +110,9 @@ module.exports = {
 				use: extractCssFromModules.extract({
 					use: [{
 						loader: `css-loader`,
+						options: {
+							minimize: config.build.compressCss,
+						},
 					}],
 					fallback: {
 						loader: `style-loader`,
@@ -126,6 +129,7 @@ module.exports = {
 						loader: `css-loader`,
 						options: {
 							sourceMap: true,
+							minimize: config.build.compressCss,
 						},
 					}, {
 						loader: `postcss-loader`,

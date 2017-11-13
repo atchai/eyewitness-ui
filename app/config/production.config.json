@@ -19,6 +19,7 @@
 		"webpackStats": "errors-only",
 		"useStyleLoader": false,
 		"sassOutputStyle": "compressed",
-		"sassSourceComments": false
+		"sassSourceComments": false,
+		"compressCss": true,
 	}
 }

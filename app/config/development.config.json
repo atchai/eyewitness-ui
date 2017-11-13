@@ -3,6 +3,7 @@
 		"webpackStats": "verbose",
 		"useStyleLoader": true,
 		"sassOutputStyle": "expanded",
-		"sassSourceComments": true
+		"sassSourceComments": true,
+		"compressCss": false,
 	}
 }
