@@ -167,6 +167,10 @@ module.exports = {
 		],
 	},
 
+	resolve: {
+		extensions: [`.js`, `.json`, `.vue`],
+	},
+
 	output: {
 		filename: `[name].bundle.js`,
 		path: path.join(BASE_PATH, `build`, `static`),
