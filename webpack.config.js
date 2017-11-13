@@ -22,13 +22,86 @@ const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
  */
 const extractSassFromApp = new ExtractTextPlugin({
 	filename: `[name].styles.sass.css`,
-	disable: config.build.useStyleLoader,
+	// disable: config.build.useStyleLoader,
+});
+
+const extractSassFromVue = new ExtractTextPlugin({
+	filename: `[name].styles.vue.css`,
+	// disable: config.build.useStyleLoader,
 });
 
 const extractCssFromModules = new ExtractTextPlugin({
 	filename: `[name].styles.modules.css`,
-	disable: config.build.useStyleLoader,
+	// disable: config.build.useStyleLoader,
 });
+
+/*
+ * Config for the Babel loader.
+ */
+const LOADER_BABEL = {
+	loader: `babel-loader`,
+	options: {
+		presets: [
+			[`env`, {}],
+			[`minify`, {}],
+		],
+		minified: config.build.compressJs,
+	},
+};
+
+/*
+ * Config for the Style loader.
+ */
+const LOADER_STYLE = {
+	loader: `style-loader`,
+	options: {
+		sourceMap: true,
+		convertToAbsoluteUrls: true,
+		hmr: true,
+	},
+};
+
+/*
+ * Config for the CSS loader.
+ */
+const LOADER_CSS = {
+	loader: `css-loader`,
+	options: {
+		sourceMap: true,
+		minimize: config.build.compressCss,
+	},
+};
+
+/*
+ * Config for the PostCSS loader.
+ */
+const LOADER_POSTCSS = {
+	loader: `postcss-loader`,
+	options: {
+		sourceMap: true,
+		plugins: [
+			autoprefixer({
+				env: config.env.id,
+				remove: false,
+			}),
+		],
+	},
+};
+
+/*
+ * Config for the SASS loader.
+ */
+const LOADER_SASS = {
+	loader: `sass-loader`,
+	options: {
+		outputStyle: config.build.sassOutputStyle,
+		precision: 3,
+		sourceComments: config.build.sassSourceComments,
+		sourceMap: true,
+		sourceMapContents: true,
+		sourceMapEmbed: true,
+	},
+};
 
 /*
  * The Webpack configuration.
@@ -44,7 +117,7 @@ module.exports = {
 	devtool: `source-map`,
 
 	entry: {
-		app: path.join(BASE_PATH, `source`, `scripts`, `app.js`),
+		app: path.join(BASE_PATH, `source`, `scripts`, `main.js`),
 	},
 
 	plugins: [
@@ -80,27 +153,38 @@ module.exports = {
 			hash: true,
 			cache: false,
 		}),
-		extractCssFromModules,
 		extractSassFromApp,
+		extractSassFromVue,
+		extractCssFromModules,
 	],
 
 	module: {
 		rules: [
 
-			// BABEL from app.
+			// VUE components.
+			{
+				test: /\.vue$/,
+				exclude: /node_modules/,
+				use: {
+					loader: `vue-loader`,
+					options: {
+						loaders: {
+							js: [LOADER_BABEL],  // eslint-disable-line id-length
+							sass: extractSassFromVue.extract({
+								use: [LOADER_CSS, LOADER_SASS],
+								fallback: `vue-style-loader`,
+							}),
+						},
+						postcss: LOADER_POSTCSS.options.plugins,
+					},
+				},
+			},
+
+			// JavaScript from app.
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
-				use: {
-					loader: `babel-loader`,
-					options: {
-						presets: [
-							[`env`, {}],
-							[`minify`, {}],
-						],
-						minified: config.build.compressJs,
-					},
-				},
+				use: LOADER_BABEL,
 			},
 
 			// CSS from modules.
@@ -108,15 +192,8 @@ module.exports = {
 				test: /\.css$/,
 				// exclude: /node_modules/,  // <- Don't exclude node_modules because it contains normalise.css.
 				use: extractCssFromModules.extract({
-					use: [{
-						loader: `css-loader`,
-						options: {
-							minimize: config.build.compressCss,
-						},
-					}],
-					fallback: {
-						loader: `style-loader`,
-					},
+					use: [LOADER_CSS],
+					fallback: LOADER_STYLE,
 				}),
 			},
 
@@ -125,42 +202,8 @@ module.exports = {
 				test: /\.scss$/,
 				exclude: /node_modules/,
 				use: extractSassFromApp.extract({
-					use: [{
-						loader: `css-loader`,
-						options: {
-							sourceMap: true,
-							minimize: config.build.compressCss,
-						},
-					}, {
-						loader: `postcss-loader`,
-						options: {
-							sourceMap: true,
-							plugins: [
-								autoprefixer({
-									env: config.env.id,
-									remove: false,
-								}),
-							],
-						},
-					}, {
-						loader: `sass-loader`,
-						options: {
-							outputStyle: config.build.sassOutputStyle,
-							precision: 3,
-							sourceComments: config.build.sassSourceComments,
-							sourceMap: true,
-							sourceMapContents: true,
-							sourceMapEmbed: true,
-						},
-					}],
-					fallback: {
-						loader: `style-loader`,
-						options: {
-							sourceMap: true,
-							convertToAbsoluteUrls: true,
-							hmr: true,
-						},
-					},
+					use: [LOADER_CSS, LOADER_POSTCSS, LOADER_SASS],
+					fallback: LOADER_STYLE,
 				}),
 			},
 
