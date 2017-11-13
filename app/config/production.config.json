@@ -21,5 +21,6 @@
 		"sassOutputStyle": "compressed",
 		"sassSourceComments": false,
 		"compressCss": true,
+		"compressJs": true
 	}
 }

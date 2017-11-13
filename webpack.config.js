@@ -98,7 +98,7 @@ module.exports = {
 							[`env`, {}],
 							[`minify`, {}],
 						],
-						minified: true,
+						minified: config.build.compressJs,
 					},
 				},
 			},
