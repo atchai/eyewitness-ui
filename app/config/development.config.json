@@ -4,6 +4,7 @@
 		"useStyleLoader": true,
 		"sassOutputStyle": "expanded",
 		"sassSourceComments": true,
+		"compressHtml": false,
 		"compressCss": false,
 		"compressJs": false
 	}

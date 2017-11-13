@@ -20,6 +20,7 @@
 		"useStyleLoader": false,
 		"sassOutputStyle": "compressed",
 		"sassSourceComments": false,
+		"compressHtml": true,
 		"compressCss": true,
 		"compressJs": true
 	}
