@@ -1,10 +1,5 @@
 {
 	"build": {
-		"webpackStats": "verbose",
-		"useStyleLoader": false,
-		"sassOutputStyle": "compressed",
-		"sassSourceComments": false,
-		"compressCss": true,
-		"compressJs": true
+		"webpackStats": "verbose"
 	}
 }
