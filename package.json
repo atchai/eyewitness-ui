@@ -73,5 +73,9 @@
  },
  "engines": {
   "node": ">=8"
- }
+ },
+ "browserslist": [
+  "last 2 versions",
+  "> 0.5%"
+ ]
 }
