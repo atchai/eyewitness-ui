@@ -14,7 +14,7 @@ import '../styles/main.scss';
  * Import the application.
  */
 import Vue from 'vue';
-import App from '../vue/App';
+import App from '../components/App';
 
 /*
  * Create a new Vue application instance.
