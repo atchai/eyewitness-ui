@@ -37,6 +37,7 @@
 		max-width: 1200px;
 		height: 100%;
 		margin: 0 auto;
+		background: white;
 
 		main {
 			flex: 1;
