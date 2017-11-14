@@ -11,9 +11,14 @@ import 'normalize.css';
 import '../styles/main.scss';
 
 /*
- * Import the application.
+ * Import dependencies.
  */
 import Vue from 'vue';
+import router from './router';
+
+/*
+ * Import the components.
+ */
 import App from '../components/App';
 
 /*
@@ -21,5 +26,6 @@ import App from '../components/App';
  */
 new Vue({
 	el: `#app`, // eslint-disable-line id-length
+	router,
 	render: createElement => createElement(App), // We must use render because we don't bundle in the Vue compiler.
 });
