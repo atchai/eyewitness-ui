@@ -4,12 +4,19 @@
 
 <template>
 
-	<div id="app" class="example"><span>Some info: </span>{{ msg }}</div>
+	<div id="app">
+		<HeaderBar />
+		<main>
+			<router-view />
+		</main>
+	</div>
 
 </template>
 
 <script>
 	/* eslint-disable node/no-unsupported-features */
+
+	import HeaderBar from './chrome/HeaderBar';
 
 	export default {
 		data: function () {
@@ -17,18 +24,21 @@
 				msg: `Hello, World!`,
 			};
 		},
+		components: { HeaderBar },
 	};
 
 </script>
 
 <style lang="scss">
 
-	.example {
-		color: green;
-		border: 1;
+	#app {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
 
-		span {
-			text-decoration: line-through;
+		main {
+			flex: 1;
 		}
 	}
 
