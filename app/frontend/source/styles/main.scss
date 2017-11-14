@@ -1,3 +1,9 @@
+@import 'variables';
+
+/*
+ * General.
+ */
+
 html {
 	font: 16px/1.5 "Lato";
 }
@@ -10,4 +16,44 @@ body {
 
 body {
 	background: #D8D7D7;
+}
+
+/*
+ * Tags.
+ */
+
+.tag {
+	text-transform: uppercase;
+	border-radius: 0.50rem;
+	padding: 0.25rem 0.35rem;
+	background: #E4E4E4;
+	color: #B6B6B6;
+
+	&.on {
+		background: $accent-color;
+		color: white;
+	}
+}
+
+/*
+ * Buttons.
+ */
+
+button {
+	height: 4.00rem;
+	line-height: 4.00rem;
+	width: 10.00rem;
+	border-radius: 0.50rem;
+	background: #B0B0B0;
+	color: white;
+	text-align: center;
+
+	&.primary {
+		background: $accent-color;
+		color: white;
+	}
+
+	&:hover {
+		filter: brightness(90%);
+	}
 }
