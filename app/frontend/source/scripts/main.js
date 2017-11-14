@@ -13,11 +13,12 @@ import '../styles/main.scss';
 /*
  * Import dependencies.
  */
+import dialogPolyfill from 'dialog-polyfill';
 import Vue from 'vue';
 import router from './router';
 
 /*
- * Import the components.
+ * Import the application components.
  */
 import App from '../components/App';
 
