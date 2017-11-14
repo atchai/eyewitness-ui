@@ -22,17 +22,17 @@ const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
  */
 const extractSassFromApp = new ExtractTextPlugin({
 	filename: `[name].styles.sass.css`,
-	// disable: config.build.useStyleLoader,
+	disable: config.build.useStyleLoader,
 });
 
 const extractSassFromVue = new ExtractTextPlugin({
 	filename: `[name].styles.vue.css`,
-	// disable: config.build.useStyleLoader,
+	disable: config.build.useStyleLoader,
 });
 
 const extractCssFromModules = new ExtractTextPlugin({
 	filename: `[name].styles.modules.css`,
-	// disable: config.build.useStyleLoader,
+	disable: config.build.useStyleLoader,
 });
 
 /*
