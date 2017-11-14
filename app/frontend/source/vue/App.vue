@@ -1,34 +1,35 @@
 <!--
-  FRONTEND ENTRY POINT
+	FRONTEND ENTRY POINT
 -->
 
 <template>
 
-  <div id="app" class="example"><span>Some info: </span>{{ msg }}</div>
+	<div id="app" class="example"><span>Some info: </span>{{ msg }}</div>
 
 </template>
 
 <script>
+	/* eslint-disable node/no-unsupported-features */
 
 	export default {
-	  data: function () {
-      return {
-        msg: 'Hello, World!',
-      };
-    },
-	}
+		data: function () {
+			return {
+				msg: `Hello, World!`,
+			};
+		},
+	};
 
 </script>
 
 <style lang="scss">
 
 	.example {
-	  color: green;
-    border: 1;
+		color: green;
+		border: 1;
 
-    span {
-      text-decoration: line-through;
-    }
+		span {
+			text-decoration: line-through;
+		}
 	}
 
 </style>
