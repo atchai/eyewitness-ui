@@ -104,6 +104,18 @@ const LOADER_SASS = {
 };
 
 /*
+ * Config for the SASS resources loader.
+ */
+const LOADER_SASS_RESOURCES = {
+	loader: `sass-resources-loader`,
+	options: {
+		resources: [
+			path.resolve(__dirname, `app`, `frontend`, `source`, `styles`, `variables.scss`),
+		],
+	},
+};
+
+/*
  * The Webpack configuration.
  */
 module.exports = {
@@ -169,9 +181,9 @@ module.exports = {
 					loader: `vue-loader`,
 					options: {
 						loaders: {
-							js: [LOADER_BABEL],  // eslint-disable-line id-length
+							js: [LOADER_BABEL], // eslint-disable-line id-length
 							sass: extractSassFromVue.extract({
-								use: [LOADER_CSS, LOADER_SASS],
+								use: [LOADER_CSS, LOADER_SASS, LOADER_SASS_RESOURCES],
 								fallback: `vue-style-loader`,
 							}),
 						},
