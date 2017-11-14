@@ -7,7 +7,8 @@ module.exports = {
     "eslint-plugin-disable": {
       "paths": {
         "node": ["*"]
-      }
+      },
+      "extensions": [".js", ".vue"]
     }
   },
   "rules": {
