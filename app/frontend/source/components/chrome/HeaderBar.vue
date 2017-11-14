@@ -50,14 +50,14 @@
 	header {
 		display: flex;
 		height: 3.00rem;
-		background: #EFEFEF;
-		border-bottom: 2px solid #D8D7D7;
+		background: $panel-background-color;
+		border-bottom: 2px solid $panel-border-color;
 
 		.item {
 			display: flex;
 			flex: 1;
 			text-align: center;
-			border-right: 1px solid #D8D7D7;
+			border-right: 1px solid $panel-border-color;
 
 			a {
 				display: flex;
