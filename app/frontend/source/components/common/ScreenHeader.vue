@@ -6,7 +6,7 @@
 
 	<div class="screen-header">
 		<h1>{{ title }}</h1>
-		<p>{{ description }}</p>
+		<p v-if="description">{{ description }}</p>
 	</div>
 
 </template>
