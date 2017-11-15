@@ -2,8 +2,6 @@
  * FRONTEND ENTRY POINT
  */
 
-/* eslint-plugin-disable node */
-
 /*
  * Import the styles.
  */

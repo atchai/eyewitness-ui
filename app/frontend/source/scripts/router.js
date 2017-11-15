@@ -2,8 +2,6 @@
  * VUE ROUTER
  */
 
-/* eslint-plugin-disable node */
-
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Messaging from '../components/screens/Messaging';

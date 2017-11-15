@@ -13,7 +13,7 @@ const compression = require(`compression`);
 const cookieParser = require(`cookie-parser`);
 const express = require(`express`);
 const basicAuth = require(`express-basic-auth`);
-const exphbs  = require(`express-handlebars`);
+const exphbs = require(`express-handlebars`);
 const HomeController = require(`../controllers/home`);
 const middleware = require(`./middleware`);
 
@@ -65,7 +65,7 @@ function setupServerMiddleware (app) {
 	// General middleware.
 	app.use(compression({ threshold: 0 }));
 	app.use(cookieParser(config.authentication.cookie.secret));
-	app.use(bodyParser.urlencoded({  // This will let us get the data from a POST.
+	app.use(bodyParser.urlencoded({ // This will let us get the data from a POST.
 		extended: true,
 	}));
 	app.use(bodyParser.json());

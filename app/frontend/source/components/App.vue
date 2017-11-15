@@ -14,7 +14,6 @@
 </template>
 
 <script>
-	/* eslint-disable node/no-unsupported-features */
 
 	import HeaderBar from './chrome/HeaderBar';
 

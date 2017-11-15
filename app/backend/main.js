@@ -28,4 +28,4 @@ async function main () {
  * Execute.
  */
 main()
-	.catch(err => console.error(err.stack));  // eslint-disable-line no-console
+	.catch(err => console.error(err.stack)); // eslint-disable-line no-console
