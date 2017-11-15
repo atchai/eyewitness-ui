@@ -4,7 +4,7 @@
 
 <template>
 
-	<div>
+	<div class="screen padding">
 		<p>The breaking news screen!</p>
 	</div>
 

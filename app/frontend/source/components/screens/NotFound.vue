@@ -4,8 +4,8 @@
 
 <template>
 
-	<div>
 		<p>404 Not Found!</p>
+	<div class="screen padding">
 	</div>
 
 </template>

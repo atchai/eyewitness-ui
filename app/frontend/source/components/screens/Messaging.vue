@@ -4,7 +4,7 @@
 
 <template>
 
-	<div>
+	<div class="screen">
 		<p>The messaging screen!</p>
 	</div>
 

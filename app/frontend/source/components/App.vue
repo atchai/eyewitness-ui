@@ -40,6 +40,12 @@
 
 		main {
 			flex: 1;
+
+			.screen {
+				&.padding {
+					padding: 2.00rem 3.00rem;
+				}
+			}
 		}
 	}
 
