@@ -17,6 +17,7 @@
 <script>
 
 	import ScreenHeader from '../../common/ScreenHeader';
+	import Story from './Story';
 
 	export default {
 		data: function () {
@@ -24,7 +25,7 @@
 
 			};
 		},
-		components: { ScreenHeader },
+		components: { ScreenHeader, Story },
 	};
 
 </script>
