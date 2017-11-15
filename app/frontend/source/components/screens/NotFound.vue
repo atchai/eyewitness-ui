@@ -4,13 +4,18 @@
 
 <template>
 
-		<p>404 Not Found!</p>
 	<div class="screen padding">
+		<ScreenHeader
+			title="Page Not Found"
+			description="Whoops, that page doesn't seem to exist."
+		/>
 	</div>
 
 </template>
 
 <script>
+
+	import ScreenHeader from '../common/ScreenHeader';
 
 	export default {
 		data: function () {
@@ -18,6 +23,7 @@
 
 			};
 		},
+		components: { ScreenHeader },
 	};
 
 </script>
