@@ -48,6 +48,7 @@
 
 	header {
 		display: flex;
+		flex-shrink: 0;
 		height: 3.00rem;
 		background: $panel-background-color;
 		border-bottom: 2px solid $panel-border-color;
