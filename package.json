@@ -11,6 +11,7 @@
   "start-production": "trawler --stdall --plain",
   "build": "webpack --display-error-details",
   "watch": "webpack --display-error-details --watch",
+  "lint": "eslint --ext js,vue ./app/backend ./app/frontend/source",
   "test": "echo \"Tests not implemented!\""
  },
  "author": "Atchai <enquiries@atchai.com> (https://atchai.com)",
