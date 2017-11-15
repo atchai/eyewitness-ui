@@ -39,9 +39,13 @@
 		background: white;
 
 		main {
+			display: flex;
 			flex: 1;
 
 			.screen {
+				display: flex;
+				flex: 1;
+
 				&.padding {
 					padding: 2.00rem 3.00rem;
 				}
