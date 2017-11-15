@@ -8,7 +8,6 @@
 		<ScreenHeader
 			title="Settings"
 		/>
-		<p>The settings screen!</p>
 	</div>
 
 </template>

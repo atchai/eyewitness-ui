@@ -9,7 +9,6 @@
 			title="Breaking News"
 			description="Send a push notification message to all your users."
 		/>
-		<p>The breaking news screen!</p>
 	</div>
 
 </template>

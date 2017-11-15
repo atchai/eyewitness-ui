@@ -9,7 +9,6 @@
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
 		/>
-		<p>The articles screen!</p>
 	</div>
 
 </template>
