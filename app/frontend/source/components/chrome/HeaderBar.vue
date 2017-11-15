@@ -33,7 +33,6 @@
 </template>
 
 <script>
-	/* eslint-disable node/no-unsupported-features */
 
 	export default {
 		data: function () {
