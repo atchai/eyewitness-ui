@@ -39,12 +39,11 @@
 		background: white;
 
 		main {
-			display: flex;
 			flex: 1;
 
 			.screen {
-				display: flex;
-				flex: 1;
+				width: 100%;
+				height: 100%;
 
 				&.padding {
 					padding: 2.00rem 3.00rem;

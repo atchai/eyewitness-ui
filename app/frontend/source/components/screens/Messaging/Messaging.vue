@@ -30,6 +30,7 @@
 <style lang="scss" scoped>
 
 	.screen {
+		display: flex;
 		flex-direction: row;
 		align-items: stretch;
 	}
