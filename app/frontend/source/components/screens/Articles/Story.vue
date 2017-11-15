@@ -73,7 +73,7 @@
 
 			&.date-time {
 				flex-shrink: 0;
-				width: 8.00rem;
+				width: 9.50rem;
 				color: #9B9B9B;
 				border-right: 1px solid $panel-border-color;
 
@@ -84,7 +84,7 @@
 
 			&.actions {
 				flex-shrink: 0;
-				width: 12.00rem;
+				width: 14.00rem;
 				@include user-select-off();
 
 				>.inner {
