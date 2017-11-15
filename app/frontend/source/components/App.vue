@@ -40,6 +40,7 @@
 
 		main {
 			flex: 1;
+			min-height: 0;
 
 			.screen {
 				width: 100%;
