@@ -1,0 +1,44 @@
+<!--
+	SCREEN HEADER
+-->
+
+<template>
+
+	<div class="screen-header">
+		<h1>{{ title }}</h1>
+		<p>{{ description }}</p>
+	</div>
+
+</template>
+
+<script>
+
+	export default {
+		props: [`title`, `description`],
+		data: function () {
+			return {
+
+			};
+		},
+	};
+
+</script>
+
+<style lang="scss" scoped>
+
+	.screen-header {
+		margin-bottom: 3.00rem;
+
+		h1 {
+			margin: 0;
+			font-size: 5.00rem;
+			font-weight: bold;
+		}
+
+		p {
+			font-size: 1.30rem;
+			margin: 0;
+		}
+	}
+
+</style>
