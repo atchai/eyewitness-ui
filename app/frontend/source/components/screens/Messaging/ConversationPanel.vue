@@ -4,7 +4,7 @@
 
 <template>
 
-	<div class="panel conversation">
+	<div class="panel">
 		Conversation...
 	</div>
 
@@ -24,7 +24,7 @@
 
 <style lang="scss" scoped>
 
-	.panel.conversation {
+	.panel {
 		flex: 1;
 	}
 

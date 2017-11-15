@@ -4,7 +4,7 @@
 
 <template>
 
-	<div class="panel threads">
+	<div class="panel">
 		Threads...
 	</div>
 
@@ -24,7 +24,7 @@
 
 <style lang="scss" scoped>
 
-	.panel.threads {
+	.panel {
 		flex-shrink: 0;
 		width: 20.00rem;
 		background: $panel-background-color;
