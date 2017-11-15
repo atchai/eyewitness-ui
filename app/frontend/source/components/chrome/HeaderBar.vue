@@ -62,7 +62,7 @@
 				display: flex;
 				flex: 1;
 				text-decoration: none;
-				color: #6F6F6F;
+				color: $panel-grey-text;
 				text-transform: uppercase;
 				letter-spacing: 1px;
 
