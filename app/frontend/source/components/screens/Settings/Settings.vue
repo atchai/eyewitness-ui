@@ -15,7 +15,7 @@
 
 <script>
 
-	import ScreenHeader from '../common/ScreenHeader';
+	import ScreenHeader from '../../common/ScreenHeader';
 
 	export default {
 		data: function () {

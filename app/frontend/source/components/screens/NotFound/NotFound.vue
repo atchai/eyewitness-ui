@@ -1,22 +1,21 @@
 <!--
-	SCREEN: ARTICLES
+	SCREEN: NOT FOUND
 -->
 
 <template>
 
 	<div class="screen padding">
 		<ScreenHeader
-			title="Stories"
-			description="Stories from your feed that are currently being displayed to your users."
+			title="Page Not Found"
+			description="Whoops, that page doesn't seem to exist. 😮"
 		/>
-		<p>The articles screen!</p>
 	</div>
 
 </template>
 
 <script>
 
-	import ScreenHeader from '../common/ScreenHeader';
+	import ScreenHeader from '../../common/ScreenHeader';
 
 	export default {
 		data: function () {

@@ -1,21 +1,22 @@
 <!--
-	SCREEN: NOT FOUND
+	SCREEN: BREAKING NEWS
 -->
 
 <template>
 
 	<div class="screen padding">
 		<ScreenHeader
-			title="Page Not Found"
-			description="Whoops, that page doesn't seem to exist."
+			title="Breaking News"
+			description="Send a push notification message to all your users."
 		/>
+		<p>The breaking news screen!</p>
 	</div>
 
 </template>
 
 <script>
 
-	import ScreenHeader from '../common/ScreenHeader';
+	import ScreenHeader from '../../common/ScreenHeader';
 
 	export default {
 		data: function () {

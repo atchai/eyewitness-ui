@@ -1,22 +1,22 @@
 <!--
-	SCREEN: BREAKING NEWS
+	SCREEN: ARTICLES
 -->
 
 <template>
 
 	<div class="screen padding">
 		<ScreenHeader
-			title="Breaking News"
-			description="Send a push notification message to all your users."
+			title="Stories"
+			description="Stories from your feed that are currently being displayed to your users."
 		/>
-		<p>The breaking news screen!</p>
+		<p>The articles screen!</p>
 	</div>
 
 </template>
 
 <script>
 
-	import ScreenHeader from '../common/ScreenHeader';
+	import ScreenHeader from '../../common/ScreenHeader';
 
 	export default {
 		data: function () {

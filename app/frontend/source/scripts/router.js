@@ -4,11 +4,11 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Messaging from '../components/screens/Messaging';
-import Articles from '../components/screens/Articles';
-import BreakingNews from '../components/screens/BreakingNews';
-import Settings from '../components/screens/Settings';
-import NotFound from '../components/screens/NotFound';
+import Messaging from '../components/screens/Messaging/Messaging';
+import Articles from '../components/screens/Articles/Articles';
+import BreakingNews from '../components/screens/BreakingNews/BreakingNews';
+import Settings from '../components/screens/Settings/Settings';
+import NotFound from '../components/screens/NotFound/NotFound';
 
 Vue.use(VueRouter);
 
