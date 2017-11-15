@@ -11,3 +11,13 @@ $accent-color: #7ED321;
 @mixin user-select-on () {
 	user-select: auto;
 }
+
+@mixin scroll-vertical () {
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+@mixin scroll-horizontal () {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
