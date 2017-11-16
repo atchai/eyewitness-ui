@@ -92,7 +92,7 @@
 
 					a {
 						margin-left: 0.50rem;
-						color: #9B9B9B;
+						color: $faded-color;
 						text-decoration: none;
 					}
 				}
