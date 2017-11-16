@@ -1,4 +1,7 @@
 {
+	"server": {
+		"externalUri": "XXX"
+	},
 	"build": {
 		"webpackStats": "verbose"
 	}
