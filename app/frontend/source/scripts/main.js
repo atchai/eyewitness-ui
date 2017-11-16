@@ -12,6 +12,7 @@ import '../styles/main.scss';
  * Import dependencies.
  */
 import dialogPolyfill from 'dialog-polyfill';
+import socketClient from 'socket.io-client';
 import Vue from 'vue';
 import router from './router';
 
@@ -19,6 +20,11 @@ import router from './router';
  * Import the application components.
  */
 import App from '../components/App';
+
+/*
+ * Connect to the socket server.
+ */
+socketClient.connect(process.env.SERVER_URI);
 
 /*
  * Create a new Vue application instance.

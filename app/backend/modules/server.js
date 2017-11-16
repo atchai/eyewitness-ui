@@ -8,12 +8,14 @@ const packageJson = require(`../../../package.json`);
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
 const path = require(`path`);
+const http = require(`http`);
 const bodyParser = require(`body-parser`);
 const compression = require(`compression`);
 const cookieParser = require(`cookie-parser`);
 const express = require(`express`);
 const basicAuth = require(`express-basic-auth`);
 const exphbs = require(`express-handlebars`);
+const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
 const middleware = require(`./middleware`);
 
@@ -24,15 +26,48 @@ async function start (port) {
 
 	const app = express();
 
+	const webServer = setupWebSocketServer(app);
 	setupServerViewEngine(app);
 	setupServerMiddleware(app);
 	setupServerRoutes(app);
 	setupServerErrorHandling(app);
 
-	// Start listening.
+	// Start listening on the HTTP web server.
 	await new Promise((resolve, reject) =>
-		app.listen(port, err => (err ? reject(err) : resolve()))
+		webServer.listen(port, err => (err ? reject(err) : resolve()))
 	);
+
+}
+
+/*
+ * Sets up web sockets.
+ */
+function setupWebSocketServer (app) {
+
+	const webServer = new http.Server(app);
+	const socketServer = socketio(webServer);
+
+	socketServer.on(`connection`, socket => {
+		socket.emit(`welcome`, {});
+	});
+
+	socketServer.on(`thread/send-message`, data => {
+		console.log(`Thread Send Message`, data);
+	});
+
+	socketServer.on(`article/set-published`, data => {
+		console.log(`Article Set Published`, data);
+	});
+
+	socketServer.on(`breaking-news/send-message`, data => {
+		console.log(`Breaking News Send Message`, data);
+	});
+
+	socketServer.on(`settings/save-message`, data => {
+		console.log(`Settings Save Message`, data);
+	});
+
+	return webServer;
 
 }
 
