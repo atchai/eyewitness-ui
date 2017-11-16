@@ -22,11 +22,11 @@ const middleware = require(`./middleware`);
 /*
  * Starts the server on the given port.
  */
-async function start (port) {
+async function start (port, database) {
 
 	const app = express();
 
-	const webServer = setupWebSocketServer(app);
+	const webServer = setupWebSocketServer(app, database);
 	setupServerViewEngine(app);
 	setupServerMiddleware(app);
 	setupServerRoutes(app);
@@ -42,7 +42,7 @@ async function start (port) {
 /*
  * Sets up web sockets.
  */
-function setupWebSocketServer (app) {
+function setupWebSocketServer (app, database) {
 
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);

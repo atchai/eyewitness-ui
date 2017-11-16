@@ -18,9 +18,9 @@ const server = require(`./modules/server`);
  */
 async function main () {
 
-	await server.start(config.server.port);
+	const database = await connectToEyewitnessDatabase();
 
-	await connectToEyewitnessDatabase();
+	await server.start(config.server.port, database);
 
 }
 
