@@ -135,7 +135,8 @@ module.exports = {
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env': {
-				'NODE_ENV': JSON.stringify(config.env.id),
+				NODE_ENV: JSON.stringify(config.env.id),
+				SERVER_URI: JSON.stringify(config.server.externalUri),
 			},
 		}),
 		new CleanWebpackPlugin([`./app/frontend/build/static`, `./app/frontend/build/views`], {
