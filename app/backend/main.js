@@ -13,6 +13,21 @@ const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(`..`, `co
 const { connectToEyewitnessDatabase } = require(`eyewitness`);
 const server = require(`./modules/server`);
 
+// If there is no listener for unhandled promise rejections then we add our own to output a stack trace and quit.
+if (!process.eventNames().includes(`unhandledRejection`)) {
+
+	process.on(`unhandledRejection`, err => {
+		/* eslint no-console: 0 */
+		console.error(``);
+		console.error(`Unhandled promise rejection!`);
+		console.error(`This should NEVER happen - promise rejections MUST be handled correctly.`);
+		console.error(``);
+		console.error(err.stack);
+		process.exit(1);
+	});
+
+}
+
 /*
  * The main function.
  */
