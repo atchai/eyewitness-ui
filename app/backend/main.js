@@ -7,12 +7,12 @@
 // Ensure we always work relative to this script.
 process.chdir(__dirname);
 
+const path = require(`path`);
 const providerId = process.env.PROVIDER_ID;
 const loadProviderConfig = Boolean(providerId);
 const env = process.env.NODE_ENV || `development`;
 const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
-const path = require(`path`);
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(`..`, `config`), {
 	localConfig: (localConfigName ? [localConfigName] : []),
 	requireLocalConfig: loadProviderConfig,
