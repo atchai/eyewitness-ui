@@ -29,6 +29,7 @@ WORKDIR /src
 
 # Install our depedencies.
 COPY .npmrc /src/.npmrc
+COPY webpack.config.js /src/webpack.config.js
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
 RUN npm install

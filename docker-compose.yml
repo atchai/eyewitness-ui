@@ -17,6 +17,7 @@ services:
       - PROVIDER_ID=
     volumes:
       - ./app:/src/app
+      - ./webpack.config.js:/src/webpack.config.js
       - ./package.json:/src/package.json
       - ./package-lock.json:/src/package-lock.json
     ports:
