@@ -6,8 +6,16 @@
 
 /* eslint-disable node/no-unpublished-require */
 
+const providerId = process.env.PROVIDER_ID;
+const loadProviderConfig = Boolean(providerId);
+const env = process.env.NODE_ENV || `development`;
+const localConfigName = path.join(`providers`, `${providerId}.${env}`);
+
 const path = require(`path`);
-const config = require(`config-ninja`).init(`eyewitness-ui`, path.resolve(__dirname, `app`, `config`));
+const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(__dirname, `app`, `config`), {
+	localConfig: (localConfigName ? [localConfigName] : []),
+	requireLocalConfig: loadProviderConfig,
+});
 
 const autoprefixer = require(`autoprefixer`);
 const CleanWebpackPlugin = require(`clean-webpack-plugin`);
