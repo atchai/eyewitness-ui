@@ -10,5 +10,13 @@
 		"compressHtml": false,
 		"compressCss": false,
 		"compressJs": false
+	},
+	"databases": {
+		"mongo": {
+			"connectionString": "mongodb://mongodb:27017/eyewitness"
+		}
+	},
+	"hippocampServer": {
+		"baseUrl": "https://eyewitness.eu.ngrok.io:5000"
 	}
 }
