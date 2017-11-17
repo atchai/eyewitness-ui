@@ -2,7 +2,7 @@ version: '3'
 
 networks:
 
-  eyewitness-network:
+  eyewitness_eyewitness-network:
     external: true
 
 volumes:
@@ -27,7 +27,7 @@ services:
     ports:
       - "7000:7000"
     networks:
-      - eyewitness-network
+      - eyewitness_eyewitness-network
     command: npm run start-development
     tty: true
     restart: on-failure
