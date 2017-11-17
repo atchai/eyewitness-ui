@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+
+  eyewitness-network:
+    external: true
+
+volumes:
+
+  mongodb-data:
+    driver: local
+
+services:
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    environment:
+      - NODE_ENV=development
+      - TZ=Europe/London
+      - PROVIDER_ID=
+    volumes:
+      - ./app:/src/app
+      - ./package.json:/src/package.json
+      - ./package-lock.json:/src/package-lock.json
+    ports:
+      - "7000:7000"
+    networks:
+      - eyewitness-network
+    command: npm run start-development
+    tty: true
+    restart: on-failure
