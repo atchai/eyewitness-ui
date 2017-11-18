@@ -1,5 +1,5 @@
 <!--
-	SCREEN: ARTICLES
+	STORY
 -->
 
 <template>
@@ -69,6 +69,10 @@
 				flex: 1;
 				min-width: 0;
 				padding-right: 0;
+
+				>.inner {
+					margin-left: 0;
+				}
 			}
 
 			&.date-time {
