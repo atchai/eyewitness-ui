@@ -32,7 +32,7 @@
 <script>
 
 	export default {
-		props: [`title`, `time`, `date`, `published`],
+		props: [`articleId`, `title`, `time`, `date`, `published`],
 	};
 
 </script>

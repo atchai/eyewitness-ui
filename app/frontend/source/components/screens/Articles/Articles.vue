@@ -12,6 +12,7 @@
 		<Story
 			v-for="article in articles"
 			:key="article.articleId"
+			:articleId="article.articleId"
 			:title="article.title"
 			:time="article.articleDate | formatDate('HH:MM')"
 			:date="article.articleDate | formatDate('DD/MM/YY')"
