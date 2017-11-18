@@ -25,7 +25,14 @@ import App from '../components/App';
 /*
  * Connect to the socket server.
  */
-socketClient.connect(process.env.SERVER_URI);
+const socket = socketClient.connect(process.env.SERVER_URI);
+
+socket.on(`welcome`, data => {
+	store.commit(`update-threads`, data.threads);
+	store.commit(`update-articles`, data.articles);
+	store.commit(`set-show-stories`, data.settings.showStories);
+	store.commit(`update-welcome-messages`, data.settings.welcomeMessages);
+});
 
 /*
  * Create a new Vue application instance.
