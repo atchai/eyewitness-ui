@@ -8,7 +8,7 @@
 		<div class="image"><img src="imageUrl"></div>
 		<div class="meta">
 			<div class="details">
-				<div class="name">{{ name }}</div>
+				<div class="name">{{ userFullName }}</div>
 				<div class="date">{{ date }}</div>
 			</div>
 			<div class="message">{{ message }}</div>
@@ -20,7 +20,7 @@
 <script>
 
 	export default {
-		props: [`imageUrl`, `name`, `date`, `message`, `unread`],
+		props: [`imageUrl`, `userFullName`, `date`, `message`, `unread`],
 	};
 
 </script>

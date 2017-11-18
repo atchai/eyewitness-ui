@@ -7,6 +7,12 @@
 	<div class="panel">
 		<div class="inbox">Inbox</div>
 		<div class="threads">
+			<Thread
+				v-for="thread in threads"
+				:userFullName="thread.userFullName"
+				:date="thread.latestDate | formatDate('ddd')"
+				:message="thread.latestMessage"
+			/>
 		</div>
 	</div>
 
@@ -17,6 +23,8 @@
 	import Thread from './Thread';
 
 	export default {
+		computed: {
+			threads () { return Object.values(this.$store.state.threads) },
 		},
 		components: { Thread },
 	};
