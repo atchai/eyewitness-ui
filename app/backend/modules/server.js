@@ -18,6 +18,7 @@ const exphbs = require(`express-handlebars`);
 const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
 const middleware = require(`./middleware`);
+const { mapListToDictionary } = require(`./utilities`);
 
 /*
  * Starts the server on the given port.
@@ -47,8 +48,48 @@ function setupWebSocketServer (app, database) {
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);
 
-	socketServer.on(`connection`, socket => {
-		socket.emit(`welcome`, {});
+	socketServer.on(`connection`, async socket => {
+
+		const recUsers = await database.find(`User`, {});
+		const recArticles = await database.find(`Article`, {});
+
+		const threadPromises = recUsers.map(async recUser => {
+
+			const recLatestMessage = await database.get(`Message`, {
+				_user: recUser._id,
+				direction: `incoming`,
+				human: { $ne: false },
+			}, {
+				limit: 1,
+				sort: { sentAt: `desc` },
+			});
+
+			return Object({
+				threadId: recUser._id,
+				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
+				latestMessage: recLatestMessage.data.text || `[No Text]`,
+				latestDate: recLatestMessage.sentAt,
+			});
+
+		});
+
+		const threads = await Promise.all(threadPromises);
+
+		const articles = recArticles.map(recArticle => Object({
+			articleId: recArticle._id,
+			title: recArticle.title,
+			published: recArticle.isPublished,
+		}));
+
+		socket.emit(`welcome`, {
+			threads: mapListToDictionary(threads, `threadId`),
+			articles: mapListToDictionary(articles, `articleId`),
+			settings: {
+				showStories: true,
+				welcomeMessages: [],
+			},
+		});
+
 	});
 
 	socketServer.on(`thread/send-message`, data => {
