@@ -20,7 +20,7 @@
 <script>
 
 	export default {
-		props: [`imageUrl`, `userFullName`, `date`, `message`, `unread`],
+		props: [`threadId`, `imageUrl`, `userFullName`, `date`, `message`, `unread`],
 	};
 
 </script>
