@@ -78,7 +78,10 @@ function setupWebSocketServer (app, database) {
 		const articles = recArticles.map(recArticle => Object({
 			articleId: recArticle._id,
 			title: recArticle.title,
-			published: recArticle.isPublished,
+			articleUrl: recArticle.articleUrl,
+			articleDate: recArticle.articleDate,
+			priority: (typeof recArticle.isPriority !== `undefined` ? recArticle.isPriority : false),
+			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
 		}));
 
 		socket.emit(`welcome`, {
