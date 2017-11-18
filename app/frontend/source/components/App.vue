@@ -18,11 +18,6 @@
 	import HeaderBar from './chrome/HeaderBar';
 
 	export default {
-		data: function () {
-			return {
-				msg: `Hello, World!`,
-			};
-		},
 		components: { HeaderBar },
 	};
 
