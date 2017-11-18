@@ -17,10 +17,6 @@
 	import Thread from './Thread';
 
 	export default {
-		data: function () {
-			return {
-
-			};
 		},
 		components: { Thread },
 	};

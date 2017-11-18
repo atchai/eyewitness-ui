@@ -21,11 +21,6 @@
 
 	export default {
 		props: [`imageUrl`, `name`, `date`, `message`, `unread`],
-		data: function () {
-			return {
-
-			};
-		},
 	};
 
 </script>

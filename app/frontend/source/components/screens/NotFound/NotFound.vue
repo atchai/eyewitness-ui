@@ -18,11 +18,6 @@
 	import ScreenHeader from '../../common/ScreenHeader';
 
 	export default {
-		data: function () {
-			return {
-
-			};
-		},
 		components: { ScreenHeader },
 	};
 

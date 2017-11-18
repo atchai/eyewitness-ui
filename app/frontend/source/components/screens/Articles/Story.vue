@@ -33,11 +33,6 @@
 
 	export default {
 		props: [`title`, `time`, `date`, `published`],
-		data: function () {
-			return {
-
-			};
-		},
 	};
 
 </script>

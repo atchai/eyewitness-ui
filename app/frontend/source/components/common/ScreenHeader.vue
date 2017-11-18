@@ -15,11 +15,6 @@
 
 	export default {
 		props: [`title`, `description`],
-		data: function () {
-			return {
-
-			};
-		},
 	};
 
 </script>

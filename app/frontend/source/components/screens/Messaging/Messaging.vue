@@ -17,11 +17,7 @@
 	import ConversationPanel from './ConversationPanel';
 
 	export default {
-		data: function () {
-			return {
 
-			};
-		},
 		components: { ThreadsPanel, ConversationPanel },
 	};
 
