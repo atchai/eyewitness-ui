@@ -49,6 +49,10 @@
 				&.padding {
 					padding: 2.00rem 3.00rem;
 				}
+
+				&.scroll-vertical {
+					@include scroll-vertical();
+				}
 			}
 		}
 	}

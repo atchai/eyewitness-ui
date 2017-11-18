@@ -4,7 +4,7 @@
 
 <template>
 
-	<div class="screen padding">
+	<div class="screen padding scroll-vertical">
 		<ScreenHeader
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
