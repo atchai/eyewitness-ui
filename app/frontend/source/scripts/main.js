@@ -16,6 +16,7 @@ import socketClient from 'socket.io-client';
 import Vue from 'vue';
 import router from './router';
 import store from './store';
+import './filters';
 
 /*
  * Import the application components.
