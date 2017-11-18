@@ -99,8 +99,23 @@ function setupWebSocketServer (app, database) {
 		console.log(`Thread Send Message`, data);
 	});
 
-	socketServer.on(`article/set-published`, data => {
-		console.log(`Article Set Published`, data);
+	socketServer.on(`article/set-published`, async (data, reply) => {
+
+		try {
+
+			// Make sure the client passed in safe values.
+			const articleId = String(data.articleId);
+			const isPublished = Boolean(data.published);
+
+			await database.update(`Article`, articleId, { isPublished });
+
+		}
+		catch (err) {
+			return reply({ success: false, error: err.message });
+		}
+
+		return reply({ success: true });
+
 	});
 
 	socketServer.on(`breaking-news/send-message`, data => {
