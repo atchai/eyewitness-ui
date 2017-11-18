@@ -19,10 +19,8 @@
 					<span v-if="published">Published</span>
 					<span v-if="!published">Offline</span>
 				</div>
-				<a href="JavaScript:void(0);">
-					<span v-if="published">take offline</span>
-					<span v-if="!published">publish</span>
-				</a>
+				<a href="JavaScript:void(0);" v-if="published" @click="setArticleUnpublished(articleId)"><span >take offline</span></a>
+				<a href="JavaScript:void(0);" v-if="!published" @click="setArticlePublished(articleId)"><span>publish</span></a>
 			</div>
 		</div>
 	</div>
@@ -31,8 +29,20 @@
 
 <script>
 
+	import { getSocket } from '../../../scripts/webSocketClient';
+
 	export default {
 		props: [`articleId`, `title`, `time`, `date`, `published`],
+		methods: {
+			setArticlePublished (articleId) {
+				this.$store.commit(`update-article`, { key: articleId, field: `published`, data: true });
+				getSocket().emit(`article/set-published`, { articleId, published: true });
+			},
+			setArticleUnpublished (articleId) {
+				this.$store.commit(`update-article`, { key: articleId, field: `published`, data: false });
+				getSocket().emit(`article/set-published`, { articleId, published: false });
+			},
+		},
 	};
 
 </script>
