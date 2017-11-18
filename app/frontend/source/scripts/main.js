@@ -15,6 +15,7 @@ import dialogPolyfill from 'dialog-polyfill';
 import socketClient from 'socket.io-client';
 import Vue from 'vue';
 import router from './router';
+import store from './store';
 
 /*
  * Import the application components.
@@ -32,5 +33,6 @@ socketClient.connect(process.env.SERVER_URI);
 new Vue({
 	el: `#app`, // eslint-disable-line id-length
 	router,
+	store,
 	render: createElement => createElement(App), // We must use render because we don't bundle in the Vue compiler.
 });
