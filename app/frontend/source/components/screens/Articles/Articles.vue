@@ -29,7 +29,7 @@
 
 	export default {
 		computed: {
-			articles () { return Object.values(this.$store.state.articles) },
+			articles () { return Object.values(this.$store.state.articles); },
 		},
 		components: { ScreenHeader, Article },
 	};
