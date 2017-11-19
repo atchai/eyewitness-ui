@@ -50,6 +50,7 @@ function setupWebSocketServer (app, database) {
 
 	socketServer.on(`connection`, async socket => {
 
+		// Query the database.
 		const recUsers = await database.find(`User`, {}, {
 			sort: { 'conversation.lastMessageSentAt': `desc` },
 		});
@@ -58,6 +59,7 @@ function setupWebSocketServer (app, database) {
 			sort: { articleDate: `desc` },
 		});
 
+		// Prepare threads.
 		const threadPromises = recUsers.map(async recUser => {
 
 			const recLatestMessage = await database.get(`Message`, {
@@ -80,6 +82,7 @@ function setupWebSocketServer (app, database) {
 
 		const threads = await Promise.all(threadPromises);
 
+		// Prepare articles.
 		const articles = recArticles.map(recArticle => Object({
 			articleId: recArticle._id,
 			title: recArticle.title,
@@ -89,6 +92,7 @@ function setupWebSocketServer (app, database) {
 			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
 		}));
 
+		// Push data to client.
 		socket.emit(`welcome`, {
 			threads: mapListToDictionary(threads, `threadId`),
 			articles: mapListToDictionary(articles, `articleId`),
