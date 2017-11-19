@@ -50,8 +50,13 @@ function setupWebSocketServer (app, database) {
 
 	socketServer.on(`connection`, async socket => {
 
-		const recUsers = await database.find(`User`, {});
-		const recArticles = await database.find(`Article`, {});
+		const recUsers = await database.find(`User`, {}, {
+			sort: { 'conversation.lastMessageSentAt': `desc` },
+		});
+
+		const recArticles = await database.find(`Article`, {}, {
+			sort: { articleDate: `desc` },
+		});
 
 		const threadPromises = recUsers.map(async recUser => {
 
