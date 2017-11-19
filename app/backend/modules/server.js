@@ -102,71 +102,71 @@ function setupWebSocketServer (app, database) {
 			},
 		});
 
-	});
+		socket.on(`thread/send-message`, async (data, reply) => {
+			console.log(`Thread Send Message`, data);
+		});
 
-	socketServer.on(`thread/send-message`, async data => {
-		console.log(`Thread Send Message`, data);
-	});
+		socket.on(`article/set-published`, async (data, reply) => {
 
-	socketServer.on(`article/set-published`, async (data, reply) => {
+			try {
 
-		try {
+				// Make sure the client passed in safe values.
+				const articleId = String(data.articleId);
+				const isPublished = Boolean(data.published);
 
-			// Make sure the client passed in safe values.
-			const articleId = String(data.articleId);
-			const isPublished = Boolean(data.published);
+				await database.update(`Article`, articleId, { isPublished });
 
-			await database.update(`Article`, articleId, { isPublished });
+			}
+			catch (err) {
+				return reply({ success: false, error: err.message });
+			}
 
-		}
-		catch (err) {
-			return reply({ success: false, error: err.message });
-		}
+			return reply({ success: true });
 
-		return reply({ success: true });
+		});
 
-	});
+		socket.on(`breaking-news/send-message`, async (data, reply) => {
+			console.log(`Breaking News Send Message`, data);
+		});
 
-	socketServer.on(`breaking-news/send-message`, async data => {
-		console.log(`Breaking News Send Message`, data);
-	});
+		socket.on(`settings/set-bot-enabled`, async (data, reply) => {
 
-	socketServer.on(`settings/set-bot-enabled`, async (data, reply) => {
+			try {
 
-		try {
+				// Make sure the client passed in safe values.
+				const isBotEnabled = Boolean(data.enabled);
 
-			// Make sure the client passed in safe values.
-			const isBotEnabled = Boolean(data.enabled);
+				const recSettings = await database.find(`Settings`, {})[0];
+				await database.update(`Settings`, recSettings, { isBotEnabled });
 
-			const recSettings = await database.find(`Settings`, {})[0];
-			await database.update(`Settings`, recSettings, { isBotEnabled });
+			}
+			catch (err) {
+				return reply({ success: false, error: err.message });
+			}
 
-		}
-		catch (err) {
-			return reply({ success: false, error: err.message });
-		}
+			return reply({ success: true });
 
-		return reply({ success: true });
+		});
 
-	});
+		socket.on(`settings/save-message`, async (data, reply) => {
 
-	socketServer.on(`settings/save-message`, async (data, reply) => {
+			try {
 
-		try {
+				// Make sure the client passed in safe values.
+				const rawWelcomeMessages = (Array.isArray(data.welcomeMessages) ? data.welcomeMessages : []);
+				const welcomeMessages = rawWelcomeMessages.map(welcomeMessage => String(welcomeMessage));
 
-			// Make sure the client passed in safe values.
-			const rawWelcomeMessages = (Array.isArray(data.welcomeMessages) ? data.welcomeMessages : []);
-			const welcomeMessages = rawWelcomeMessages.map(welcomeMessage => String(welcomeMessage));
+				const recSettings = await database.find(`Settings`, {})[0];
+				await database.update(`Settings`, recSettings, { welcomeMessages });
 
-			const recSettings = await database.find(`Settings`, {})[0];
-			await database.update(`Settings`, recSettings, { welcomeMessages });
+			}
+			catch (err) {
+				return reply({ success: false, error: err.message });
+			}
 
-		}
-		catch (err) {
-			return reply({ success: false, error: err.message });
-		}
+			return reply({ success: true });
 
-		return reply({ success: true });
+		});
 
 	});
 
