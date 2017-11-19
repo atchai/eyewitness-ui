@@ -131,8 +131,43 @@ function setupWebSocketServer (app, database) {
 		console.log(`Breaking News Send Message`, data);
 	});
 
-		console.log(`Settings Save Message`, data);
+	socketServer.on(`settings/set-bot-enabled`, async (data, reply) => {
+
+		try {
+
+			// Make sure the client passed in safe values.
+			const isBotEnabled = Boolean(data.enabled);
+
+			const recSettings = await database.find(`Settings`, {})[0];
+			await database.update(`Settings`, recSettings, { isBotEnabled });
+
+		}
+		catch (err) {
+			return reply({ success: false, error: err.message });
+		}
+
+		return reply({ success: true });
+
+	});
+
 	socketServer.on(`settings/save-message`, async (data, reply) => {
+
+		try {
+
+			// Make sure the client passed in safe values.
+			const rawWelcomeMessages = (Array.isArray(data.welcomeMessages) ? data.welcomeMessages : []);
+			const welcomeMessages = rawWelcomeMessages.map(welcomeMessage => String(welcomeMessage));
+
+			const recSettings = await database.find(`Settings`, {})[0];
+			await database.update(`Settings`, recSettings, { welcomeMessages });
+
+		}
+		catch (err) {
+			return reply({ success: false, error: err.message });
+		}
+
+		return reply({ success: true });
+
 	});
 
 	return webServer;
