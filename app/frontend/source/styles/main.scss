@@ -45,13 +45,19 @@ body {
  */
 
 button {
-	height: 4.00rem;
-	line-height: 4.00rem;
-	width: 10.00rem;
-	border-radius: 0.50rem;
+	height: 3.00rem;
+	line-height: 3.00rem;
+	width: 11.00rem;
+	border-radius: 0.20rem;
 	background: #B0B0B0;
 	color: white;
 	text-align: center;
+	font-size: 1.20rem;
+	border: 0;
+	padding: 0;
+	margin: 0 1.00rem;
+	outline: 0;
+	cursor: pointer;
 
 	&.primary {
 		background: $accent-color;
@@ -59,6 +65,14 @@ button {
 	}
 
 	&:hover {
-		filter: brightness(90%);
+		filter: brightness(95%);
+	}
+
+	&:first-child {
+		margin-left: 0;
+	}
+
+	&:last-child {
+		margin-right: 0;
 	}
 }
