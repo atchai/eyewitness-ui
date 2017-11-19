@@ -104,7 +104,7 @@ function setupWebSocketServer (app, database) {
 
 	});
 
-	socketServer.on(`thread/send-message`, data => {
+	socketServer.on(`thread/send-message`, async data => {
 		console.log(`Thread Send Message`, data);
 	});
 
@@ -127,12 +127,12 @@ function setupWebSocketServer (app, database) {
 
 	});
 
-	socketServer.on(`breaking-news/send-message`, data => {
+	socketServer.on(`breaking-news/send-message`, async data => {
 		console.log(`Breaking News Send Message`, data);
 	});
 
-	socketServer.on(`settings/save-message`, data => {
 		console.log(`Settings Save Message`, data);
+	socketServer.on(`settings/save-message`, async (data, reply) => {
 	});
 
 	return webServer;
