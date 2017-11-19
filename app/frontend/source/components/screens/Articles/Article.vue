@@ -1,10 +1,10 @@
 <!--
-	STORY
+	ARTICLE
 -->
 
 <template>
 
-	<div class="story">
+	<div class="article">
 		<div class="cell title">
 			<div class="inner">{{ title }}</div>
 		</div>
@@ -60,7 +60,7 @@
 
 <style lang="scss" scoped>
 
-	.story {
+	.article {
 		display: flex;
 		align-items: stretch;
 		height: 3.50rem;

@@ -9,7 +9,7 @@
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
 		/>
-		<Story
+		<Article
 			v-for="article in articles"
 			:key="article.articleId"
 			:articleId="article.articleId"
@@ -25,13 +25,13 @@
 <script>
 
 	import ScreenHeader from '../../common/ScreenHeader';
-	import Story from './Story';
+	import Article from './Article';
 
 	export default {
 		computed: {
 			articles () { return Object.values(this.$store.state.articles) },
 		},
-		components: { ScreenHeader, Story },
+		components: { ScreenHeader, Article },
 	};
 
 </script>
