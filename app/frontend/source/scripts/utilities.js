@@ -17,8 +17,16 @@ function updateStoreObjectItem (object, payload) {
 }
 
 /*
+ * Removes the given object item with the given key.
+ */
+function removeStoreObjectItem (object, payload) {
+	delete object[payload.key];
+}
+
+/*
  * Export.
  */
 export {
 	updateStoreObjectItem,
+	removeStoreObjectItem,
 };
