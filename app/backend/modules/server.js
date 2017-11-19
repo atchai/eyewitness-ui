@@ -59,6 +59,10 @@ function setupWebSocketServer (app, database) {
 			sort: { articleDate: `desc` },
 		});
 
+		const recWelcomeMessages = await database.find(`WelcomeMessage`, {}, {
+			sort: { weight: `asc` },
+		});
+
 		// Prepare threads.
 		const threadPromises = recUsers.map(async recUser => {
 
@@ -92,13 +96,20 @@ function setupWebSocketServer (app, database) {
 			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
 		}));
 
+		// Prepare welcome messages.
+		const welcomeMessages = recWelcomeMessages.map(recWelcomeMessage => Object({
+			welcomeMessageId: recWelcomeMessage._id,
+			text: recWelcomeMessage.text,
+			weight: recWelcomeMessage.weight,
+		}));
+
 		// Push data to client.
 		socket.emit(`welcome`, {
 			threads: mapListToDictionary(threads, `threadId`),
 			articles: mapListToDictionary(articles, `articleId`),
+			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
 			settings: {
 				showStories: true,
-				welcomeMessages: [],
 			},
 		});
 
