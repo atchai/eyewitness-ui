@@ -8,7 +8,7 @@
 		<div class="inbox">Inbox</div>
 		<div class="threads">
 			<Thread
-				v-for="thread in threads"
+				v-for="thread in threadSet"
 				:key="thread.threadId"
 				:threadId="thread.threadId"
 				:userFullName="thread.userFullName"
@@ -22,11 +22,14 @@
 
 <script>
 
+	import { mapGetters } from 'vuex';
 	import Thread from './Thread';
 
 	export default {
 		computed: {
-			threads () { return Object.values(this.$store.state.threads) },
+			...mapGetters([
+				`threadSet`,
+			]),
 		},
 		components: { Thread },
 	};

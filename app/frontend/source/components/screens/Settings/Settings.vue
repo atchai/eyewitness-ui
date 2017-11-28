@@ -11,7 +11,7 @@
 		/>
 		<div class="welcome">
 			<WelcomeMessage
-				v-for="welcomeMessage in welcomeMessages"
+				v-for="welcomeMessage in welcomeMessageSet"
 				:key="welcomeMessage.welcomeMessageId"
 				:welcomeMessageId="welcomeMessage.welcomeMessageId"
 				:text="welcomeMessage.text"
@@ -27,12 +27,15 @@
 <script>
 
 	import ObjectId from 'bson-objectid';
+	import { mapGetters } from 'vuex';
 	import ScreenHeader from '../../common/ScreenHeader';
 	import WelcomeMessage from './WelcomeMessage';
 
 	export default {
 		computed: {
-			welcomeMessages () { return this.$store.state.welcomeMessages; },
+			...mapGetters([
+				`welcomeMessageSet`,
+			]),
 		},
 		components: { ScreenHeader, WelcomeMessage },
 		methods: {
