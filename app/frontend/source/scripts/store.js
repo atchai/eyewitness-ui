@@ -13,9 +13,7 @@ export default new Vuex.Store({
 		threads: {},
 		articles: {},
 		welcomeMessages: {},
-		settings: {
-			showStories: null,
-		},
+		showStories: null,
 	},
 	mutations: {
 		'update-thread': (state, payload) => updateStoreObjectItem(state.threads, payload),

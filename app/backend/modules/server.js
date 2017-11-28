@@ -107,10 +107,8 @@ function setupWebSocketServer (app, database) {
 		socket.emit(`welcome`, {
 			threads: mapListToDictionary(threads, `threadId`),
 			articles: mapListToDictionary(articles, `articleId`),
+			showStories: true,
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
-			settings: {
-				showStories: true,
-			},
 		});
 
 		socket.on(`thread/send-message`, async (data, reply) => {

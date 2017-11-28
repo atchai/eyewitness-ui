@@ -16,8 +16,8 @@ function setupWebSocketClient (store) {
 	socket.on(`welcome`, data => {
 		store.commit(`update-threads`, data.threads);
 		store.commit(`update-articles`, data.articles);
-		store.commit(`set-show-stories`, data.settings.showStories);
-		store.commit(`update-welcome-messages`, data.settings.welcomeMessages);
+		store.commit(`set-show-stories`, data.showStories);
+		store.commit(`update-welcome-messages`, data.welcomeMessages);
 	});
 
 	return socket;
