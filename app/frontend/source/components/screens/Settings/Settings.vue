@@ -38,9 +38,13 @@
 		methods: {
 
 			addWelcomeMessage () {
+				const newId = new ObjectId().toString();
 				this.$store.commit(`add-welcome-message`, {
-					welcomeMessageId: new ObjectId().toString(),
-					text: ``,
+					key: newId,
+					data: {
+						welcomeMessageId: newId,
+						text: ``,
+					},
 				});
 			},
 
