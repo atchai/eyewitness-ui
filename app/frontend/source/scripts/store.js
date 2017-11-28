@@ -34,4 +34,9 @@ export default new Vuex.Store({
 		'update-welcome-messages': (state, payload) => state.welcomeMessages = payload,
 		'remove-welcome-message': (state, payload) => removeStoreObjectItem(state.welcomeMessages, payload),
 	},
+	getters: {
+		threadSet: state => Object.values(state.threads),
+		articleSet: state => Object.values(state.articles),
+		welcomeMessageSet: state => Object.values(state.welcomeMessages),
+	},
 });
