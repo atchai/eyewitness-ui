@@ -4,7 +4,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { updateStoreObjectItem, removeStoreObjectItem } from './utilities';
+import { addStoreObjectItem, updateStoreObjectItem, removeStoreObjectItem } from './utilities';
 
 /*
  * Enable stores.
@@ -29,7 +29,7 @@ export default new Vuex.Store({
 		'update-articles': (state, payload) => state.articles = payload,
 		'remove-article': (state, payload) => removeStoreObjectItem(state.articles, payload),
 		'set-show-stories': (state, payload) => state.showStories = payload,
-		'add-welcome-message': (state, payload) => state.welcomeMessages[payload.welcomeMessageId] = payload,
+		'add-welcome-message': (state, payload) => addStoreObjectItem(state, `welcomeMessages`, payload),
 		'update-welcome-message': (state, payload) => updateStoreObjectItem(state.welcomeMessages, payload),
 		'update-welcome-messages': (state, payload) => state.welcomeMessages = payload,
 		'remove-welcome-message': (state, payload) => removeStoreObjectItem(state.welcomeMessages, payload),

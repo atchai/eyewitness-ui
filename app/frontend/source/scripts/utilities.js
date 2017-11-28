@@ -3,6 +3,18 @@
  */
 
 /*
+ * Adds a single item to the given property.
+ */
+function addStoreObjectItem (state, property, payload) {
+
+	state[property] = Object({
+		...state[property],
+		[payload.key]: payload.data,
+	});
+
+}
+
+/*
  * Updates the given object item with the given payload.
  */
 function updateStoreObjectItem (object, payload) {
@@ -27,6 +39,7 @@ function removeStoreObjectItem (object, payload) {
  * Export.
  */
 export {
+	addStoreObjectItem,
 	updateStoreObjectItem,
 	removeStoreObjectItem,
 };
