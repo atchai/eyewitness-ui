@@ -26,7 +26,7 @@
 
 <script>
 
-	import mongoose from 'mongoose';
+	import ObjectId from 'bson-objectid';
 	import ScreenHeader from '../../common/ScreenHeader';
 	import WelcomeMessage from './WelcomeMessage';
 
@@ -39,7 +39,7 @@
 
 			addWelcomeMessage () {
 				this.$store.commit(`add-welcome-message`, {
-					welcomeMessageId: new mongoose.mongo.ObjectId(),
+					welcomeMessageId: new ObjectId().toString(),
 					text: ``,
 				});
 			},
