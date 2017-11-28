@@ -6,8 +6,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { updateStoreObjectItem, removeStoreObjectItem } from './utilities';
 
+/*
+ * Enable stores.
+ */
 Vue.use(Vuex);
 
+/*
+ * Export a configured store.
+ */
 export default new Vuex.Store({
 	state: {
 		threads: {},
