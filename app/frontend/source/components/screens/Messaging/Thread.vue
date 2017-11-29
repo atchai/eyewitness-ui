@@ -4,19 +4,17 @@
 
 <template>
 
-	<router-link :to="`messaging/thread/${threadId}`" :class="{ thread: true, unread: unread }">
-		<!-- <div :class="{ thread: true, unread: unread }"> -->
-			<div class="image">
-				<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
+	<router-link :to="`/messaging/thread/${threadId}`" :class="{ thread: true, unread: unread }">
+		<div class="image">
+			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
+		</div>
+		<div class="meta">
+			<div class="details">
+				<div class="name">{{ userFullName }}</div>
+				<div class="date">{{ date }}</div>
 			</div>
-			<div class="meta">
-				<div class="details">
-					<div class="name">{{ userFullName }}</div>
-					<div class="date">{{ date }}</div>
-				</div>
-				<div class="message">{{ message }}</div>
-			</div>
-		<!-- </div> -->
+			<div class="message">{{ message }}</div>
+		</div>
 	</router-link>
 
 
