@@ -41,14 +41,25 @@
 		methods: {
 
 			addWelcomeMessage () {
+
 				const newId = new ObjectId().toString();
+
+				const welcomeMessages = this.$store.getters.welcomeMessageSet;
+				let maxWeight = 0;
+
+				welcomeMessages.forEach(welcomeMessage => {
+					if (welcomeMessage.weight > maxWeight) { maxWeight = welcomeMessage.weight; }
+				})
+
 				this.$store.commit(`add-welcome-message`, {
 					key: newId,
 					data: {
 						welcomeMessageId: newId,
 						text: ``,
+						weight: maxWeight + 1,
 					},
 				});
+
 			},
 
 		}
