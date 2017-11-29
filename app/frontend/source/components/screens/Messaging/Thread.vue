@@ -33,6 +33,15 @@
 		height: 4.50rem;
 		padding: 0 0.50rem;
 		border-bottom: 1px solid $panel-border-color;
+		cursor: pointer;
+
+		&.selected {
+			background: #D8D7D7;
+		}
+
+		&:hover {
+			background: #E8E7E7;
+		}
 
 		>.image {
 			display: flex;
