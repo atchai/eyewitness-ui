@@ -36,21 +36,35 @@
 		methods: {
 
 			setArticlePublished (articleId) {
-				this.$store.commit(`update-article`, { key: articleId, field: `published`, data: true });
+
+				this.$store.commit(`update-article`, {
+					key: articleId,
+					dataField: `published`,
+					dataValue: true,
+				});
+
 				getSocket().emit(
 					`article/set-published`,
 					{ articleId, published: true },
 					data => (!data || !data.success ? alert(`There was a problem publishing the story.`) : void (0))
 				);
+
 			},
 
 			setArticleUnpublished (articleId) {
-				this.$store.commit(`update-article`, { key: articleId, field: `published`, data: false });
+
+				this.$store.commit(`update-article`, {
+					key: articleId,
+					dataField: `published`,
+					dataValue: false,
+				});
+
 				getSocket().emit(
 					`article/set-published`,
 					{ articleId, published: false },
 					data => (!data || !data.success ? alert(`There was a problem unpublishing the story.`) : void (0))
 				);
+
 			},
 
 		},
