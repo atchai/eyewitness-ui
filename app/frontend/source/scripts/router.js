@@ -23,10 +23,10 @@ export default new VueRouter({
 		},
 		{
 			path: `/messaging`,
-			name: `Messaging`,
 			component: Messaging,
 			children: [{
 				path: ``,
+				name: `Messaging`,
 				component: SelectConversation,
 			}, {
 				path: `thread/:threadId`,
