@@ -27,12 +27,12 @@ function updateStorePropertyItem (state, property, payload) {
 	const key = payload.key;
 
 	// Replace the item in its entirety.
-	if (payload.data) {
+	if (typeof payload.data !== `undefined`) {
 		dictionary[key] = payload.data;
 	}
 
 	// Otherwise just replace a single field in the item.
-	else if (payload.dataField && payload.dataValue) {
+	else if (typeof payload.dataField !== `undefined` && typeof payload.dataValue !== `undefined`) {
 		dictionary[key][payload.dataField] = payload.dataValue;
 	}
 
