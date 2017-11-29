@@ -11,7 +11,7 @@
 				<router-link to="/messaging"><span>Conversations</span></router-link>
 			</div>
 			<div class="item">
-				<router-link to="/articles"><span>Stories</span></router-link>
+				<router-link to="/stories"><span>Stories</span></router-link>
 			</div>
 			<div class="item">
 				<router-link to="/breaking-news"><span>Breaking News</span></router-link>

@@ -5,7 +5,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Messaging from '../components/screens/Messaging/Messaging';
-import Articles from '../components/screens/Articles/Articles';
+import Stories from '../components/screens/Stories/Stories';
 import BreakingNews from '../components/screens/BreakingNews/BreakingNews';
 import Settings from '../components/screens/Settings/Settings';
 import NotFound from '../components/screens/NotFound/NotFound';
@@ -25,9 +25,9 @@ export default new VueRouter({
 			component: Messaging,
 		},
 		{
-			path: `/articles`,
-			name: `Articles`,
-			component: Articles,
+			path: `/stories`,
+			name: `Stories`,
+			component: Stories,
 		},
 		{
 			path: `/breaking-news`,

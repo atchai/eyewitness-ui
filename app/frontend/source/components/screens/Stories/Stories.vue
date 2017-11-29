@@ -9,7 +9,7 @@
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
 		/>
-		<Article
+		<Story
 			v-for="article in articleSet"
 			:key="article.articleId"
 			:articleId="article.articleId"
@@ -26,7 +26,7 @@
 
 	import { mapGetters } from 'vuex';
 	import ScreenHeader from '../../common/ScreenHeader';
-	import Article from './Article';
+	import Story from './Story';
 
 	export default {
 		computed: {
@@ -34,7 +34,7 @@
 				`articleSet`,
 			]),
 		},
-		components: { ScreenHeader, Article },
+		components: { ScreenHeader, Story },
 	};
 
 </script>
