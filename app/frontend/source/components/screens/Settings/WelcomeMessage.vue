@@ -5,7 +5,7 @@
 <template>
 
 	<div class="welcome-message">
-		<textarea>{{ text }}</textarea>
+		<textarea :id="`welcome-message-${welcomeMessageId}`">{{ text }}</textarea>
 		<div class="actions">
 			<button @click="removeWelcomeMessage(welcomeMessageId)">Delete</button>
 			<button class="primary" @click="saveWelcomeMessage(welcomeMessageId, $event)">Save</button>
@@ -16,15 +16,44 @@
 
 <script>
 
+	import { getSocket } from '../../../scripts/webSocketClient';
+
 	export default {
 		props: [`welcomeMessageId`, `text`],
 		methods: {
 
-			removeWelcomeMessage (key) {
-				this.$store.commit(`remove-welcome-message`, { key });
+			removeWelcomeMessage (welcomeMessageId) {
+
+				this.$store.commit(`remove-welcome-message`, {
+					key: welcomeMessageId,
+				});
+
+				getSocket().emit(
+					`welcome-message/remove`,
+					{ welcomeMessageId },
+					data => (!data || !data.success ? alert(`There was a problem removing the welcome message.`) : void (0))
+				);
+
 			},
 
 			saveWelcomeMessage (welcomeMessageId, event) {
+
+				const text = document.getElementById(`welcome-message-${welcomeMessageId}`).value.trim();
+
+				// If there is no text lets remove the message altogether.
+				if (!text) { return this.removeWelcomeMessage(welcomeMessageId); }
+
+				this.$store.commit(`update-welcome-message`, {
+					key: welcomeMessageId,
+					dataField: `text`,
+					dataValue: text,
+				});
+
+				getSocket().emit(
+					`welcome-message/update`,
+					this.$store.state.welcomeMessages[welcomeMessageId],
+					data => (!data || !data.success ? alert(`There was a problem saving the welcome message.`) : void (0))
+				);
 
 			},
 
