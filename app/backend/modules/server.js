@@ -157,16 +157,42 @@ function setupWebSocketServer (app, database) {
 
 		});
 
-		socket.on(`settings/save-message`, async (data, reply) => {
+		socket.on(`welcome-message/update`, async (data, reply) => {
 
 			try {
 
-				// Make sure the client passed in safe values.
-				const rawWelcomeMessages = (Array.isArray(data.welcomeMessages) ? data.welcomeMessages : []);
-				const welcomeMessages = rawWelcomeMessages.map(welcomeMessage => String(welcomeMessage));
+				// Get the welcome message to update.
+				let recWelcomeMessage = await database.get(`WelcomeMessage`, { _id: data.welcomeMessageId });
 
-				const recSettings = await database.find(`Settings`, {})[0];
-				await database.update(`Settings`, recSettings, { welcomeMessages });
+				// If no welcome message exists lets create a new one.
+				if (!recWelcomeMessage) {
+					recWelcomeMessage = {
+						_id: data.welcomeMessageId,
+					};
+				}
+
+				// Update the record.
+				recWelcomeMessage.text = data.text;
+				recWelcomeMessage.weight = data.weight;
+
+				// Update the database.
+				await database.update(`WelcomeMessage`, data.welcomeMessageId, recWelcomeMessage, { upsert: true });
+
+			}
+			catch (err) {
+				return reply({ success: false, error: err.message });
+			}
+
+			return reply({ success: true });
+
+		});
+
+		socket.on(`welcome-message/remove`, async (data, reply) => {
+
+			try {
+
+				// Update the database.
+				await database.delete(`WelcomeMessage`, data.welcomeMessageId);
 
 			}
 			catch (err) {
