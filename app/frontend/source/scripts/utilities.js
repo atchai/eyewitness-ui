@@ -2,44 +2,59 @@
  * UTILITIES
  */
 
+import Vue from 'vue';
+
 /*
- * Adds a single item to the given property.
+ * Adds a single item to the given state property.
  */
-function addStoreObjectItem (state, property, payload) {
+function addStorePropertyItem (state, property, payload) {
+
+	const dictionary = state[property];
 
 	state[property] = Object({
-		...state[property],
+		...dictionary,
 		[payload.key]: payload.data,
 	});
 
 }
 
 /*
- * Updates the given object item with the given payload.
+ * Updates a single item on the given state property.
  */
-function updateStoreObjectItem (object, payload) {
+function updateStorePropertyItem (state, property, payload) {
 
-	if (payload.field) {
-		object[payload.key][payload.field] = payload.data;
+	const dictionary = state[property];
+	const key = payload.key;
+
+	// Replace the item in its entirety.
+	if (payload.data) {
+		dictionary[key] = payload.data;
 	}
+
+	// Otherwise just replace a single field in the item.
+	else if (payload.dataField && payload.dataValue) {
+		dictionary[key][payload.dataField] = payload.dataValue;
+	}
+
+	// Whoops!
 	else {
-		object[payload.key] = payload.data;
+		throw new Error(`You must specify either "data" or "dataField" and "dataValue" when updating store items.`);
 	}
 
 }
 
 /*
- * Removes the given object item with the given key.
+ * Removes a single item on the given state property.
  */
-function removeStoreObjectItem (object, payload) {
-	delete object[payload.key];
+function removeStorePropertyItem (state, property, payload) {
+	Vue.delete(state[property], payload.key);
 }
 
 /*
  * Export.
  */
 export {
-	addStoreObjectItem,
-	updateStoreObjectItem,
-	removeStoreObjectItem,
+	addStorePropertyItem,
+	updateStorePropertyItem,
+	removeStorePropertyItem,
 };
