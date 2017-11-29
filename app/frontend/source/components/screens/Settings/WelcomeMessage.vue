@@ -8,7 +8,7 @@
 		<textarea>{{ text }}</textarea>
 		<div class="actions">
 			<button @click="removeWelcomeMessage(welcomeMessageId)">Delete</button>
-			<button class="primary" @click="saveWelcomeMessage(welcomeMessageId, $event)">Edit</button>
+			<button class="primary" @click="saveWelcomeMessage(welcomeMessageId, $event)">Save</button>
 		</div>
 	</div>
 
