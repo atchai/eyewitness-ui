@@ -4,18 +4,21 @@
 
 <template>
 
-	<div :class="{ thread: true, unread: unread }">
-		<div class="image">
-			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
-		</div>
-		<div class="meta">
-			<div class="details">
-				<div class="name">{{ userFullName }}</div>
-				<div class="date">{{ date }}</div>
+	<router-link :to="`messaging/thread/${threadId}`" :class="{ thread: true, unread: unread }">
+		<!-- <div :class="{ thread: true, unread: unread }"> -->
+			<div class="image">
+				<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
 			</div>
-			<div class="message">{{ message }}</div>
-		</div>
-	</div>
+			<div class="meta">
+				<div class="details">
+					<div class="name">{{ userFullName }}</div>
+					<div class="date">{{ date }}</div>
+				</div>
+				<div class="message">{{ message }}</div>
+			</div>
+		<!-- </div> -->
+	</router-link>
+
 
 </template>
 
@@ -35,6 +38,8 @@
 		height: 4.50rem;
 		padding: 0 0.50rem;
 		border-bottom: 1px solid $panel-border-color;
+		text-decoration: none;
+		color: inherit;
 		cursor: pointer;
 
 		&.selected {
