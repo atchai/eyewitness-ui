@@ -6,7 +6,7 @@
 
 	<div class="screen">
 		<ThreadsPanel />
-		<ConversationPanel />
+		<router-view></router-view>
 	</div>
 
 </template>
