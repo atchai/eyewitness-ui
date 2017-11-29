@@ -5,7 +5,9 @@
 <template>
 
 	<div :class="{ thread: true, unread: unread }">
-		<div class="image"><img src="imageUrl"></div>
+		<div class="image">
+			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
+		</div>
 		<div class="meta">
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
@@ -49,12 +51,14 @@
 			width: 3.50rem;
 			margin-right: 0.50rem;
 
-			img {
+			>.image-circle {
 				display: block;
 				margin: auto;
 				width: 3.00rem;
 				height: 3.00rem;
 				border-radius: 50%;
+				background-color: #9B9B9B;
+				background-size: cover;
 				overflow: hidden;
 			}
 		}
