@@ -71,7 +71,7 @@ function setupWebSocketServer (app, database) {
 				_user: recUser._id,
 			}, {
 				limit: 100,
-				sort: { sentAt: `desc` },
+				sort: { sentAt: `asc` },
 			});
 
 			// Order them with the oldest first, newest last.
