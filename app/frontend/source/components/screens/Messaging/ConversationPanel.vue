@@ -21,11 +21,19 @@
 				<a href="JavaScript:void(0);" v-if="!thread.botEnabled" @click="setBotEnabled(thread.threadId)"><span>enable</span></a>
 			</div>
 		</div>
+
 		<div class="messages">
-
-
-
+			<Message
+				v-for="message in thread.messages"
+				:key="message.messageId"
+				:messageId="message.messageId"
+				:direction="message.direction"
+				:humanToHuman="message.humanToHuman"
+				:sentAt="message.sentAt"
+				:data="message.data"
+			/>
 		</div>
+
 		<div class="composer">
 			<div class="image" @click="selectTextInput"><img src="providerImageUrl"></div>
 			<div class="text-input" @click="selectTextInput"><textarea id="composer-text-input" placeholder="Write a reply..."></textarea></div>
@@ -44,9 +52,11 @@
 <script>
 
 	import { getSocket } from '../../../scripts/webSocketClient';
+	import Message from './Message';
 
 	export default {
 		props: [`botEnabled`],
+		components: { Message },
 		computed: {
 
 			thread () { return this.$store.state.threads[this.$route.params.threadId] || {}; },
