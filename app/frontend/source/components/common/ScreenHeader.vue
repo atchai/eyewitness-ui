@@ -23,6 +23,7 @@
 
 	.screen-header {
 		margin-bottom: 3.00rem;
+		@include user-select-off();
 
 		h1 {
 			margin: 0;

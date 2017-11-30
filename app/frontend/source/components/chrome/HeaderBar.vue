@@ -52,6 +52,7 @@
 		height: 3.00rem;
 		background: $panel-background-color;
 		border-bottom: 2px solid $panel-border-color;
+		@include user-select-off();
 
 		.item {
 			display: flex;

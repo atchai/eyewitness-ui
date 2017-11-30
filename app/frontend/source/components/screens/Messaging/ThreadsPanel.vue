@@ -45,6 +45,7 @@
 		width: 20.00rem;
 		background: $panel-background-color;
 		border-right: 1px solid $panel-border-color;
+		@include user-select-off();
 
 		>.inbox {
 			height: 5.00rem;

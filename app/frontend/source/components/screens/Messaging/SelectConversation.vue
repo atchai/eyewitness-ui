@@ -26,6 +26,7 @@
 
 	.panel {
 		flex: 1;
+		@include user-select-off();
 
 		>p {
 			margin-top: 8.00rem;

@@ -70,7 +70,9 @@
 <style lang="scss" scoped>
 
 	.screen {
-
+		.actions {
+			@include user-select-off();
+		}
 	}
 
 </style>
