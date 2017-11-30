@@ -49,7 +49,7 @@
 		props: [`botEnabled`],
 		computed: {
 
-			thread () { return this.$store.state.threads[this.$route.params.threadId] || []; },
+			thread () { return this.$store.state.threads[this.$route.params.threadId] || {}; },
 
 			providerImageUrl () { return ``; },
 
