@@ -10,15 +10,15 @@
 			<div class="image">
 				<div class="image-circle"></div>
 			</div>
-			<div class="name">{{ userFullName }}</div>
+			<div class="name">{{ thread.userFullName }}</div>
 			<div class="actions">
 				<span class="label">Show Stories:</span>
-				<div :class="{ tag: true, on: botEnabled }">
-					<span v-if="botEnabled">Enabled</span>
-					<span v-if="!botEnabled">Disabled</span>
+				<div :class="{ tag: true, on: thread.botEnabled }">
+					<span v-if="thread.botEnabled">Enabled</span>
+					<span v-if="!thread.botEnabled">Disabled</span>
 				</div>
-				<a href="JavaScript:void(0);" v-if="botEnabled" @click="setBotDisabled(threadId)"><span >disable</span></a>
-				<a href="JavaScript:void(0);" v-if="!botEnabled" @click="setBotEnabled(threadId)"><span>enable</span></a>
+				<a href="JavaScript:void(0);" v-if="thread.botEnabled" @click="setBotDisabled(thread.threadId)"><span >disable</span></a>
+				<a href="JavaScript:void(0);" v-if="!thread.botEnabled" @click="setBotEnabled(thread.threadId)"><span>enable</span></a>
 			</div>
 		</div>
 		<div class="messages">
@@ -44,13 +44,10 @@
 <script>
 
 	export default {
+		props: [`botEnabled`],
 		computed: {
 
-			threadId () { return this.$route.params.threadId; },
-
-			userFullName () { return `Joe Bloggs`; },
-
-			botEnabled () { return true; },
+			thread () { return this.$store.state.threads[this.$route.params.threadId] || []; },
 
 			providerImageUrl () { return ``; },
 
