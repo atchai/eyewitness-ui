@@ -143,6 +143,23 @@ function setupWebSocketServer (app, database) {
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
 		});
 
+		socket.on(`thread/set-bot-enabled`, async (data, reply) => {
+
+			try {
+
+				await database.update(`User`, data.threadId, {
+					bot: { disabled: !data.enabled },
+				});
+
+			}
+			catch (err) {
+				return reply({ success: false, error: err.message });
+			}
+
+			return reply({ success: true });
+
+		});
+
 		socket.on(`thread/send-message`, async (data, reply) => {
 			console.log(`Thread Send Message`, data);
 		});
