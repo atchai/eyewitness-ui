@@ -112,6 +112,11 @@ function setupWebSocketServer (app, database) {
 
 		const threads = await Promise.all(threadPromises);
 
+		// Order threads by last incoming message.
+		threads.sort((threadA, threadB) =>
+			(threadA.latestDate > threadB.latestDate ? +1 : (threadA.latestDate < threadB.latestDate ? -1 : 0))
+		);
+
 		// Prepare articles.
 		const articles = recArticles.map(recArticle => Object({
 			articleId: recArticle._id,
