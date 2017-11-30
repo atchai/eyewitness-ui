@@ -43,6 +43,8 @@
 
 <script>
 
+	import { getSocket } from '../../../scripts/webSocketClient';
+
 	export default {
 		props: [`botEnabled`],
 		computed: {
@@ -53,6 +55,38 @@
 
 		},
 		methods: {
+
+			setBotEnabled (threadId) {
+
+				this.$store.commit(`update-thread`, {
+					key: threadId,
+					dataField: `botEnabled`,
+					dataValue: true,
+				});
+
+				getSocket().emit(
+					`thread/set-bot-enabled`,
+					{ threadId, enabled: true },
+					data => (!data || !data.success ? alert(`There was a problem enabling the user's bot.`) : void (0))
+				);
+
+			},
+
+			setBotDisabled (threadId) {
+
+				this.$store.commit(`update-thread`, {
+					key: threadId,
+					dataField: `botEnabled`,
+					dataValue: false,
+				});
+
+				getSocket().emit(
+					`thread/set-bot-enabled`,
+					{ threadId, enabled: false },
+					data => (!data || !data.success ? alert(`There was a problem disabling the user's bot.`) : void (0))
+				);
+
+			},
 
 			selectTextInput () {
 				document.getElementById(`composer-text-input`).focus();
