@@ -13,7 +13,7 @@
 			<div class="name">{{ thread.userFullName }}</div>
 			<div class="actions">
 				<span class="label">Show Stories:</span>
-				<div :class="{ tag: true, on: thread.botEnabled }">
+				<div :class="{ 'tag': true, 'on': thread.botEnabled }">
 					<span v-if="thread.botEnabled">Enabled</span>
 					<span v-if="!thread.botEnabled">Disabled</span>
 				</div>

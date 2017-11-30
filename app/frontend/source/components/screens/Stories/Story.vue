@@ -15,7 +15,7 @@
 
 		<div class="cell actions">
 			<div class="inner">
-				<div :class="{ tag: true, on: published }">
+				<div :class="{ 'tag': true, 'on': published }">
 					<span v-if="published">Published</span>
 					<span v-if="!published">Offline</span>
 				</div>

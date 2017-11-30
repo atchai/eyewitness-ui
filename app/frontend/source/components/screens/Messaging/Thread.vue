@@ -4,7 +4,7 @@
 
 <template>
 
-	<router-link :to="`/messaging/thread/${threadId}`" :class="{ thread: true, unread: unread }">
+	<router-link :to="`/messaging/thread/${threadId}`" :class="{ 'thread': true, 'unread': unread }">
 		<div class="image">
 			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
 		</div>
