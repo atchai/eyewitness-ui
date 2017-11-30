@@ -28,7 +28,7 @@
 		</div>
 		<div class="composer">
 			<div class="image" @click="selectTextInput"><img src="providerImageUrl"></div>
-			<div class="text-input"><textarea id="composer-text-input" placeholder="Write a reply..."></textarea></div>
+			<div class="text-input" @click="selectTextInput"><textarea id="composer-text-input" placeholder="Write a reply..."></textarea></div>
 			<div class="actions">
 				<div class="icon">A</div>
 				<div class="icon">B</div>
@@ -175,7 +175,6 @@
 		>.composer {
 			display: flex;
 			height: 8.00rem;
-			padding: 1.00rem 0;
 			border-top: 1px solid $panel-border-color;
 
 			>.image {
@@ -194,6 +193,8 @@
 			>.text-input {
 				flex: 1;
 				height: 100%;
+				padding: 1.00rem 0;
+				cursor: text;
 
 				>textarea {
 					width: 100%;
