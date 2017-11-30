@@ -106,6 +106,7 @@ function setupWebSocketServer (app, database) {
 				messages,
 				latestMessage: lastIncomingMessage.data.text || `[No Text]`,
 				latestDate: lastIncomingMessage.sentAt || null,
+				botEnabled: !(recUser.bot && recUser.bot.disabled),
 			});
 
 		});
