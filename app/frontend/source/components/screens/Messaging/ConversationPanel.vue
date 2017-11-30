@@ -170,6 +170,8 @@
 
 		>.messages {
 			flex: 1;
+			padding: 1.00rem;
+			overflow-y: auto;
 		}
 
 		>.composer {
