@@ -212,6 +212,7 @@
 				width: 10.00rem;
 				height: 100%;
 				flex-shrink: 0;
+				@include user-select-off();
 
 				>.icon {
 					width: 2.00rem;
