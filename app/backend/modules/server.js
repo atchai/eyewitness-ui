@@ -66,20 +66,46 @@ function setupWebSocketServer (app, database) {
 		// Prepare threads.
 		const threadPromises = recUsers.map(async recUser => {
 
-			const recLatestMessage = await database.get(`Message`, {
+			// Get the last 100 messages for this user.
+			const recMessages = await database.find(`Message`, {
 				_user: recUser._id,
-				direction: `incoming`,
-				human: { $ne: false },
 			}, {
-				limit: 1,
+				limit: 100,
 				sort: { sentAt: `desc` },
 			});
+
+			// Order them with the oldest first, newest last.
+			recMessages.reverse();
+
+			// Prepare messages.
+			const messages = recMessages.map(recMessage =>
+				Object({
+					messageId: recMessage._id.toString(),
+					direction: recMessage.direction,
+					sentAt: recMessage.sentAt,
+					humanToHuman: recMessage.humanToHuman,
+					data: recMessage.data,
+				})
+			);
+
+			// Get the most recent incoming message.
+			let lastIncomingMessage;
+
+			for (let index = messages.length - 1; index >= 0; index++) {
+				const message = messages[index];
+
+				if (message.direction === `incoming`) {
+					lastIncomingMessage = message;
+					break;
+				}
+			}
 
 			return Object({
 				threadId: recUser._id,
 				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
-				latestMessage: recLatestMessage.data.text || `[No Text]`,
-				latestDate: recLatestMessage.sentAt,
+				messages,
+				latestMessage: lastIncomingMessage.data.text || `[No Text]`,
+				latestDate: lastIncomingMessage.sentAt || null,
 			});
 
 		});
