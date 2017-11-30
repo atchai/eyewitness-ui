@@ -36,6 +36,11 @@ function updateStorePropertyItem (state, property, payload) {
 		dictionary[key][payload.dataField] = payload.dataValue;
 	}
 
+	// Otherwise do we have a function we can execute?
+	else if (typeof payload.dataFunction === `function`) {
+		dictionary[key] = payload.dataFunction(dictionary[key], payload);
+	}
+
 	// Whoops!
 	else {
 		throw new Error(`You must specify either "data" or "dataField" and "dataValue" when updating store items.`);
