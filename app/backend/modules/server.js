@@ -91,7 +91,7 @@ function setupWebSocketServer (app, database) {
 			// Get the most recent incoming message.
 			let lastIncomingMessage;
 
-			for (let index = messages.length - 1; index >= 0; index++) {
+			for (let index = messages.length - 1; index >= 0; index--) {
 				const message = messages[index];
 
 				if (message.direction === `incoming`) {
