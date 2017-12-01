@@ -42,7 +42,7 @@
 		<div class="composer">
 			<div class="image" @click="selectTextInput"><img src="providerImageUrl"></div>
 			<div class="text-input" @click="selectTextInput"><textarea id="composer-text-input" placeholder="Write a reply..."></textarea></div>
-			<div class="actions">
+			<div class="tools">
 				<div class="icon">A</div>
 				<div class="icon">B</div>
 				<div class="icon">C</div>
@@ -259,7 +259,7 @@
 				}
 			}
 
-			>.actions {
+			>.tools {
 				display: flex;
 				align-items: center;
 				justify-content: center;
