@@ -18,6 +18,7 @@ function setupWebSocketClient (store) {
 		store.commit(`update-articles`, data.articles);
 		store.commit(`set-show-stories`, data.showStories);
 		store.commit(`update-welcome-messages`, data.welcomeMessages);
+		store.commit(`set-max-old-thread-messages`, data.maxOldThreadMessages);
 	});
 
 	return socket;
