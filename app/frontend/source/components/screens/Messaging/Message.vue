@@ -27,7 +27,7 @@
 							<a
 								v-for="button in element.buttons"
 								:key="button.label"
-								:href="button.payload"
+								:href="`${button.payload}?notrack=1`"
 								target="_blank"
 								>
 									{{ button.label }}
