@@ -314,6 +314,10 @@ function setupServerMiddleware (app) {
 		users: config.authentication.basicAuth.users,
 		challenge: true,
 		realm: packageJson.name,
+		unauthorizedResponse: req => JSON.stringify({
+			success: false,
+			error: (req.auth ? `Invalid credentials.` : `No credentials provided.`),
+		}),
 	}));
 
 }
