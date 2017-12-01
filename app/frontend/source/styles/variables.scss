@@ -17,10 +17,12 @@ $faded-color: #9B9B9B;
 
 @mixin scroll-vertical () {
 	overflow-y: auto;
+	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 }
 
 @mixin scroll-horizontal () {
 	overflow-x: auto;
+	scroll-behavior: smooth;
 	-webkit-overflow-scrolling: touch;
 }
