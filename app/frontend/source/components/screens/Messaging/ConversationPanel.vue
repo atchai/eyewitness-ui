@@ -121,7 +121,17 @@
 				document.getElementById(`composer-text-input`).focus();
 			},
 
+			scrollMessagesToBottom () {
+				const element = this.$el.querySelector(`.messages`);
+				element.scrollTop = element.scrollHeight;
+			},
+
 		},
+		/*
+		 * Always scroll messages to the bottom.
+		 */
+		mounted () { this.scrollMessagesToBottom(); },
+		updated () { this.scrollMessagesToBottom(); },
 		data: function () {
 			return {
 
