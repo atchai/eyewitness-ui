@@ -47,6 +47,7 @@ function setupWebSocketServer (app, database) {
 
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);
+	const maxOldThreadMessages = 100;
 
 	socketServer.on(`connection`, async socket => {
 
@@ -70,7 +71,7 @@ function setupWebSocketServer (app, database) {
 			const recMessages = await database.find(`Message`, {
 				_user: recUser._id,
 			}, {
-				limit: 100,
+				limit: maxOldThreadMessages,
 				sort: { sentAt: `asc` },
 			});
 
@@ -143,6 +144,7 @@ function setupWebSocketServer (app, database) {
 			articles: mapListToDictionary(articles, `articleId`),
 			showStories: true,
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
+			maxOldThreadMessages,
 		});
 
 		socket.on(`thread/set-bot-enabled`, async (data, reply) => {
