@@ -17,6 +17,7 @@ const basicAuth = require(`express-basic-auth`);
 const exphbs = require(`express-handlebars`);
 const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
+const WebhooksController = require(`../controllers/webhooks`);
 const middleware = require(`./middleware`);
 const { mapListToDictionary } = require(`./utilities`);
 
@@ -27,10 +28,10 @@ async function start (port, database) {
 
 	const app = express();
 
-	const webServer = setupWebSocketServer(app, database);
+	const { webServer, socketServer } = setupWebSocketServer(app, database);
 	setupServerViewEngine(app);
 	setupServerMiddleware(app);
-	setupServerRoutes(app);
+	setupServerRoutes(app, socketServer);
 	setupServerErrorHandling(app);
 
 	// Start listening on the HTTP web server.
@@ -258,7 +259,7 @@ function setupWebSocketServer (app, database) {
 
 	});
 
-	return webServer;
+	return { webServer, socketServer };
 
 }
 
@@ -325,7 +326,10 @@ function setupServerMiddleware (app) {
 /*
  * Add all of the routes.
  */
-function setupServerRoutes (app) {
+function setupServerRoutes (app, socketServer) {
+
+	const ctrlWebhooks = new WebhooksController(socketServer);
+	app.post(`/webhooks/new-message`, ctrlWebhooks.newMessage.bind(ctrlWebhooks));
 
 	const ctrlHome = new HomeController();
 	app.get(`*`, ctrlHome.renderHomePage.bind(ctrlHome));
