@@ -271,6 +271,7 @@
 				>.icon {
 					width: 2.00rem;
 					text-align: center;
+					visibility: hidden;
 				}
 			}
 		}
