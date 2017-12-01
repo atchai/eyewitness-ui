@@ -23,6 +23,11 @@
 		</div>
 
 		<div class="messages">
+			<div class="top-ruler">
+				<div class="rule"></div>
+				<div class="label">{{ numOldMessagesLoadedText }}</div>
+				<div class="rule"></div>
+			</div>
 			<Message
 				v-for="message in thread.messages"
 				:key="message.messageId"
@@ -62,6 +67,20 @@
 			thread () { return this.$store.state.threads[this.$route.params.threadId] || {}; },
 
 			providerImageUrl () { return ``; },
+
+			numOldMessagesLoadedText () {
+
+				const maxOldThreadMessages = this.$store.state.maxOldThreadMessages;
+				const loadedMaxMessages = (this.thread.messages && this.thread.messages.length >= maxOldThreadMessages);
+
+				if (loadedMaxMessages) {
+					return `Loaded ${maxOldThreadMessages} old message${maxOldThreadMessages !== 1 ? `s` : ``}`;
+				}
+				else {
+					return `Loaded all messages`;
+				}
+
+			},
 
 		},
 		methods: {
@@ -183,6 +202,28 @@
 			flex: 1;
 			padding: 1.00rem;
 			overflow-y: auto;
+
+			>.top-ruler {
+				display: flex;
+				align-items: center;
+				font-size: 0.70em;
+				color: #bbb;
+				text-transform: lowercase;
+				margin-top: 1.00rem;
+				margin-bottom: 3.00rem;
+				@include user-select-off();
+
+				>.rule {
+					flex: 1;
+					height: 1px;
+					background: #ccc;
+					margin: 0 1.00rem;
+				}
+
+				>.label {
+
+				}
+			}
 		}
 
 		>.composer {
