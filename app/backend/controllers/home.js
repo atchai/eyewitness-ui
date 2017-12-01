@@ -1,7 +1,7 @@
 'use strict';
 
 /*
- * CONTROLLER: HOME
+ * CONTROLLER: Home
  */
 
 const config = require(`config-ninja`).use(`eyewitness-ui`);

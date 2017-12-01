@@ -132,11 +132,6 @@
 		 */
 		mounted () { this.scrollMessagesToBottom(); },
 		updated () { this.scrollMessagesToBottom(); },
-		data: function () {
-			return {
-
-			};
-		},
 	};
 
 </script>
