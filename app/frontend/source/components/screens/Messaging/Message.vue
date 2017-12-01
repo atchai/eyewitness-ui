@@ -79,7 +79,6 @@
 				}
 
 				&.carousel {
-					overflow-x: auto;
 					border-radius: inherit;
 
 					>.inner {
@@ -87,8 +86,7 @@
 						flex-wrap: nowrap;
 						align-items: stretch;
 						border-radius: inherit;
-						overflow-x: auto;
-						-webkit-overflow-scrolling: touch;
+						@include scroll-vertical();
 
 						>.item {
 							display: flex;

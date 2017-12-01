@@ -201,7 +201,7 @@
 		>.messages {
 			flex: 1;
 			padding: 1.00rem;
-			overflow-y: auto;
+			@include scroll-horizontal();
 
 			>.top-ruler {
 				display: flex;
