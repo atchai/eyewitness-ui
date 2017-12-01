@@ -40,7 +40,7 @@
 		color: inherit;
 		cursor: pointer;
 
-		&.selected {
+		&.router-link-active {
 			background: #D8D7D7;
 		}
 
