@@ -106,8 +106,8 @@ function setupWebSocketServer (app, database) {
 				threadId: recUser._id,
 				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
 				messages,
-				latestMessage: lastIncomingMessage.data.text || `[No Text]`,
-				latestDate: lastIncomingMessage.sentAt || null,
+				latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
+				latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
 				botEnabled: !(recUser.bot && recUser.bot.disabled),
 			});
 
