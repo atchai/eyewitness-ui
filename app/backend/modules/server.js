@@ -90,8 +90,6 @@ function setupWebSocketServer (app, database) {
 				})
 			);
 
-			console.log(`messages`, JSON.stringify(messages, null, 2));
-
 			// Get the most recent incoming message.
 			let lastIncomingMessage;
 
