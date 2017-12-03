@@ -73,7 +73,7 @@ function setupWebSocketServer (app, database) {
 				_user: recUser._id,
 			}, {
 				limit: maxOldThreadMessages,
-				sort: { sentAt: `asc` },
+				sort: { sentAt: `desc` },
 			});
 
 			// Order them with the oldest first, newest last.
