@@ -26,6 +26,34 @@ export default new Vuex.Store({
 		'update-thread': (state, payload) => updateStorePropertyItem(state, `threads`, payload),
 		'update-threads': (state, payload) => state.threads = payload,
 		'remove-thread': (state, payload) => removeStorePropertyItem(state, `threads`, payload),
+		'add-thread-message': (state, payload) => {
+			updateStorePropertyItem(state, `threads`, {
+				key: payload.key,
+				dataFunction: thread => {
+
+					const newMessage = payload.newMessage;
+					const messages = Array.from(thread.messages);
+
+					messages.push({
+						messageId: newMessage.messageId,
+						direction: newMessage.direction,
+						humanToHuman: newMessage.humanToHuman,
+						sentAt: newMessage.sentAt,
+						data: newMessage.data,
+					});
+
+					thread.messages = messages;
+
+					if (newMessage.direction === `incoming` && newMessage.sentAt && newMessage.data.text) {
+						thread.latestDate = newMessage.sentAt;
+						thread.latestMessage = newMessage.data.text;
+					}
+
+					return thread;
+
+				},
+			});
+		},
 		'update-article': (state, payload) => updateStorePropertyItem(state, `articles`, payload),
 		'update-articles': (state, payload) => state.articles = payload,
 		'remove-article': (state, payload) => removeStorePropertyItem(state, `articles`, payload),
