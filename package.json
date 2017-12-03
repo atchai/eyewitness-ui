@@ -9,6 +9,7 @@
   "start-local": "concurrently \"npm run watch\" \"trawler --debug --stdall\"",
   "start-development": "npm install && npm run start-local",
   "start-production": "trawler --stdall --plain",
+  "deploy": "node ./scripts/deploy/deploy",
   "build": "npm run lint && webpack --display-error-details",
   "watch": "webpack --display-error-details --watch",
   "lint": "eslint --ext js,vue ./app/backend ./app/frontend/source",
