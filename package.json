@@ -25,6 +25,7 @@
   "express-handlebars": "^3.0.0",
   "eyewitness": "git+ssh://git@github.com/atchai/eyewitness.git",
   "moment": "^2.19.2",
+  "request-ninja": "^0.2.6",
   "socket.io": "^2.0.4",
   "trawler-std": "^0.3.7"
  },
