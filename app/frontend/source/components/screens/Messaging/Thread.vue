@@ -11,7 +11,7 @@
 		<div class="meta">
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
-				<div class="date">{{ date }}</div>
+				<div class="date">{{ date | formatDateAsRelative() }}</div>
 			</div>
 			<div class="message">{{ message }}</div>
 		</div>
@@ -86,7 +86,7 @@
 
 				>.date {
 					flex-shrink: 0;
-					width: 3.00rem;
+					width: 7.00rem;
 					color: $faded-color;
 					text-align: right;
 				}

@@ -12,7 +12,7 @@
 				:key="thread.threadId"
 				:threadId="thread.threadId"
 				:userFullName="thread.userFullName"
-				:date="thread.latestDate | formatDate('ddd')"
+				:date="thread.latestDate"
 				:message="thread.latestMessage"
 			/>
 		</div>
