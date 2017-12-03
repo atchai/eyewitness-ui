@@ -41,7 +41,14 @@
 
 		<div class="composer">
 			<div class="image" @click="selectTextInput"><img src="providerImageUrl"></div>
-			<div class="text-input" @click="selectTextInput"><textarea id="composer-text-input" placeholder="Write a reply..."></textarea></div>
+			<div class="text-input" @click="selectTextInput">
+				<textarea
+					id="composer-text-input"
+					placeholder="Write a reply..."
+					@keydown.enter.exact.prevent="sendMessage(thread.threadId, $event)"
+					>
+				</textarea>
+			</div>
 			<div class="tools">
 				<div class="icon">A</div>
 				<div class="icon">B</div>
@@ -56,6 +63,7 @@
 
 <script>
 
+	import ObjectId from 'bson-objectid';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import Message from './Message';
 
@@ -124,6 +132,22 @@
 			scrollMessagesToBottom () {
 				const element = this.$el.querySelector(`.messages`);
 				element.scrollTop = element.scrollHeight;
+			},
+
+			sendMessage (threadId, event) {
+
+				// No message so nothing to do.
+				const messageText = event.target.value.trim();
+				if (!messageText) { return; }
+
+				event.target.value = ``;
+
+				getSocket().emit(
+					`thread/send-message`,
+					{ threadId, messageText },
+					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
+				);
+
 			},
 
 		},
