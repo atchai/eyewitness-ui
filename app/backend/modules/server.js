@@ -15,6 +15,7 @@ const cookieParser = require(`cookie-parser`);
 const express = require(`express`);
 const basicAuth = require(`express-basic-auth`);
 const exphbs = require(`express-handlebars`);
+const RequestNinja = require(`request-ninja`);
 const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
 const WebhooksController = require(`../controllers/webhooks`);
@@ -164,7 +165,32 @@ function setupWebSocketServer (app, database) {
 		});
 
 		socket.on(`thread/send-message`, async (data, reply) => {
-			console.log(`Thread Send Message`, data);
+
+			const hippocampUrl = config.hippocamp.url;
+
+			const req = new RequestNinja(hippocampUrl, {
+				timeout: (1000 * 30),
+				returnResponseObject: true,
+			});
+
+			const res = await req.postJson({
+				fromAdmin: true,
+				messages: [{
+					userId: data.threadId,
+					channelName: `facebook`,
+					direction: `outgoing`,
+					text: data.messageText,
+				}],
+			});
+
+			if (res.statusCode !== 200) {
+				throw new Error(`Non 200 HTTP status code "${res.statusCode}" returned by Hippocamp.`);
+			}
+
+			if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
+
+			return reply({ success: true });
+
 		});
 
 		socket.on(`article/set-published`, async (data, reply) => {
