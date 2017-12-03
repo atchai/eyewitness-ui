@@ -1,7 +1,6 @@
 {
 	"server": {
-		"port": 7000,
-		"externalUri": "XXX"
+		"port": 5002
 	},
 	"authentication": {
 		"cookie": {
