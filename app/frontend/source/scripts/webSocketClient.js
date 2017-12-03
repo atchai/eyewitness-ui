@@ -21,6 +21,26 @@ function setupWebSocketClient (store) {
 		store.commit(`set-max-old-thread-messages`, data.maxOldThreadMessages);
 	});
 
+	socket.on(`thread/new-message`, data => {
+
+		const messages = Array.from(store.state.threads[data.threadId].messages);
+
+		messages.push({
+			messageId: data.message.messageId,
+			direction: data.message.direction,
+			humanToHuman: data.message.humanToHuman,
+			sentAt: data.message.sentAt,
+			data: data.message.data,
+		});
+
+		store.commit(`update-thread`, {
+			key: data.threadId,
+			dataField: `messages`,
+			dataValue: messages,
+		});
+
+	});
+
 	return socket;
 
 }

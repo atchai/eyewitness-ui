@@ -21,13 +21,16 @@ module.exports = class WebhooksController {
 		const userId = req.body.userId;
 		const message = req.body.message;
 
-		console.log(`userId`, userId);
-		console.log(`message`, message);
-
 		// Alert all clients to this incoming message.
 		this.socketServer.emit(`thread/new-message`, {
 			threadId: userId,
-			message,
+			message: {
+				messageId: message.messageId,
+				direction: message.direction,
+				sentAt: message.sentAt,
+				humanToHuman: message.humanToHuman,
+				data: message,
+			},
 		});
 
 		return res.json({
