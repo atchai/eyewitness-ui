@@ -23,20 +23,33 @@ function setupWebSocketClient (store) {
 
 	socket.on(`thread/new-message`, data => {
 
-		const messages = Array.from(store.state.threads[data.threadId].messages);
-
-		messages.push({
-			messageId: data.message.messageId,
-			direction: data.message.direction,
-			humanToHuman: data.message.humanToHuman,
-			sentAt: data.message.sentAt,
-			data: data.message.data,
-		});
+		const threadId = data.threadId;
+		const newMessage = data.message;
 
 		store.commit(`update-thread`, {
-			key: data.threadId,
-			dataField: `messages`,
-			dataValue: messages,
+			key: threadId,
+			dataFunction: thread => {
+
+				const messages = Array.from(thread.messages);
+
+				messages.push({
+					messageId: newMessage.messageId,
+					direction: newMessage.direction,
+					humanToHuman: newMessage.humanToHuman,
+					sentAt: newMessage.sentAt,
+					data: newMessage.data,
+				});
+
+				thread.messages = messages;
+
+				if (newMessage.direction === `incoming` && newMessage.sentAt && newMessage.data.text) {
+					thread.latestDate = newMessage.sentAt;
+					thread.latestMessage = newMessage.data.text;
+				}
+
+				return thread;
+
+			},
 		});
 
 	});
