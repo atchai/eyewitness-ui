@@ -55,7 +55,7 @@ function setupWebSocketServer (app, database) {
 
 		// Query the database.
 		const recUsers = await database.find(`User`, {}, {
-			sort: { 'conversation.lastMessageSentAt': `desc` },
+			sort: { 'conversation.lastMessageSentAt': `asc` },
 		});
 
 		const recArticles = await database.find(`Article`, {}, {
