@@ -72,6 +72,7 @@
 			flex: 1;
 			margin: 0.35rem 0;
 			font-size: 0.80rem;
+			min-width: 0;
 
 			>.details {
 				display: flex;
@@ -82,6 +83,9 @@
 				>.name {
 					flex: 1;
 					font-weight: bold;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
 				}
 
 				>.date {
