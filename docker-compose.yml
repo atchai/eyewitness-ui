@@ -21,7 +21,7 @@ services:
       - ./package.json:/src/package.json
       - ./package-lock.json:/src/package-lock.json
     ports:
-      - "7000:7000"
+      - "5002:5002"
     networks:
       - eyewitness_eyewitness-network
     command: npm run start-development
