@@ -17,6 +17,6 @@
 		}
 	},
 	"hippocampServer": {
-		"baseUrl": "https://eyewitness.eu.ngrok.io:5000"
+		"baseUrl": "http://bot:5000"
 	}
 }

@@ -17,10 +17,6 @@
 			}
 		}
 	},
-	"hippocamp": {
-		"url": "http://bot:5000/api/adapter/web",
-		"accessToken": "BO4AHX72iCGqQIbdbu62q08PQHOCmHoRPlkxkv4Y"
-	},
 	"build": {
 		"webpackStats": "errors-only",
 		"useStyleLoader": false,
@@ -29,5 +25,9 @@
 		"compressHtml": true,
 		"compressCss": true,
 		"compressJs": true
+	},
+	"hippocampServer": {
+		"baseUrl": null,
+		"accessToken": "BO4AHX72iCGqQIbdbu62q08PQHOCmHoRPlkxkv4Y"
 	}
 }

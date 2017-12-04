@@ -166,7 +166,7 @@ function setupWebSocketServer (app, database) {
 
 		socket.on(`thread/send-message`, async (data, reply) => {
 
-			const hippocampUrl = config.hippocamp.url;
+			const hippocampUrl = `${config.hippocampServer.baseUrl}/api/adapter/web`;
 
 			const req = new RequestNinja(hippocampUrl, {
 				timeout: (1000 * 30),
