@@ -40,5 +40,8 @@ RUN rm -f ./ssl/id_eyewitness /root/.ssh/id_eyewitness.pub
 # Add all our application files.
 COPY app /src/app
 
+# Build the application frontend.
+RUN npm run build
+
 # Run the application.
 CMD ["npm", "run", "start-production"]
