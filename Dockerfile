@@ -32,6 +32,7 @@ WORKDIR /src
 COPY .npmrc /src/.npmrc
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
+COPY webpack.config.js /src/webpack.config.js
 RUN npm install --dev
 
 # Remove SSH keys (they aren't wanted in production).
@@ -45,6 +46,7 @@ RUN npm run build
 
 # Remove any non-production dependencies.
 RUN npm install --production
+RUN rm -f /src/webpack.config.js
 
 # Run the application.
 CMD ["npm", "run", "start-production"]
