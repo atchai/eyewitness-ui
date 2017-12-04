@@ -1,4 +1,7 @@
 {
+	"server": {
+		"externalUri": "https://eyewitness-battabox-production.atchai.com:9002"
+	},
 	"databases": {
 		"mongo": {
 			"connectionString": "mongodb://user-vlaPTZzebcXnaZFlHniE:fSlnOao4tEYJnq29aCGWuhJGMMsjEZ44bh5n5eqdeAuCAp9bgbnwng5db0fd@ds153165-a0.mlab.com:53165,ds153165-a1.mlab.com:53165/eyewitness-production-battabox?replicaSet=rs-ds153165"

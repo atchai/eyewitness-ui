@@ -1,4 +1,7 @@
 {
+	"server": {
+		"externalUri": "http://localhost:5002"
+	},
 	"build": {
 		"webpackStats": "verbose",
 		"useStyleLoader": true,

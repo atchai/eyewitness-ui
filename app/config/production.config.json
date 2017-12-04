@@ -1,6 +1,7 @@
 {
 	"server": {
-		"port": 5002
+		"port": 5002,
+		"externalUri": null
 	},
 	"authentication": {
 		"cookie": {
