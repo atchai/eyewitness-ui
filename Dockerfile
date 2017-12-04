@@ -32,7 +32,7 @@ WORKDIR /src
 COPY .npmrc /src/.npmrc
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
-RUN npm install --production
+RUN npm install --dev
 
 # Remove SSH keys (they aren't wanted in production).
 RUN rm -f ./ssl/id_eyewitness /root/.ssh/id_eyewitness.pub
@@ -42,6 +42,9 @@ COPY app /src/app
 
 # Build the application frontend.
 RUN npm run build
+
+# Remove any non-production dependencies.
+RUN npm install --production
 
 # Run the application.
 CMD ["npm", "run", "start-production"]
