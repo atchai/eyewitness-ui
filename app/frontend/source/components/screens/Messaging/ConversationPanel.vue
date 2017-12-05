@@ -142,6 +142,14 @@
 
 				event.target.value = ``;
 
+				// Disable the bot in the UI.
+				this.$store.commit(`update-thread`, {
+					key: threadId,
+					dataField: `botEnabled`,
+					dataValue: false,
+				});
+
+				// Send the message (also disables the bot).
 				getSocket().emit(
 					`thread/send-message`,
 					{ threadId, messageText },
