@@ -15,12 +15,12 @@ const cookieParser = require(`cookie-parser`);
 const express = require(`express`);
 const basicAuth = require(`express-basic-auth`);
 const exphbs = require(`express-handlebars`);
-const RequestNinja = require(`request-ninja`);
 const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
+const EventsController = require(`../controllers/events`);
 const WebhooksController = require(`../controllers/webhooks`);
 const middleware = require(`./middleware`);
-const { mapListToDictionary } = require(`./utilities`);
+const { handleSocketEvent } = require(`./utilities`);
 
 /*
  * Starts the server on the given port.
@@ -49,237 +49,20 @@ function setupWebSocketServer (app, database) {
 
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);
-	const maxOldThreadMessages = 100;
 
 	socketServer.on(`connection`, async socket => {
 
-		// Query the database.
-		const recUsers = await database.find(`User`, {}, {
-			sort: { 'conversation.lastMessageSentAt': `asc` },
-		});
+		const ctrlEvents = new EventsController(database, socket);
 
-		const recArticles = await database.find(`Article`, {}, {
-			sort: { articleDate: `desc` },
-		});
+		await ctrlEvents.emitWelcomeEvent();
 
-		const recWelcomeMessages = await database.find(`WelcomeMessage`, {}, {
-			sort: { weight: `asc` },
-		});
-
-		// Prepare threads.
-		const threadPromises = recUsers.map(async recUser => {
-
-			// Get the last 100 messages for this user.
-			const recMessages = await database.find(`Message`, {
-				_user: recUser._id,
-			}, {
-				limit: maxOldThreadMessages,
-				sort: { sentAt: `desc` },
-			});
-
-			// Order them with the oldest first, newest last.
-			recMessages.reverse();
-
-			// Prepare messages.
-			const messages = recMessages.map(recMessage =>
-				Object({
-					messageId: recMessage._id.toString(),
-					direction: recMessage.direction,
-					sentAt: recMessage.sentAt,
-					humanToHuman: recMessage.humanToHuman,
-					data: recMessage.data,
-				})
-			);
-
-			// Get the most recent incoming message.
-			let lastIncomingMessage;
-
-			for (let index = messages.length - 1; index >= 0; index--) {
-				const message = messages[index];
-
-				if (message.direction === `incoming`) {
-					lastIncomingMessage = message;
-					break;
-				}
-			}
-
-			return Object({
-				threadId: recUser._id,
-				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
-				messages,
-				latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
-				latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
-				botEnabled: !(recUser.bot && recUser.bot.disabled),
-			});
-
-		});
-
-		const threads = await Promise.all(threadPromises);
-
-		// Order threads by last incoming message.
-		threads.sort((threadA, threadB) =>
-			(threadA.latestDate > threadB.latestDate ? +1 : (threadA.latestDate < threadB.latestDate ? -1 : 0))
-		);
-
-		// Prepare articles.
-		const articles = recArticles.map(recArticle => Object({
-			articleId: recArticle._id,
-			title: recArticle.title,
-			articleUrl: recArticle.articleUrl,
-			articleDate: recArticle.articleDate,
-			priority: (typeof recArticle.isPriority !== `undefined` ? recArticle.isPriority : false),
-			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
-		}));
-
-		// Prepare welcome messages.
-		const welcomeMessages = recWelcomeMessages.map(recWelcomeMessage => Object({
-			welcomeMessageId: recWelcomeMessage._id,
-			text: recWelcomeMessage.text,
-			weight: recWelcomeMessage.weight,
-		}));
-
-		// Push data to client.
-		socket.emit(`welcome`, {
-			threads: mapListToDictionary(threads, `threadId`),
-			articles: mapListToDictionary(articles, `articleId`),
-			showStories: true,
-			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
-			maxOldThreadMessages,
-		});
-
-		socket.on(`thread/set-bot-enabled`, async (data, reply) => {
-
-			try {
-
-				await database.update(`User`, data.threadId, {
-					bot: { disabled: !data.enabled },
-				});
-
-			}
-			catch (err) {
-				return reply({ success: false, error: err.message });
-			}
-
-			return reply({ success: true });
-
-		});
-
-		socket.on(`thread/send-message`, async (data, reply) => {
-
-			const hippocampUrl = `${config.hippocampServer.baseUrl}/api/adapter/web`;
-
-			const req = new RequestNinja(hippocampUrl, {
-				timeout: (1000 * 30),
-				returnResponseObject: true,
-			});
-
-			const res = await req.postJson({
-				fromAdmin: true,
-				messages: [{
-					userId: data.threadId,
-					channelName: `facebook`,
-					direction: `outgoing`,
-					text: data.messageText,
-				}],
-			});
-
-			if (res.statusCode !== 200) {
-				throw new Error(`Non 200 HTTP status code "${res.statusCode}" returned by Hippocamp.`);
-			}
-
-			if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
-
-			return reply({ success: true });
-
-		});
-
-		socket.on(`article/set-published`, async (data, reply) => {
-
-			try {
-
-				// Make sure the client passed in safe values.
-				const articleId = String(data.articleId);
-				const isPublished = Boolean(data.published);
-
-				await database.update(`Article`, articleId, { isPublished });
-
-			}
-			catch (err) {
-				return reply({ success: false, error: err.message });
-			}
-
-			return reply({ success: true });
-
-		});
-
-		socket.on(`breaking-news/send-message`, async (data, reply) => {
-			console.log(`Breaking News Send Message`, data);
-		});
-
-		socket.on(`settings/set-bot-enabled`, async (data, reply) => {
-
-			try {
-
-				// Make sure the client passed in safe values.
-				const isBotEnabled = Boolean(data.enabled);
-
-				const recSettings = await database.find(`Settings`, {})[0];
-				await database.update(`Settings`, recSettings, { isBotEnabled });
-
-			}
-			catch (err) {
-				return reply({ success: false, error: err.message });
-			}
-
-			return reply({ success: true });
-
-		});
-
-		socket.on(`welcome-message/update`, async (data, reply) => {
-
-			try {
-
-				// Get the welcome message to update.
-				let recWelcomeMessage = await database.get(`WelcomeMessage`, { _id: data.welcomeMessageId });
-
-				// If no welcome message exists lets create a new one.
-				if (!recWelcomeMessage) {
-					recWelcomeMessage = {
-						_id: data.welcomeMessageId,
-					};
-				}
-
-				// Update the record.
-				recWelcomeMessage.text = data.text;
-				recWelcomeMessage.weight = data.weight;
-
-				// Update the database.
-				await database.update(`WelcomeMessage`, data.welcomeMessageId, recWelcomeMessage, { upsert: true });
-
-			}
-			catch (err) {
-				return reply({ success: false, error: err.message });
-			}
-
-			return reply({ success: true });
-
-		});
-
-		socket.on(`welcome-message/remove`, async (data, reply) => {
-
-			try {
-
-				// Update the database.
-				await database.delete(`WelcomeMessage`, data.welcomeMessageId);
-
-			}
-			catch (err) {
-				return reply({ success: false, error: err.message });
-			}
-
-			return reply({ success: true });
-
-		});
+		socket.on(`thread/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSetBotEnabled));
+		socket.on(`thread/send-message`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSendMessage));
+		socket.on(`article/set-published`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.articleSetPublished));
+		socket.on(`breaking-news/send-message`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.breakingNewsSendMessage));
+		socket.on(`settings/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.settingsSetBotEnabled));
+		socket.on(`welcome-message/update`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.welcomeMessageUpdate));
+		socket.on(`welcome-message/remove`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.welcomeMessageRemove));
 
 	});
 

@@ -17,6 +17,7 @@
 			}
 		}
 	},
+	"maxOldThreadMessages": 100,
 	"build": {
 		"webpackStats": "errors-only",
 		"useStyleLoader": false,
