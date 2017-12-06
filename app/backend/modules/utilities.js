@@ -31,6 +31,7 @@ async function handleSocketEvent (handler, data, reply) {
 
 	}
 	catch (err) {
+		console.error(`Socket Handler Error:\n`, err.stack); // eslint-disable-line no-console
 		return reply({ success: false, error: err.message });
 	}
 
