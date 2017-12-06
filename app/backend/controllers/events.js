@@ -125,8 +125,12 @@ module.exports = class EventsController {
 	 */
 	async threadSetBotEnabled (data, reply) {
 
-		await this.database.update(`User`, data.threadId, {
-			bot: { disabled: !data.enabled },
+		// Make sure the client passed in safe values.
+		const threadId = String(data.threadId);
+		const botDisabled = Boolean(!data.enabled);
+
+		await this.database.update(`User`, threadId, {
+			'bot.disabled': botDisabled,
 		});
 
 		return reply({ success: true });
@@ -138,6 +142,10 @@ module.exports = class EventsController {
 	 */
 	async threadSendMessage (data, reply) {
 
+		// Make sure the client passed in safe values.
+		const threadId = String(data.threadId);
+		const text = String(data.messageText);
+
 		const req = new RequestNinja(this.hippocampUrl, {
 			timeout: (1000 * 30),
 			returnResponseObject: true,
@@ -146,10 +154,10 @@ module.exports = class EventsController {
 		const res = await req.postJson({
 			fromAdmin: true,
 			messages: [{
-				userId: data.threadId,
+				userId: threadId,
 				channelName: `facebook`,
 				direction: `outgoing`,
-				text: data.messageText,
+				text,
 			}],
 		});
 
@@ -172,6 +180,7 @@ module.exports = class EventsController {
 		const articleId = String(data.articleId);
 		const isPublished = Boolean(data.published);
 
+		// Update the database.
 		await this.database.update(`Article`, articleId, { isPublished });
 
 		return reply({ success: true });
@@ -197,6 +206,7 @@ module.exports = class EventsController {
 		// Make sure the client passed in safe values.
 		const isBotEnabled = Boolean(data.enabled);
 
+		// Update the database.
 		const recSettings = await this.database.find(`Settings`, {})[0];
 		await this.database.update(`Settings`, recSettings, { isBotEnabled });
 
@@ -209,22 +219,27 @@ module.exports = class EventsController {
 	 */
 	async welcomeMessageUpdate (data, reply) {
 
+		// Make sure the client passed in safe values.
+		const welcomeMessageId = String(data.welcomeMessageId);
+		const text = String(data.text);
+		const weight = Number(data.weight);
+
 		// Get the welcome message to update.
-		let recWelcomeMessage = await this.database.get(`WelcomeMessage`, { _id: data.welcomeMessageId });
+		let recWelcomeMessage = await this.database.get(`WelcomeMessage`, { _id: welcomeMessageId });
 
 		// If no welcome message exists lets create a new one.
 		if (!recWelcomeMessage) {
 			recWelcomeMessage = {
-				_id: data.welcomeMessageId,
+				_id: welcomeMessageId,
 			};
 		}
 
 		// Update the record.
-		recWelcomeMessage.text = data.text;
-		recWelcomeMessage.weight = data.weight;
+		recWelcomeMessage.text = text;
+		recWelcomeMessage.weight = weight;
 
 		// Update the database.
-		await this.database.update(`WelcomeMessage`, data.welcomeMessageId, recWelcomeMessage, { upsert: true });
+		await this.database.update(`WelcomeMessage`, welcomeMessageId, recWelcomeMessage, { upsert: true });
 
 		return reply({ success: true });
 
@@ -235,8 +250,11 @@ module.exports = class EventsController {
 	 */
 	async welcomeMessageRemove (data, reply) {
 
+		// Make sure the client passed in safe values.
+		const welcomeMessageId = String(data.welcomeMessageId);
+
 		// Update the database.
-		await this.database.delete(`WelcomeMessage`, data.welcomeMessageId);
+		await this.database.delete(`WelcomeMessage`, welcomeMessageId);
 
 		return reply({ success: true });
 
