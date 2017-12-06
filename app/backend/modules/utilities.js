@@ -21,8 +21,25 @@ function mapListToDictionary (list, keyField) {
 }
 
 /*
+ * Calls the given handler method to process the incoming socket event, and catches any resulting errors.
+ */
+async function handleSocketEvent (handler, data, reply) {
+
+	try {
+
+		await handler(data, reply);
+
+	}
+	catch (err) {
+		return reply({ success: false, error: err.message });
+	}
+
+}
+
+/*
  * Export.
  */
 module.exports = {
 	mapListToDictionary,
+	handleSocketEvent,
 };
