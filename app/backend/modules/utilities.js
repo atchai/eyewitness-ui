@@ -27,7 +27,8 @@ async function handleSocketEvent (handler, data, reply) {
 
 	try {
 
-		await handler(data, reply);
+		// Call the handler function and pass down the scope of its controller.
+		await handler.call(this, data, reply);
 
 	}
 	catch (err) {
