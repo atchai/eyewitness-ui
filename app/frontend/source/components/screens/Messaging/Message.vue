@@ -37,6 +37,10 @@
 				<video v-if="data.attachments[0].type === `video`" controls playsinline class="media-attachment">
 					<source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" />
 				</video>
+				<div v-if="data.attachments[0].type === `location`" class="media-attachment location">
+					<strong>User sent a location:</strong><br>
+					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
+				</div>
 			</div>
 
 		</div>
@@ -163,6 +167,10 @@
 					>video.media-attachment {
 						min-height: 5.00rem;
 						max-height: 23.00rem;
+					}
+
+					>.media-attachment.location {
+						padding: 0.50rem 0.75rem;
 					}
 				}
 			}
