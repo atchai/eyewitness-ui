@@ -28,7 +28,8 @@ function enforceHttps (req, res, next) {
  * Handles errors in any of the routes.
  */
 function handleErrors (err, req, res, next) { // eslint-disable-line no-unused-vars
-	return res.status(500).end(`A fatal error occured: "${err}".`);
+	console.error(`A controller error occured:\n`, err.stack); // eslint-disable-line no-console
+	return res.status(500).end(`A controller error occured: "${err}".`);
 }
 
 /*
