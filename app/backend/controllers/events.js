@@ -142,6 +142,23 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Update the "adminLastReadMessages" property on the user's document.
+	 */
+	async threadSetAdminReadDate (data, reply) {
+
+		// Make sure the client passed in safe values.
+		const threadId = String(data.threadId);
+		const lastRead = moment(data.lastRead).toDate();
+
+		await this.database.update(`User`, threadId, {
+			'appData.adminLastReadMessages': lastRead,
+		});
+
+		return reply({ success: true });
+
+	}
+
+	/*
 	 * Send an admin message to the given user.
 	 */
 	async threadSendMessage (data, reply) {
