@@ -65,6 +65,7 @@ export default new Vuex.Store({
 		'set-max-old-thread-messages': (state, payload) => state.maxOldThreadMessages = payload,
 	},
 	getters: {
+		hasThread: state => threadId => Boolean(state.threads[threadId]),
 		threadSet: state => Object.values(state.threads),
 		articleSet: state => Object.values(state.articles),
 		welcomeMessageSet: state => Object.values(state.welcomeMessages),
