@@ -45,9 +45,9 @@ export default new Vuex.Store({
 
 					thread.messages = messages;
 
-					if (newMessage.direction === `incoming` && newMessage.sentAt && newMessage.data.text) {
-						thread.latestDate = newMessage.sentAt;
-						thread.latestMessage = newMessage.data.text;
+					if (payload.latestDate && payload.latestMessage) {
+						thread.latestDate = payload.latestDate;
+						thread.latestMessage = payload.latestMessage;
 					}
 
 					return thread;
