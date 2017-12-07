@@ -25,7 +25,27 @@ function setupWebSocketClient (store) {
 
 		const threadId = data.threadId;
 		const newMessage = data.message;
+		const hasThread = store.getters.hasThread(threadId);
 
+		// If we have not spoken to this user before we must ask the backend for the full thread data.
+		if (!hasThread) {
+			return socket.emit(
+				`thread/pull`,
+				{ threadId },
+				resData => {
+
+					if (!resData || !resData.success) { return alert(`There was a problem loading in a new thread.`); }
+
+					store.commit(`add-thread`, {
+						key: threadId,
+						data: resData.thread,
+					});
+
+				}
+			);
+		}
+
+		// Add the new message to the thread.
 		store.commit(`add-thread-message`, {
 			key: threadId,
 			newMessage,

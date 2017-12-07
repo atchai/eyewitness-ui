@@ -23,6 +23,7 @@ export default new Vuex.Store({
 		maxOldThreadMessages: null,
 	},
 	mutations: {
+		'add-thread': (state, payload) => addStorePropertyItem(state, `threads`, payload),
 		'update-thread': (state, payload) => updateStorePropertyItem(state, `threads`, payload),
 		'update-threads': (state, payload) => state.threads = payload,
 		'remove-thread': (state, payload) => removeStorePropertyItem(state, `threads`, payload),
