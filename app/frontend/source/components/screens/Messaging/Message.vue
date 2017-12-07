@@ -28,6 +28,17 @@
 				</div>
 			</div>
 
+			<div v-if="data.attachments && data.attachments[0]" class="inner attachments">
+				<audio v-if="data.attachments[0].type === `audio`" controls class="media-attachment">
+					<!-- <source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" /> -->
+					<source :src="data.attachments[0].remoteUrl" />
+				</audio>
+				<img v-if="data.attachments[0].type === `image`" :src="data.attachments[0].remoteUrl" class="media-attachment" />
+				<video v-if="data.attachments[0].type === `video`" controls playsinline class="media-attachment">
+					<source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" />
+				</video>
+			</div>
+
 		</div>
 	</div>
 
@@ -56,7 +67,7 @@
 			overflow: hidden;
 
 			>.inner {
-				display: inline-flex;
+				display: flex;
 				border-radius: inherit;
 				width: 100%;
 
@@ -136,6 +147,22 @@
 								}
 							}
 						}
+					}
+				}
+
+				&.attachments {
+					border-radius: inherit;
+
+					>.media-attachment {
+						display: block;
+						min-width: 5.00rem;
+						max-width: 50.00rem;
+					}
+
+					>img.media-attachment,
+					>video.media-attachment {
+						min-height: 5.00rem;
+						max-height: 20.00rem;
 					}
 				}
 			}
