@@ -8,7 +8,7 @@ const config = require(`config-ninja`).use(`eyewitness-ui`);
 
 const moment = require(`moment`);
 const RequestNinja = require(`request-ninja`);
-const { mapListToDictionary } = require(`../modules/utilities`);
+const { mapListToDictionary, getLatestMessageInformation } = require(`../modules/utilities`);
 
 module.exports = class EventsController {
 
@@ -131,20 +131,7 @@ module.exports = class EventsController {
 
 		// Construct the thread.
 		const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
-		let latestMessage = `[No Text]`;
-		let latestDate = null;
-
-		if (lastIncomingMessage) {
-			latestDate = lastIncomingMessage.sentAt;
-
-			if (lastIncomingMessage.data.text) {
-				latestMessage = lastIncomingMessage.data.text;
-			}
-			else if (lastIncomingMessage.data.attachments && lastIncomingMessage.data.attachments.length) {
-				const type = lastIncomingMessage.data.attachments[0].type;
-				latestMessage = `[${type[0].toUpperCase()}${type.substr(1)} Attachment]`;
-			}
-		}
+		const { latestMessage, latestDate } = getLatestMessageInformation(lastIncomingMessage);
 
 		return Object({
 			threadId: recUser._id,
