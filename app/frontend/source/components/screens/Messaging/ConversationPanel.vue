@@ -64,6 +64,7 @@
 <script>
 
 	import ObjectId from 'bson-objectid';
+	import moment from 'moment';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import Message from './Message';
 
@@ -73,6 +74,8 @@
 		computed: {
 
 			thread () { return this.$store.state.threads[this.$route.params.threadId] || {}; },
+
+			isThread () { return Boolean(this.$store.state.threads[this.$route.params.threadId]); },
 
 			providerImageUrl () { return ``; },
 
@@ -158,12 +161,44 @@
 
 			},
 
+			markAsReadByAdmin () {
+
+				// If there's no thread ID present then we don't have anything to mark as read (yet).
+				const threadId = (this.thread && this.thread.threadId);
+				if (!threadId) { return; }
+
+				const lastRead = moment().toISOString();
+				const lastSent = moment(this.$store.state.threads[threadId].latestDate).toISOString();
+
+				console.log(`lastRead`, lastRead);
+				console.log(`lastSent`, lastSent);
+
+				this.$store.commit(`update-thread`, {
+					key: threadId,
+					dataField: `adminLastReadMessages`,
+					dataValue: lastRead,
+				});
+
+				getSocket().emit(
+					`thread/set-admin-read-date`,
+					{ threadId, lastRead },
+					data => (!data || !data.success ? alert(`There was a problem marking the thread as read.`) : void (0))
+				);
+
+			}
+
 		},
 		/*
 		 * Always scroll messages to the bottom.
 		 */
-		mounted () { this.scrollMessagesToBottom(); },
-		updated () { this.scrollMessagesToBottom(); },
+		mounted () {
+			this.markAsReadByAdmin();
+			this.scrollMessagesToBottom();
+		},
+		updated () {
+			this.markAsReadByAdmin();
+			this.scrollMessagesToBottom();
+		},
 	};
 
 </script>
