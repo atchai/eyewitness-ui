@@ -13,25 +13,16 @@
 
 			<div v-if="data.carousel" class="inner carousel">
 				<div class="inner">
-					<div
-						v-for="element in data.carousel.elements"
-						:key="element.label"
-						class="item"
-					>
+					<div v-for="element in data.carousel.elements" :key="element.label" class="item">
 						<div class="image" :style="`background-image: url('${element.imageUrl}')`"></div>
 						<div class="info">
 							<div class="label">{{ element.label }}</div>
 							<div class="text">{{ element.text }}</div>
 						</div>
 						<div class="buttons">
-							<a
-								v-for="button in element.buttons"
-								:key="button.label"
-								:href="`${button.payload}?notrack=1`"
-								target="_blank"
-								>
-									{{ button.label }}
-								</a>
+							<a v-for="button in element.buttons" :key="button.label" :href="`${button.payload}?notrack=1`" target="_blank">
+								{{ button.label }}
+							</a>
 						</div>
 					</div>
 				</div>
