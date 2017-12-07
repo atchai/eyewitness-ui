@@ -4,7 +4,7 @@
 
 <template>
 
-	<router-link :to="`/messaging/thread/${threadId}`" :class="{ 'thread': true, 'unread': unread }">
+	<router-link :to="`/messaging/thread/${threadId}`" :class="{ 'thread': true, 'unread': unread, 'unread': unread }">
 		<div class="image">
 			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
 		</div>
@@ -13,7 +13,10 @@
 				<div class="name">{{ userFullName }}</div>
 				<div class="date">{{ date | formatDateAsRelative() }}</div>
 			</div>
-			<div class="message">{{ message }}</div>
+			<div class="message">
+				<div class="text">{{ message }}</div>
+				<div class="unread-container"><div class="orb"></div></div>
+			</div>
 		</div>
 	</router-link>
 
@@ -22,8 +25,20 @@
 
 <script>
 
+	import moment from 'moment';
+
 	export default {
-		props: [`threadId`, `imageUrl`, `userFullName`, `date`, `message`, `unread`],
+		props: [`threadId`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
+		computed: {
+
+			unread () {
+				const adminLastReadMessages = moment(this.adminLastReadMessages);
+				const lastMessage = moment(this.date);
+
+				return adminLastReadMessages.isBefore(lastMessage);
+			},
+
+		},
 	};
 
 </script>
@@ -46,6 +61,14 @@
 
 		&:hover {
 			background: #E8E7E7;
+		}
+
+		&.unread {
+			.unread-container {
+				>.orb {
+					visibility: visible !important;
+				}
+			}
 		}
 
 		>.image {
@@ -97,10 +120,32 @@
 			}
 
 			>.message {
+				display: flex;
+				align-items: stretch;
 				flex: 1;
 				min-height: 0;
-				color: $panel-grey-text;
-				overflow: hidden;
+
+				>.text {
+					flex: 1;
+					color: $panel-grey-text;
+					overflow: hidden;
+				}
+
+				>.unread-container {
+					display: flex;
+					width: 1.00rem;
+					flex-shrink: 0;
+
+					>.orb {
+						width: 0.50rem;
+						height: 0.50rem;
+						border-radius: 50%;
+						background: #0583FF;
+						margin: auto;
+						margin-right: 0;
+						visibility: hidden;
+					}
+				}
 			}
 		}
 	}

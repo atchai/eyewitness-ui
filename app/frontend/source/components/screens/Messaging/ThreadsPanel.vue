@@ -14,6 +14,7 @@
 				:userFullName="thread.userFullName"
 				:date="thread.latestDate"
 				:message="thread.latestMessage"
+				:adminLastReadMessages="thread.adminLastReadMessages"
 			/>
 		</div>
 	</div>
