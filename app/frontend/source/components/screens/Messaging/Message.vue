@@ -70,6 +70,15 @@
 			max-width: 85%;
 			overflow: hidden;
 
+			a {
+				color: #0683FF !important;
+				text-decoration: underline;
+
+				&:hover {
+					opacity: 0.80;
+				}
+			}
+
 			>.inner {
 				display: flex;
 				border-radius: inherit;
@@ -182,6 +191,10 @@
 			>.bubble {
 				background: #0683FF;
 				color: $font-color-light;
+
+				a {
+					color: white !important;
+				}
 			}
 		}
 	}
