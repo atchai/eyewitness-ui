@@ -131,13 +131,27 @@ module.exports = class EventsController {
 
 		// Construct the thread.
 		const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+		let latestMessage = `[No Text]`;
+		let latestDate = null;
+
+		if (lastIncomingMessage) {
+			latestDate = lastIncomingMessage.sentAt;
+
+			if (lastIncomingMessage.data.text) {
+				latestMessage = lastIncomingMessage.data.text;
+			}
+			else if (lastIncomingMessage.data.attachments && lastIncomingMessage.data.attachments.length) {
+				const type = lastIncomingMessage.data.attachments[0].type;
+				latestMessage = `[${type[0].toUpperCase()}${type.substr(1)} Attachment]`;
+			}
+		}
 
 		return Object({
 			threadId: recUser._id,
 			userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
 			messages,
-			latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
-			latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
+			latestMessage,
+			latestDate,
 			botEnabled: !(recUser.bot && recUser.bot.disabled),
 			adminLastReadMessages: adminLastReadMessages.toISOString(),
 		});
