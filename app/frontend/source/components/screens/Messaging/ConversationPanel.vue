@@ -168,10 +168,6 @@
 				if (!threadId) { return; }
 
 				const lastRead = moment().toISOString();
-				const lastSent = moment(this.$store.state.threads[threadId].latestDate).toISOString();
-
-				console.log(`lastRead`, lastRead);
-				console.log(`lastSent`, lastSent);
 
 				this.$store.commit(`update-thread`, {
 					key: threadId,
