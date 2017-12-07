@@ -6,6 +6,7 @@
 
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
+const moment = require(`moment`);
 const RequestNinja = require(`request-ninja`);
 const { mapListToDictionary } = require(`../modules/utilities`);
 
@@ -74,6 +75,8 @@ module.exports = class EventsController {
 				}
 			}
 
+			const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+
 			return Object({
 				threadId: recUser._id,
 				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
@@ -81,6 +84,7 @@ module.exports = class EventsController {
 				latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
 				latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
 				botEnabled: !(recUser.bot && recUser.bot.disabled),
+				adminLastReadMessages: adminLastReadMessages.toISOString(),
 			});
 
 		});
