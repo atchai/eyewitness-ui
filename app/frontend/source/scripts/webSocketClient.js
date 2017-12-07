@@ -49,6 +49,8 @@ function setupWebSocketClient (store) {
 		store.commit(`add-thread-message`, {
 			key: threadId,
 			newMessage,
+			latestDate: data.latestDate,
+			latestMessage: data.latestMessage,
 		});
 
 	});
