@@ -56,6 +56,7 @@ function setupWebSocketServer (app, database) {
 
 		await ctrlEvents.emitWelcomeEvent();
 
+		socket.on(`thread/pull`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadPull));
 		socket.on(`thread/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSetBotEnabled));
 		socket.on(`thread/set-admin-read-date`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSetAdminReadDate));
 		socket.on(`thread/send-message`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSendMessage));

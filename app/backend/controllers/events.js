@@ -76,6 +76,21 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Send a full thread to the client that's requesting it.
+	 */
+	async threadPull (data, reply) {
+
+		// Make sure the client passed in safe values.
+		const threadId = String(data.threadId);
+
+		const recUser = await this.database.get(`User`, { _id: threadId });
+		const thread = await this.buildThread(recUser);
+
+		return reply({ success: true, thread });
+
+	}
+
+	/*
 	 * Constructs a thread object that we can send to clients.
 	 */
 	async buildThread (recUser) {
