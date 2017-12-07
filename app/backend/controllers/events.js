@@ -39,56 +39,7 @@ module.exports = class EventsController {
 		});
 
 		// Prepare threads.
-		const threadPromises = recUsers.map(async recUser => {
-
-			// Get the last 100 messages for this user.
-			const recMessages = await this.database.find(`Message`, {
-				_user: recUser._id,
-			}, {
-				limit: config.maxOldThreadMessages,
-				sort: { sentAt: `desc` },
-			});
-
-			// Order them with the oldest first, newest last.
-			recMessages.reverse();
-
-			// Prepare messages.
-			const messages = recMessages.map(recMessage =>
-				Object({
-					messageId: recMessage._id.toString(),
-					direction: recMessage.direction,
-					sentAt: recMessage.sentAt,
-					humanToHuman: recMessage.humanToHuman,
-					data: recMessage.data,
-				})
-			);
-
-			// Get the most recent incoming message.
-			let lastIncomingMessage;
-
-			for (let index = messages.length - 1; index >= 0; index--) {
-				const message = messages[index];
-
-				if (message.direction === `incoming`) {
-					lastIncomingMessage = message;
-					break;
-				}
-			}
-
-			const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
-
-			return Object({
-				threadId: recUser._id,
-				userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
-				messages,
-				latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
-				latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
-				botEnabled: !(recUser.bot && recUser.bot.disabled),
-				adminLastReadMessages: adminLastReadMessages.toISOString(),
-			});
-
-		});
-
+		const threadPromises = recUsers.map(recUser => this.buildThread(recUser));
 		const threads = await Promise.all(threadPromises);
 
 		// Order threads by last incoming message.
@@ -120,6 +71,60 @@ module.exports = class EventsController {
 			showStories: true,
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
 			maxOldThreadMessages: config.maxOldThreadMessages,
+		});
+
+	}
+
+	/*
+	 * Constructs a thread object that we can send to clients.
+	 */
+	async buildThread (recUser) {
+
+		// Get the last 100 messages for this user.
+		const recMessages = await this.database.find(`Message`, {
+			_user: recUser._id,
+		}, {
+			limit: config.maxOldThreadMessages,
+			sort: { sentAt: `desc` },
+		});
+
+		// Order them with the oldest first, newest last.
+		recMessages.reverse();
+
+		// Prepare messages.
+		const messages = recMessages.map(recMessage =>
+			Object({
+				messageId: recMessage._id.toString(),
+				direction: recMessage.direction,
+				sentAt: recMessage.sentAt,
+				humanToHuman: recMessage.humanToHuman,
+				data: recMessage.data,
+			})
+		);
+
+		// Get the most recent incoming message.
+		let lastIncomingMessage;
+
+		for (let index = messages.length - 1; index >= 0; index--) {
+			const message = messages[index];
+
+			if (message.direction === `incoming`) {
+				lastIncomingMessage = message;
+				break;
+			}
+		}
+
+		// Construct the thread.
+		const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+
+		return Object({
+			threadId: recUser._id,
+			userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
+			messages,
+			latestMessage: (lastIncomingMessage && lastIncomingMessage.data.text) || `[No Text]`,
+			latestDate: (lastIncomingMessage && lastIncomingMessage.sentAt) || null,
+			botEnabled: !(recUser.bot && recUser.bot.disabled),
+			adminLastReadMessages: adminLastReadMessages.toISOString(),
 		});
 
 	}
