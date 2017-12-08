@@ -37,10 +37,15 @@ function setupWebSocketClient (store) {
 
 					if (!resData || !resData.success) { return alert(`There was a problem loading in a new thread.`); }
 
+					// Add the new thread.
 					store.commit(`add-thread`, {
 						key: threadId,
 						data: resData.thread,
 					});
+
+					// Do we need to sort the threads?
+					const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
+					store.commit(`update-threads`, newThreadsDictionary);
 
 				}
 			);
