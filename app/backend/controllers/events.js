@@ -27,10 +27,12 @@ module.exports = class EventsController {
 		// Query the database.
 		const recUsers = await this.database.find(`User`, {}, {
 			sort: { 'conversation.lastMessageSentAt': `desc` },
+			limit: config.maxListSize,
 		});
 
 		const recArticles = await this.database.find(`Article`, {}, {
 			sort: { articleDate: `desc` },
+			limit: config.maxListSize,
 		});
 
 		const recWelcomeMessages = await this.database.find(`WelcomeMessage`, {}, {
@@ -64,7 +66,7 @@ module.exports = class EventsController {
 			articles: mapListToDictionary(articles, `articleId`),
 			showStories: true,
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
-			maxOldThreadMessages: config.maxOldThreadMessages,
+			maxOldThreadMessages: config.maxListSize,
 		});
 
 	}
