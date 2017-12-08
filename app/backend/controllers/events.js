@@ -22,26 +22,70 @@ module.exports = class EventsController {
 	/*
 	 * Sends the welcome event to a new client.
 	 */
-	async emitWelcomeEvent (socket) {
+	async emitWelcomeEvent (socket, pageMainTab) {
 
-		// Query the database.
+		const output = {
+			showStories: true,
+			maxOldThreadMessages: config.maxListSize,
+		};
+
+		// Only get the data relevent for the page the user is was when their socket connected.
+		switch (pageMainTab) {
+
+			case `messaging`: {
+				const { threads } = await this.getWelcomeDataForMessagingTab();
+				output.threads = threads;
+				break;
+			}
+
+			case `stories`: {
+				const { articles } = await this.getWelcomeDataForStoriesTab();
+				output.articles = articles;
+				break;
+			}
+
+			case `settings`: {
+				const { welcomeMessages } = await this.getWelcomeDataForSettingsTab();
+				output.welcomeMessages = welcomeMessages;
+				break;
+			}
+
+		}
+
+		// Push data to client.
+		socket.emit(`welcome`, output);
+
+	}
+
+	/*
+	 * Amalgamates the data for the messaging tab.
+	 */
+	async getWelcomeDataForMessagingTab () {
+
 		const recUsers = await this.database.find(`User`, {}, {
 			sort: { 'conversation.lastMessageSentAt': `desc` },
 			limit: config.maxListSize,
 		});
 
+		// Prepare threads.
+		const threadPromises = recUsers.map(recUser => this.buildThread(recUser));
+		const threads = await Promise.all(threadPromises);
+
+		return {
+			threads: mapListToDictionary(threads, `threadId`),
+		};
+
+	}
+
+	/*
+	 * Amalgamates the data for the stories tab.
+	 */
+	async getWelcomeDataForStoriesTab () {
+
 		const recArticles = await this.database.find(`Article`, {}, {
 			sort: { articleDate: `desc` },
 			limit: config.maxListSize,
 		});
-
-		const recWelcomeMessages = await this.database.find(`WelcomeMessage`, {}, {
-			sort: { weight: `asc` },
-		});
-
-		// Prepare threads.
-		const threadPromises = recUsers.map(recUser => this.buildThread(recUser));
-		const threads = await Promise.all(threadPromises);
 
 		// Prepare articles.
 		const articles = recArticles.map(recArticle => Object({
@@ -53,6 +97,21 @@ module.exports = class EventsController {
 			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
 		}));
 
+		return {
+			articles: mapListToDictionary(articles, `articleId`),
+		};
+
+	}
+
+	/*
+	 * Amalgamates the data for the settings tab.
+	 */
+	async getWelcomeDataForSettingsTab () {
+
+		const recWelcomeMessages = await this.database.find(`WelcomeMessage`, {}, {
+			sort: { weight: `asc` },
+		});
+
 		// Prepare welcome messages.
 		const welcomeMessages = recWelcomeMessages.map(recWelcomeMessage => Object({
 			welcomeMessageId: recWelcomeMessage._id,
@@ -60,14 +119,9 @@ module.exports = class EventsController {
 			weight: recWelcomeMessage.weight,
 		}));
 
-		// Push data to client.
-		socket.emit(`welcome`, {
-			threads: mapListToDictionary(threads, `threadId`),
-			articles: mapListToDictionary(articles, `articleId`),
-			showStories: true,
+		return {
 			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
-			maxOldThreadMessages: config.maxListSize,
-		});
+		};
 
 	}
 

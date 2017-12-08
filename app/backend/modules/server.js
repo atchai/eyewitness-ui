@@ -53,7 +53,9 @@ function setupWebSocketServer (app, database) {
 
 	socketServer.on(`connection`, async socket => {
 
-		await ctrlEvents.emitWelcomeEvent(socket);
+		const [, pageMainTab] = socket.handshake.headers.referer.match(/^https?:\/\/[^/]+\/([a-z0-9\-]+)\/?/i) || [];
+
+		await ctrlEvents.emitWelcomeEvent(socket, pageMainTab.toLowerCase());
 
 		socket.on(
 			`thread/pull`,

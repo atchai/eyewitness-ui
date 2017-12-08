@@ -15,11 +15,14 @@ function setupWebSocketClient (store) {
 	socket = socketClient.connect(process.env.SERVER_URI);
 
 	socket.on(`welcome`, data => {
-		store.commit(`update-threads`, data.threads);
-		store.commit(`update-articles`, data.articles);
+
 		store.commit(`set-show-stories`, data.showStories);
-		store.commit(`update-welcome-messages`, data.welcomeMessages);
 		store.commit(`set-max-old-thread-messages`, data.maxOldThreadMessages);
+
+		if (data.threads) { store.commit(`update-threads`, data.threads); }
+		if (data.articles) { store.commit(`update-articles`, data.articles); }
+		if (data.welcomeMessages) { store.commit(`update-welcome-messages`, data.welcomeMessages); }
+
 	});
 
 	socket.on(`thread/new-message`, data => {
