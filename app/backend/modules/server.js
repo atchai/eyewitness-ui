@@ -55,15 +55,42 @@ function setupWebSocketServer (app, database) {
 
 		await ctrlEvents.emitWelcomeEvent(socket);
 
-		socket.on(`thread/pull`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadPull));
-		socket.on(`thread/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetBotEnabled));
-		socket.on(`thread/set-admin-read-date`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetAdminReadDate));
-		socket.on(`thread/send-message`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage));
-		socket.on(`article/set-published`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished));
-		socket.on(`breaking-news/send-message`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.breakingNewsSendMessage));
-		socket.on(`settings/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled));
-		socket.on(`welcome-message/update`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate));
-		socket.on(`welcome-message/remove`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove));
+		socket.on(
+			`thread/pull`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadPull)
+		);
+		socket.on(
+			`thread/set-bot-enabled`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetBotEnabled)
+		);
+		socket.on(
+			`thread/set-admin-read-date`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetAdminReadDate)
+		);
+		socket.on(
+			`thread/send-message`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage)
+		);
+		socket.on(
+			`article/set-published`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
+		);
+		socket.on(
+			`breaking-news/send-message`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.breakingNewsSendMessage)
+		);
+		socket.on(
+			`settings/set-bot-enabled`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
+		);
+		socket.on(
+			`welcome-message/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate)
+		);
+		socket.on(
+			`welcome-message/remove`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove)
+		);
 
 	});
 
