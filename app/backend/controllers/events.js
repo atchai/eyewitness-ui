@@ -12,10 +12,9 @@ const { mapListToDictionary, getLatestMessageInformation } = require(`../modules
 
 module.exports = class EventsController {
 
-	constructor (database, socket) {
+	constructor (database) {
 
 		this.database = database;
-		this.socket = socket;
 		this.hippocampUrl = `${config.hippocampServer.baseUrl}/api/adapter/web`;
 
 	}
@@ -23,7 +22,7 @@ module.exports = class EventsController {
 	/*
 	 * Sends the welcome event to a new client.
 	 */
-	async emitWelcomeEvent () {
+	async emitWelcomeEvent (socket) {
 
 		// Query the database.
 		const recUsers = await this.database.find(`User`, {}, {
@@ -60,7 +59,7 @@ module.exports = class EventsController {
 		}));
 
 		// Push data to client.
-		this.socket.emit(`welcome`, {
+		socket.emit(`welcome`, {
 			threads: mapListToDictionary(threads, `threadId`),
 			articles: mapListToDictionary(articles, `articleId`),
 			showStories: true,
@@ -73,7 +72,7 @@ module.exports = class EventsController {
 	/*
 	 * Send a full thread to the client that's requesting it.
 	 */
-	async threadPull (data, reply) {
+	async threadPull (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const threadId = String(data.threadId);
@@ -143,7 +142,7 @@ module.exports = class EventsController {
 	/*
 	 * Update the "bot.disabled" property on the user's document.
 	 */
-	async threadSetBotEnabled (data, reply) {
+	async threadSetBotEnabled (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const threadId = String(data.threadId);
@@ -160,7 +159,7 @@ module.exports = class EventsController {
 	/*
 	 * Update the "adminLastReadMessages" property on the user's document.
 	 */
-	async threadSetAdminReadDate (data, reply) {
+	async threadSetAdminReadDate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const threadId = String(data.threadId);
@@ -177,7 +176,7 @@ module.exports = class EventsController {
 	/*
 	 * Send an admin message to the given user.
 	 */
-	async threadSendMessage (data, reply) {
+	async threadSendMessage (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const threadId = String(data.threadId);
@@ -211,7 +210,7 @@ module.exports = class EventsController {
 	/*
 	 * Update the "isPublished" property of the given article.
 	 */
-	async articleSetPublished (data, reply) {
+	async articleSetPublished (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const articleId = String(data.articleId);
@@ -227,7 +226,7 @@ module.exports = class EventsController {
 	/*
 	 * Send a broadcast message to all users.
 	 */
-	async breakingNewsSendMessage (data, reply) {
+	async breakingNewsSendMessage (socket, data, reply) {
 
 		console.log(`Breaking News Send Message`, data);
 
@@ -238,7 +237,7 @@ module.exports = class EventsController {
 	/*
 	 * Allow the bot to be turned on/off for all users.
 	 */
-	async settingsSetBotEnabled (data, reply) {
+	async settingsSetBotEnabled (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const isBotEnabled = Boolean(data.enabled);
@@ -254,7 +253,7 @@ module.exports = class EventsController {
 	/*
 	 * Upserts a welcome message.
 	 */
-	async welcomeMessageUpdate (data, reply) {
+	async welcomeMessageUpdate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const welcomeMessageId = String(data.welcomeMessageId);
@@ -285,7 +284,7 @@ module.exports = class EventsController {
 	/*
 	 * Upserts a welcome message.
 	 */
-	async welcomeMessageRemove (data, reply) {
+	async welcomeMessageRemove (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const welcomeMessageId = String(data.welcomeMessageId);

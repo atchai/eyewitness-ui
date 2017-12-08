@@ -23,12 +23,12 @@ function mapListToDictionary (list, keyField) {
 /*
  * Calls the given handler method to process the incoming socket event, and catches any resulting errors.
  */
-async function handleSocketEvent (handler, data, reply) {
+async function handleSocketEvent (socket, handler, data, reply) {
 
 	try {
 
 		// Call the handler function and pass down the scope of its controller.
-		await handler.call(this, data, reply);
+		await handler.call(this, socket, data, reply);
 
 	}
 	catch (err) {

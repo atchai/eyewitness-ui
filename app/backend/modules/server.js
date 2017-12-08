@@ -49,22 +49,21 @@ function setupWebSocketServer (app, database) {
 
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);
+	const ctrlEvents = new EventsController(database);
 
 	socketServer.on(`connection`, async socket => {
 
-		const ctrlEvents = new EventsController(database, socket);
+		await ctrlEvents.emitWelcomeEvent(socket);
 
-		await ctrlEvents.emitWelcomeEvent();
-
-		socket.on(`thread/pull`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadPull));
-		socket.on(`thread/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSetBotEnabled));
-		socket.on(`thread/set-admin-read-date`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSetAdminReadDate));
-		socket.on(`thread/send-message`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.threadSendMessage));
-		socket.on(`article/set-published`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.articleSetPublished));
-		socket.on(`breaking-news/send-message`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.breakingNewsSendMessage));
-		socket.on(`settings/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.settingsSetBotEnabled));
-		socket.on(`welcome-message/update`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.welcomeMessageUpdate));
-		socket.on(`welcome-message/remove`, handleSocketEvent.bind(ctrlEvents, ctrlEvents.welcomeMessageRemove));
+		socket.on(`thread/pull`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadPull));
+		socket.on(`thread/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetBotEnabled));
+		socket.on(`thread/set-admin-read-date`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetAdminReadDate));
+		socket.on(`thread/send-message`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage));
+		socket.on(`article/set-published`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished));
+		socket.on(`breaking-news/send-message`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.breakingNewsSendMessage));
+		socket.on(`settings/set-bot-enabled`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled));
+		socket.on(`welcome-message/update`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate));
+		socket.on(`welcome-message/remove`, handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove));
 
 	});
 
