@@ -27,7 +27,7 @@ module.exports = class EventsController {
 
 		// Query the database.
 		const recUsers = await this.database.find(`User`, {}, {
-			sort: { 'conversation.lastMessageSentAt': `asc` },
+			sort: { 'conversation.lastMessageSentAt': `desc` },
 		});
 
 		const recArticles = await this.database.find(`Article`, {}, {
@@ -41,11 +41,6 @@ module.exports = class EventsController {
 		// Prepare threads.
 		const threadPromises = recUsers.map(recUser => this.buildThread(recUser));
 		const threads = await Promise.all(threadPromises);
-
-		// Order threads by last incoming message.
-		threads.sort((threadA, threadB) =>
-			(threadA.latestDate > threadB.latestDate ? +1 : (threadA.latestDate < threadB.latestDate ? -1 : 0))
-		);
 
 		// Prepare articles.
 		const articles = recArticles.map(recArticle => Object({
