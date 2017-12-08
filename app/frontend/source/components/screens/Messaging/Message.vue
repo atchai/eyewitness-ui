@@ -150,7 +150,7 @@
 									display: block;
 									height: 2.50rem;
 									line-height: 2.50rem;
-									color: #2E8EFF;
+									color: #2E8EFF !important;
 									text-align: center;
 									text-decoration: none;
 									border-top: 1px solid $panel-border-color;
