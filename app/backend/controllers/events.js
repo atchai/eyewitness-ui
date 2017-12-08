@@ -33,19 +33,19 @@ module.exports = class EventsController {
 		switch (pageMainTab) {
 
 			case `messaging`: {
-				const { threads } = await this.getWelcomeDataForMessagingTab();
+				const { threads } = await this.getDataForMessagingTab();
 				output.threads = threads;
 				break;
 			}
 
 			case `stories`: {
-				const { articles } = await this.getWelcomeDataForStoriesTab();
+				const { articles } = await this.getDataForStoriesTab();
 				output.articles = articles;
 				break;
 			}
 
 			case `settings`: {
-				const { welcomeMessages } = await this.getWelcomeDataForSettingsTab();
+				const { welcomeMessages } = await this.getDataForSettingsTab();
 				output.welcomeMessages = welcomeMessages;
 				break;
 			}
@@ -60,7 +60,7 @@ module.exports = class EventsController {
 	/*
 	 * Amalgamates the data for the messaging tab.
 	 */
-	async getWelcomeDataForMessagingTab () {
+	async getDataForMessagingTab () {
 
 		const recUsers = await this.database.find(`User`, {}, {
 			sort: { 'conversation.lastMessageSentAt': `desc` },
@@ -80,7 +80,7 @@ module.exports = class EventsController {
 	/*
 	 * Amalgamates the data for the stories tab.
 	 */
-	async getWelcomeDataForStoriesTab () {
+	async getDataForStoriesTab () {
 
 		const recArticles = await this.database.find(`Article`, {}, {
 			sort: { articleDate: `desc` },
@@ -106,7 +106,7 @@ module.exports = class EventsController {
 	/*
 	 * Amalgamates the data for the settings tab.
 	 */
-	async getWelcomeDataForSettingsTab () {
+	async getDataForSettingsTab () {
 
 		const recWelcomeMessages = await this.database.find(`WelcomeMessage`, {}, {
 			sort: { weight: `asc` },
