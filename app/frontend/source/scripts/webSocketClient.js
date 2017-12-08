@@ -3,6 +3,7 @@
  */
 
 import socketClient from 'socket.io-client';
+import { sortObjectPropertiesByKey } from './utilities';
 
 let socket;
 
@@ -52,6 +53,12 @@ function setupWebSocketClient (store) {
 			latestDate: data.latestDate,
 			latestMessage: data.latestMessage,
 		});
+
+		// Do we need to sort the threads?
+		if (newMessage.direction === `incoming`) {
+			const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
+			store.commit(`update-threads`, newThreadsDictionary);
+		}
 
 	});
 

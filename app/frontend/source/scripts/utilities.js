@@ -2,6 +2,7 @@
  * UTILITIES
  */
 
+import deepSort from 'deep-sort';
 import Vue from 'vue';
 
 /*
@@ -56,10 +57,31 @@ function removeStorePropertyItem (state, property, payload) {
 }
 
 /*
+ *
+ */
+function sortObjectPropertiesByKey (existingDictionary, keyProperty, sortProperty, sortDirection) {
+
+	// Convert
+	const dictionaryAsArray = Object.values(existingDictionary);
+	const newDictionary = {};
+
+	deepSort(dictionaryAsArray, sortProperty, sortDirection);
+
+	dictionaryAsArray.forEach(item => {
+		const keyValue = item[keyProperty];
+		newDictionary[keyValue] = item;
+	});
+
+	return newDictionary;
+
+}
+
+/*
  * Export.
  */
 export {
 	addStorePropertyItem,
 	updateStorePropertyItem,
 	removeStorePropertyItem,
+	sortObjectPropertiesByKey,
 };
