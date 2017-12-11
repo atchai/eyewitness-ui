@@ -126,6 +126,14 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Returns the tab data for the messaging tab.
+	 */
+	async messagingPullTabData (socket, data, reply) {
+		const { threads } = await this.getDataForMessagingTab();
+		return reply({ success: true, threads });
+	}
+
+	/*
 	 * Send a full thread to the client that's requesting it.
 	 */
 	async threadPull (socket, data, reply) {
@@ -261,6 +269,14 @@ module.exports = class EventsController {
 
 		return reply({ success: true });
 
+	}
+
+	/*
+	 * Returns the tab data for the stories tab.
+	 */
+	async articlesPullTabData (socket, data, reply) {
+		const { articles } = await this.getDataForStoriesTab();
+		return reply({ success: true, articles });
 	}
 
 	/*
