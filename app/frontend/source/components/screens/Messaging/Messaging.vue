@@ -7,7 +7,7 @@
 	<div :class="{ screen: true, loading: (loadingState > 0) }">
 		<ScreenLoader />
 		<ThreadsPanel />
-		<router-view></router-view>
+		<router-view :providerPhotoUrl="providerPhotoUrl"></router-view>
 	</div>
 
 </template>
@@ -21,6 +21,7 @@
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
 	export default {
+		props: [`providerPhotoUrl`],
 		data: function () {
 			return {
 				loadingState: 0,

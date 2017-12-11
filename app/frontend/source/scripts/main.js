@@ -41,8 +41,16 @@ document.ondragstart = event => {
  * Create a new Vue application instance.
  */
 new Vue({
+
 	el: `#app`, // eslint-disable-line id-length
 	router,
 	store,
-	render: createElement => createElement(App), // We must use render because we don't bundle in the Vue compiler.
+
+	// We must use render because we don't bundle in the Vue compiler.
+	render: createElement => createElement(App, {
+		props: {
+			providerPhotoUrl: process.env.PROVIDER_PHOTO_URL,
+		},
+	}),
+
 });

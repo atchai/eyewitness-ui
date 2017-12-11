@@ -40,7 +40,9 @@
 		</div>
 
 		<div class="composer">
-			<div class="image" @click="selectTextInput"><img src="providerImageUrl"></div>
+			<div class="image-container" @click="selectTextInput">
+				<div class="image" :style="`background-image: url('${providerPhotoUrl}');`"></div>
+			</div>
 			<div class="text-input" @click="selectTextInput">
 				<textarea
 					id="composer-text-input"
@@ -69,7 +71,7 @@
 	import Message from './Message';
 
 	export default {
-		props: [`botEnabled`],
+		props: [`providerPhotoUrl`, `botEnabled`],
 		components: { Message },
 		computed: {
 
@@ -299,16 +301,20 @@
 			height: 8.00rem;
 			border-top: 1px solid $panel-border-color;
 
-			>.image {
+			>.image-container {
 				display: flex;
 				flex-shrink: 0;
 				width: 5.00rem;
 				cursor: text;
 
-				>img {
-					width: 4.00rem;
-					max-height: 4.00rem;
+				>.image {
+					width: 3.00rem;
+					height: 3.00rem;
 					margin: auto;
+					border-radius: 0.25rem;
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
 				}
 			}
 

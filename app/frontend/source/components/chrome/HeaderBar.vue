@@ -25,7 +25,7 @@
 			<div class="item provider">
 				<a href="/logout"><span>Logout</span></a>
 			</div>
-			<div class="item logo"></div>
+			<div class="item logo" :style="`background-image: url('${providerPhotoUrl}');`"></div>
 		</aside>
 
 	</header>
@@ -35,11 +35,7 @@
 <script>
 
 	export default {
-		data: function () {
-			return {
-
-			};
-		},
+		props: [`providerPhotoUrl`],
 	};
 
 </script>
@@ -94,8 +90,10 @@
 			>.logo {
 				flex: auto;
 				width: 3.00rem;
-				background: purple;
 				border-right: 0;
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
 			}
 		}
 	}
