@@ -36,6 +36,7 @@
 		data: function () {
 			return {
 				loadingState: 0,
+				loadingRoute: ``,
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, Story },
@@ -48,7 +49,7 @@
 
 			fetchTabData () {
 
-				setLoadingStarted(this);
+				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
 					`articles/pull-tab-data`,

@@ -39,6 +39,7 @@
 		data: function () {
 			return {
 				loadingState: 0,
+				loadingRoute: ``,
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, WelcomeMessage },
@@ -51,7 +52,7 @@
 
 			fetchTabData () {
 
-				setLoadingStarted(this);
+				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
 					`settings/pull-tab-data`,

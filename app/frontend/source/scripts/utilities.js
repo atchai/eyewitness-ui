@@ -84,12 +84,23 @@ function setLoadingStarted (cmp, delay = 50) {
 	cmp.isLoading = false;
 	cmp.loadingState = 0;
 
+	// Find the top level route path that matched.
+	const matchedTopRoute = cmp.$route.matched[0].path.toLowerCase();
+
+	// If we are already on the top level route path lets not fetch again.
+	if (cmp.loadingRoute === matchedTopRoute) { return false; }
+	cmp.loadingRoute = matchedTopRoute;
+
+	// Show the loader after a short delay to avoid flashing.
 	setTimeout(() => {
 		if (cmp.loadingState === 0) {
 			cmp.isLoading = true;
 			cmp.loadingState = 1;
 		}
 	}, delay);
+
+	// Allow the tab to fetch the data it needs.
+	return true;
 
 }
 

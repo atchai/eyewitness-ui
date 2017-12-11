@@ -24,6 +24,7 @@
 		data: function () {
 			return {
 				loadingState: 0,
+				loadingRoute: ``,
 			};
 		},
 		components: { ConversationPanel, ScreenLoader, ThreadsPanel },
@@ -31,7 +32,7 @@
 
 			fetchTabData () {
 
-				setLoadingStarted(this);
+				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
 					`messaging/pull-tab-data`,
