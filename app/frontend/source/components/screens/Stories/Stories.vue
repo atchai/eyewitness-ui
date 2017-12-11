@@ -5,6 +5,7 @@
 <template>
 
 	<div :class="{ screen: true, padding: true, 'scroll-vertical': true, loading: (loadingState > 0) }">
+		<ScreenLoader />
 		<ScreenHeader
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
@@ -26,6 +27,7 @@
 
 	import { mapGetters } from 'vuex';
 	import ScreenHeader from '../../common/ScreenHeader';
+	import ScreenLoader from '../../common/ScreenLoader';
 	import Story from './Story';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
@@ -36,7 +38,7 @@
 				loadingState: 0,
 			};
 		},
-		components: { ScreenHeader, Story },
+		components: { ScreenHeader, ScreenLoader, Story },
 		computed: {
 			...mapGetters([
 				`articleSet`,

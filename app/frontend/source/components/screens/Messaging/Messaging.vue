@@ -5,6 +5,7 @@
 <template>
 
 	<div :class="{ screen: true, loading: (loadingState > 0) }">
+		<ScreenLoader />
 		<ThreadsPanel />
 		<router-view></router-view>
 	</div>
@@ -13,8 +14,9 @@
 
 <script>
 
-	import ThreadsPanel from './ThreadsPanel';
 	import ConversationPanel from './ConversationPanel';
+	import ThreadsPanel from './ThreadsPanel';
+	import ScreenLoader from '../../common/ScreenLoader';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
@@ -24,7 +26,7 @@
 				loadingState: 0,
 			};
 		},
-		components: { ThreadsPanel, ConversationPanel },
+		components: { ConversationPanel, ScreenLoader, ThreadsPanel },
 		methods: {
 
 			fetchTabData () {
