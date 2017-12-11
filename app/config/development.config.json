@@ -16,6 +16,7 @@
 			"connectionString": "mongodb://mongodb:27017/eyewitness"
 		}
 	},
+	"facebookPageId": "amitygazette",
 	"hippocampServer": {
 		"baseUrl": "http://bot:5000"
 	}

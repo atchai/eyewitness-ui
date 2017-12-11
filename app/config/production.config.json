@@ -17,6 +17,7 @@
 			}
 		}
 	},
+	"facebookPageId": null,
 	"maxListSize": 100,
 	"build": {
 		"webpackStats": "errors-only",

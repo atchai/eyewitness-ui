@@ -7,6 +7,7 @@
 			"connectionString": "mongodb://user-ta4aZuir670o1I0eqAqM:cCbA0FFHgpekblnosVVw9VepyZPYuACoaMDlA19UAtjSt2BfDFDbuiFGtyFC@ds153285-a0.mlab.com:53285,ds153285-a1.mlab.com:53285/eyewitness-production-sabc?replicaSet=rs-ds153285"
 		}
 	},
+	"facebookPageId": "SABCNewsOnline",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-sabc-production.atchai.com:9000"
 	}
