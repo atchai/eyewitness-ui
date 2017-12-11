@@ -167,8 +167,6 @@
 
 					>.media-attachment {
 						display: block;
-						min-width: 5.00rem;
-						max-width: 50.00rem;
 					}
 
 					>img.media-attachment,
