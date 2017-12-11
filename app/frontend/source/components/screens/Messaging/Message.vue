@@ -7,7 +7,7 @@
 	<div :class="[`message`, direction]">
 		<div class="bubble">
 
-			<div v-if="data.text" class="inner text">
+			<div v-if="data.text && !(data.attachments && data.attachments.length)" class="inner text">
 				{{data.text}}
 			</div>
 
