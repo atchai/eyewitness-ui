@@ -148,6 +148,7 @@ module.exports = {
 			'process.env': {
 				NODE_ENV: JSON.stringify(config.env.id),
 				SERVER_URI: JSON.stringify(config.server.externalUri),
+				PROVIDER_PHOTO_URL: JSON.stringify(`https://graph.facebook.com/${config.facebookPageId}/picture?type=large`),
 			},
 		}),
 		new CleanWebpackPlugin([`./app/frontend/build/static`, `./app/frontend/build/views`], {
