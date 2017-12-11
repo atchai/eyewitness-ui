@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="{ screen: true, padding: true, loading: isLoading }">
+	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<ScreenLoader />
 		<ScreenHeader
 			title="Settings"
@@ -33,11 +33,12 @@
 	import ScreenLoader from '../../common/ScreenLoader';
 	import WelcomeMessage from './WelcomeMessage';
 	import { getSocket } from '../../../scripts/webSocketClient';
+	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
 	export default {
 		data: function () {
 			return {
-				isLoading: true,
+				loadingState: 0,
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, WelcomeMessage },
@@ -50,14 +51,14 @@
 
 			fetchTabData () {
 
-				this.isLoading = true;
+				setLoadingStarted(this);
 
 				getSocket().emit(
 					`settings/pull-tab-data`,
 					{},
 					resData => {
 
-						// this.isLoading = false;
+						setLoadingFinished(this);
 
 						if (!resData || !resData.success) { return alert(`There was a problem loading the settings tab.`); }
 
