@@ -82,6 +82,10 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.breakingNewsSendMessage)
 		);
 		socket.on(
+			`settings/pull-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData)
+		);
+		socket.on(
 			`settings/set-bot-enabled`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
 		);

@@ -291,6 +291,14 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Returns the tab data for the settings tab.
+	 */
+	async settingsPullTabData (socket, data, reply) {
+		const { welcomeMessages } = await this.getDataForSettingsTab();
+		return reply({ success: true, welcomeMessages });
+	}
+
+	/*
 	 * Allow the bot to be turned on/off for all users.
 	 */
 	async settingsSetBotEnabled (socket, data, reply) {
