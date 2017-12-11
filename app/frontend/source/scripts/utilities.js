@@ -77,6 +77,31 @@ function sortObjectPropertiesByKey (existingDictionary, keyProperty, sortPropert
 }
 
 /*
+ * Mark a component as currently loading.
+ */
+function setLoadingStarted (cmp, delay = 50) {
+
+	cmp.isLoading = false;
+	cmp.loadingState = 0;
+
+	setTimeout(() => {
+		if (cmp.loadingState === 0) {
+			cmp.isLoading = true;
+			cmp.loadingState = 1;
+		}
+	}, delay);
+
+}
+
+/*
+ * Mark a component as finished loaded.
+ */
+function setLoadingFinished (cmp) {
+	cmp.isLoading = false;
+	cmp.loadingState = -1;
+}
+
+/*
  * Export.
  */
 export {
@@ -84,4 +109,6 @@ export {
 	updateStorePropertyItem,
 	removeStorePropertyItem,
 	sortObjectPropertiesByKey,
+	setLoadingStarted,
+	setLoadingFinished,
 };
