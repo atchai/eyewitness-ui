@@ -40,6 +40,10 @@
 					<strong>User sent a location:</strong><br>
 					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
 				</div>
+				<div v-if="data.attachments[0].type === `link`" class="media-attachment link">
+					<strong>User sent a link:</strong><br>
+					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
+				</div>
 			</div>
 
 		</div>
@@ -185,7 +189,8 @@
 						cursor: pointer;
 					}
 
-					>.media-attachment.location {
+					>.media-attachment.location,
+					>.media-attachment.link {
 						padding: 0.50rem 0.75rem;
 					}
 				}
