@@ -30,7 +30,6 @@
 
 			<div v-if="data.attachments && data.attachments[0]" class="inner attachments">
 				<audio v-if="data.attachments[0].type === `audio`" controls class="media-attachment">
-					<!-- <source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" /> -->
 					<source :src="data.attachments[0].remoteUrl" />
 				</audio>
 				<img v-if="data.attachments[0].type === `image`" :src="data.attachments[0].remoteUrl" class="media-attachment" />
