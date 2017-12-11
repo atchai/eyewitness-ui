@@ -53,9 +53,7 @@ function setupWebSocketServer (app, database) {
 
 	socketServer.on(`connection`, async socket => {
 
-		const [, pageMainTab] = socket.handshake.headers.referer.match(/^https?:\/\/[^/]+\/([a-z0-9\-]+)\/?/i) || [];
-
-		await ctrlEvents.emitWelcomeEvent(socket, pageMainTab.toLowerCase());
+		await ctrlEvents.emitWelcomeEvent(socket);
 
 		socket.on(
 			`messaging/pull-tab-data`,

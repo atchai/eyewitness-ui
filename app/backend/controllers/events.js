@@ -22,35 +22,12 @@ module.exports = class EventsController {
 	/*
 	 * Sends the welcome event to a new client.
 	 */
-	async emitWelcomeEvent (socket, pageMainTab) {
+	async emitWelcomeEvent (socket) {
 
 		const output = {
 			showStories: true,
 			maxOldThreadMessages: config.maxListSize,
 		};
-
-		// Only get the data relevent for the page the user is was when their socket connected.
-		switch (pageMainTab) {
-
-			case `messaging`: {
-				const { threads } = await this.getDataForMessagingTab();
-				output.threads = threads;
-				break;
-			}
-
-			case `stories`: {
-				const { articles } = await this.getDataForStoriesTab();
-				output.articles = articles;
-				break;
-			}
-
-			case `settings`: {
-				const { welcomeMessages } = await this.getDataForSettingsTab();
-				output.welcomeMessages = welcomeMessages;
-				break;
-			}
-
-		}
 
 		// Push data to client.
 		socket.emit(`welcome`, output);
