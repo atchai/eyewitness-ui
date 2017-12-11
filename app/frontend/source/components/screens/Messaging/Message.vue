@@ -174,8 +174,7 @@
 
 					>img.media-attachment,
 					>video.media-attachment {
-						min-height: 5.00rem;
-						max-height: 23.00rem;
+						height: 15.00rem;
 					}
 
 					>.media-attachment.location {
