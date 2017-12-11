@@ -29,6 +29,15 @@ import App from '../components/App';
 setupWebSocketClient(store);
 
 /*
+ * Prevent drag events on certain elements.
+ */
+document.ondragstart = event => {
+	const tagName = event.target.tagName.toUpperCase();
+	if ([`A`, `IMG`].includes(tagName) || !event.target.className.match(/(?:^|\s)no-drag(?:\s|$)/i)) { return false; }
+	return true;
+};
+
+/*
  * Create a new Vue application instance.
  */
 new Vue({
