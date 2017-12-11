@@ -32,7 +32,7 @@
 				<audio v-if="data.attachments[0].type === `audio`" controls class="media-attachment">
 					<source :src="data.attachments[0].remoteUrl" />
 				</audio>
-				<img v-if="data.attachments[0].type === `image`" :src="data.attachments[0].remoteUrl" class="media-attachment" />
+				<img v-if="data.attachments[0].type === `image`" :src="data.attachments[0].remoteUrl" class="media-attachment" @click="openAttachmentUrl" />
 				<video v-if="data.attachments[0].type === `video`" controls playsinline class="media-attachment">
 					<source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" />
 				</video>
@@ -51,6 +51,13 @@
 
 	export default {
 		props: [`messageId`, `direction`, `humanToHuman`, `sentAt`, `data`],
+		methods: {
+
+			openAttachmentUrl () {
+				window.open(this.data.attachments[0].remoteUrl);
+			},
+
+		}
 	};
 
 </script>
@@ -172,6 +179,10 @@
 					>img.media-attachment,
 					>video.media-attachment {
 						height: 15.00rem;
+					}
+
+					img.media-attachment {
+						cursor: pointer;
 					}
 
 					>.media-attachment.location {
