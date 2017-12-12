@@ -5,15 +5,15 @@
 <template>
 
 	<div class="article">
-		<div class="cell title">
+		<div v-if="isFullFat" class="cell title">
 			<div class="inner">{{ title }}</div>
 		</div>
 
-		<div class="cell date-time">
+		<div v-if="isFullFat" class="cell date-time">
 			<div class="inner">{{ time }}, {{date}}</div>
 		</div>
 
-		<div class="cell actions">
+		<div v-if="isFullFat" class="cell actions">
 			<div class="inner">
 				<div :class="{ 'tag': true, 'on': published }">
 					<span v-if="published">Published</span>
@@ -32,7 +32,7 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 
 	export default {
-		props: [`articleId`, `title`, `time`, `date`, `published`],
+		props: [`articleId`, `isFullFat`, `title`, `time`, `date`, `published`],
 		methods: {
 
 			setArticlePublished (articleId) {

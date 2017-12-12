@@ -14,6 +14,7 @@
 			v-for="article in articleSet"
 			:key="article.articleId"
 			:articleId="article.articleId"
+			:isFullFat="article.isFullFat"
 			:title="article.title"
 			:time="article.articleDate | formatDate('HH:MM')"
 			:date="article.articleDate | formatDate('DD/MM/YY')"
