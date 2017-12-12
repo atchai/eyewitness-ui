@@ -48,7 +48,7 @@
 	.thread {
 		display: flex;
 		flex-direction: row;
-		height: 4.50rem;
+		height: 4.75rem;
 		padding: 0 0.50rem;
 		border-bottom: 1px solid $panel-border-color;
 		text-decoration: none;
