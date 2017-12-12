@@ -35,9 +35,99 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Prepares story data for the frontend and maps the list to a dictionary.
+	 */
+	prepareStories (recArticles, pageSize, isHardLimit = false) {
+
+		const stories = [];
+
+		for (let index = 0; index < recArticles.length; index++) {
+			const recArticle = recArticles[index];
+			const story = { articleId: recArticle._id.toString() };
+
+			// Full-fat stories contain all properties.
+			if (stories.length < pageSize) {
+				story.isFullFat = true;
+				story.title = recArticle.title;
+				story.articleUrl = recArticle.articleUrl;
+				story.articleDate = recArticle.articleDate;
+				story.priority = (typeof recArticle.isPriority !== `undefined` ? recArticle.isPriority : false);
+				story.published = (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true);
+			}
+
+			// Don't add any low-fat stories if we have a hard limit.
+			else if (isHardLimit) {
+				break;
+			}
+
+			// Low-fat stories only contain the item ID.
+			else {
+				story.isFullFat = false;
+			}
+
+			stories.push(story);
+		}
+
+		return mapListToDictionary(stories, `articleId`);
+
+	}
+
+	/*
+	 * Returns multiple items from the given model.
+	 */
+	async getItems (modelName, sortField, sortDirection) {
+
+		const records = await this.database.find(modelName, {}, {
+			sort: { [sortField]: sortDirection },
+		});
+
+		return records;
+
+	}
+
+	/*
+	 * Returns prepared items from the given model based on the specified array of item IDs.
+	 */
+	async getItemsById (modelName, itemIds) {
+
+		const records = await this.database.find(modelName, {
+			$or: itemIds.map(id => Object({ _id: id })),
+		});
+
+		return records;
+
+	}
+
+	/*
+	 * Returns the data for the stories tab.
+	 */
+	async getStoryTabData (socket, data, reply) {
+
+		const records = await this.getItems(`Article`, `articleDate`, `desc`);
+		const stories = this.prepareStories(records, data.pageSize);
+
+		return reply({
+			success: true,
+			stories,
+		});
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
 	 * Amalgamates the data for the messaging tab.
 	 */
-	async getDataForMessagingTab () {
+	async getDataForMessagingTab (data) {
 
 		const recUsers = await this.database.find(`User`, {}, {
 			sort: { 'conversation.lastMessageSentAt': `desc` },
@@ -50,32 +140,6 @@ module.exports = class EventsController {
 
 		return {
 			threads: mapListToDictionary(threads, `threadId`),
-		};
-
-	}
-
-	/*
-	 * Amalgamates the data for the stories tab.
-	 */
-	async getDataForStoriesTab () {
-
-		const recArticles = await this.database.find(`Article`, {}, {
-			sort: { articleDate: `desc` },
-			limit: config.maxListSize,
-		});
-
-		// Prepare articles.
-		const articles = recArticles.map(recArticle => Object({
-			articleId: recArticle._id,
-			title: recArticle.title,
-			articleUrl: recArticle.articleUrl,
-			articleDate: recArticle.articleDate,
-			priority: (typeof recArticle.isPriority !== `undefined` ? recArticle.isPriority : false),
-			published: (typeof recArticle.isPublished !== `undefined` ? recArticle.isPublished : true),
-		}));
-
-		return {
-			articles: mapListToDictionary(articles, `articleId`),
 		};
 
 	}
@@ -246,14 +310,6 @@ module.exports = class EventsController {
 
 		return reply({ success: true });
 
-	}
-
-	/*
-	 * Returns the tab data for the stories tab.
-	 */
-	async articlesPullTabData (socket, data, reply) {
-		const { articles } = await this.getDataForStoriesTab();
-		return reply({ success: true, articles });
 	}
 
 	/*

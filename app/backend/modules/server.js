@@ -56,6 +56,11 @@ function setupWebSocketServer (app, database) {
 		await ctrlEvents.emitWelcomeEvent(socket);
 
 		socket.on(
+			`stories/pull-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.getStoryTabData)
+		);
+
+		socket.on(
 			`messaging/pull-tab-data`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingPullTabData)
 		);
@@ -74,10 +79,6 @@ function setupWebSocketServer (app, database) {
 		socket.on(
 			`thread/send-message`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage)
-		);
-		socket.on(
-			`articles/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articlesPullTabData)
 		);
 		socket.on(
 			`article/set-published`,
