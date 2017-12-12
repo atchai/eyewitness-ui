@@ -15,6 +15,10 @@ module.exports = class HomeController {
 
 		res.render(`home`, {
 			pageTitle: config.pageTitle,
+			appConfig: JSON.stringify({
+				listSize: config.listSize,
+				providerPhotoUrl: `https://graph.facebook.com/${config.facebookPageId}/picture?type=large`,
+			}),
 		});
 
 	}
