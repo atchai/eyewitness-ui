@@ -71,7 +71,12 @@
 	import Message from './Message';
 
 	export default {
-		props: [`providerPhotoUrl`, `botEnabled`],
+		props: [`botEnabled`],
+		data: function () {
+			return {
+				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
+			};
+		},
 		components: { Message },
 		computed: {
 

@@ -35,7 +35,11 @@
 <script>
 
 	export default {
-		props: [`providerPhotoUrl`],
+		data: function () {
+			return {
+				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
+			};
+		},
 	};
 
 </script>

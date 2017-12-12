@@ -49,7 +49,7 @@ new Vue({
 	// We must use render because we don't bundle in the Vue compiler.
 	render: createElement => createElement(App, {
 		props: {
-			providerPhotoUrl: process.env.PROVIDER_PHOTO_URL,
+
 		},
 	}),
 

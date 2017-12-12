@@ -5,9 +5,9 @@
 <template>
 
 	<div id="app">
-		<HeaderBar :providerPhotoUrl="providerPhotoUrl" />
+		<HeaderBar />
 		<main>
-			<router-view :providerPhotoUrl="providerPhotoUrl" />
+			<router-view />
 		</main>
 	</div>
 
@@ -18,7 +18,6 @@
 	import HeaderBar from './chrome/HeaderBar';
 
 	export default {
-		props: [`providerPhotoUrl`],
 		components: { HeaderBar },
 	};
 
