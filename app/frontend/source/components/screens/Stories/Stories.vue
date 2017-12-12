@@ -52,16 +52,16 @@
 				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
-					`articles/pull-tab-data`,
-					{},
+					`stories/pull-tab-data`,
+					{ pageSize: APP_CONFIG.pageSize },
 					resData => {
 
 						setLoadingFinished(this);
 
 						if (!resData || !resData.success) { return alert(`There was a problem loading the stories tab.`); }
 
-						// Replace all of the articles.
-						this.$store.commit(`update-articles`, resData.articles);
+						// Replace all of the stories.
+						this.$store.commit(`update-articles`, resData.stories);
 
 					}
 				);
