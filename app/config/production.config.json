@@ -18,7 +18,8 @@
 		}
 	},
 	"facebookPageId": null,
-	"maxListSize": 100,
+	"pageSize": 20,
+	"pageIncrement": 5,
 	"build": {
 		"webpackStats": "errors-only",
 		"useStyleLoader": false,
