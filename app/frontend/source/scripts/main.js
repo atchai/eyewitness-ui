@@ -13,6 +13,7 @@ import '../styles/main.scss';
  */
 import dialogPolyfill from 'dialog-polyfill';
 import Vue from 'vue';
+import vueScroll from 'vue-scroll';
 import router from './router';
 import store from './store';
 import { setupWebSocketClient } from './webSocketClient';
@@ -27,6 +28,11 @@ import App from '../components/App';
  * Connect to the socket server.
  */
 setupWebSocketClient(store);
+
+/*
+ * Miscellaneous plugins.
+ */
+Vue.use(vueScroll, { throttle: 500 });
 
 /*
  * Prevent drag events on certain elements.
