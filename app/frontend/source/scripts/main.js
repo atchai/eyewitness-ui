@@ -33,7 +33,7 @@ setupWebSocketClient(store);
  */
 document.ondragstart = event => {
 	const tagName = event.target.tagName.toUpperCase();
-	if ([`A`, `IMG`].includes(tagName) || !event.target.className.match(/(?:^|\s)no-drag(?:\s|$)/i)) { return false; }
+	if ([ `A`, `IMG` ].includes(tagName) || !event.target.className.match(/(?:^|\s)no-drag(?:\s|$)/i)) { return false; }
 	return true;
 };
 
