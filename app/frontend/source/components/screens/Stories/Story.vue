@@ -1,10 +1,10 @@
 <!--
-	ARTICLE
+	STORY
 -->
 
 <template>
 
-	<div class="article">
+	<div :class="{ 'story': true, 'full-fat': isFullFat }">
 		<div v-if="isFullFat" class="cell title">
 			<div class="inner">{{ title }}</div>
 		</div>
@@ -74,7 +74,7 @@
 
 <style lang="scss" scoped>
 
-	.article {
+	.story {
 		display: flex;
 		align-items: stretch;
 		height: 3.50rem;
