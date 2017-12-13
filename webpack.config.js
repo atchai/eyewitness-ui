@@ -55,6 +55,7 @@ const LOADER_BABEL = {
 		],
 		plugins: [
 			`transform-object-rest-spread`,
+			`transform-runtime`,
 		],
 		minified: config.build.compressJs,
 	},
