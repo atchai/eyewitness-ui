@@ -22,6 +22,7 @@
 	"pageIncrement": 5,
 	"build": {
 		"webpackStats": "errors-only",
+		"sourceMapMode": false,
 		"useStyleLoader": false,
 		"sassOutputStyle": "compressed",
 		"sassSourceComments": false,

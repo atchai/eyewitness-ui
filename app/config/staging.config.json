@@ -1,5 +1,6 @@
 {
 	"build": {
-		"webpackStats": "verbose"
+		"webpackStats": "verbose",
+		"sourceMapMode": "cheap-module-eval-source-map"
 	}
 }

@@ -4,6 +4,7 @@
 	},
 	"build": {
 		"webpackStats": "verbose",
+		"sourceMapMode": "cheap-module-eval-source-map",
 		"useStyleLoader": true,
 		"sassOutputStyle": "expanded",
 		"sassSourceComments": true,

@@ -137,7 +137,7 @@ module.exports = {
 
 	stats: config.build.webpackStats,
 
-	devtool: `source-map`,
+	devtool: config.build.sourceMapMode,
 
 	entry: {
 		app: path.join(BASE_PATH, `source`, `scripts`, `main.js`),
