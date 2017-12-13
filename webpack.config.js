@@ -13,7 +13,7 @@ const env = process.env.NODE_ENV || `development`;
 const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(__dirname, `app`, `config`), {
-	localConfig: (localConfigName ? [localConfigName] : []),
+	localConfig: (localConfigName ? [ localConfigName ] : []),
 	requireLocalConfig: loadProviderConfig,
 });
 
@@ -50,8 +50,8 @@ const LOADER_BABEL = {
 	loader: `babel-loader`,
 	options: {
 		presets: [
-			[`env`, {}],
-			[`minify`, {}],
+			[ `env`, {}],
+			[ `minify`, {}],
 		],
 		plugins: [
 			`transform-object-rest-spread`,
@@ -150,9 +150,9 @@ module.exports = {
 				SERVER_URI: JSON.stringify(config.server.externalUri),
 			},
 		}),
-		new CleanWebpackPlugin([`./app/frontend/build/static`, `./app/frontend/build/views`], {
+		new CleanWebpackPlugin([ `./app/frontend/build/static`, `./app/frontend/build/views` ], {
 			verbose: true,
-			exclude: [`.gitkeep`],
+			exclude: [ `.gitkeep` ],
 		}),
 		new HtmlWebpackPlugin({
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
@@ -193,9 +193,9 @@ module.exports = {
 					loader: `vue-loader`,
 					options: {
 						loaders: {
-							js: [LOADER_BABEL], // eslint-disable-line id-length
+							js: [ LOADER_BABEL ], // eslint-disable-line id-length
 							sass: extractSassFromVue.extract({
-								use: [LOADER_CSS, LOADER_SASS, LOADER_SASS_RESOURCES],
+								use: [ LOADER_CSS, LOADER_SASS, LOADER_SASS_RESOURCES ],
 								fallback: `vue-style-loader`,
 							}),
 						},
@@ -216,7 +216,7 @@ module.exports = {
 				test: /\.css$/,
 				// exclude: /node_modules/,  // <- Don't exclude node_modules because it contains normalise.css.
 				use: extractCssFromModules.extract({
-					use: [LOADER_CSS],
+					use: [ LOADER_CSS ],
 					fallback: LOADER_STYLE,
 				}),
 			},
@@ -226,7 +226,7 @@ module.exports = {
 				test: /\.scss$/,
 				exclude: /node_modules/,
 				use: extractSassFromApp.extract({
-					use: [LOADER_CSS, LOADER_POSTCSS, LOADER_SASS],
+					use: [ LOADER_CSS, LOADER_POSTCSS, LOADER_SASS ],
 					fallback: LOADER_STYLE,
 				}),
 			},
@@ -235,7 +235,7 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: [`.js`, `.json`, `.vue`],
+		extensions: [ `.js`, `.json`, `.vue` ],
 	},
 
 	output: {
