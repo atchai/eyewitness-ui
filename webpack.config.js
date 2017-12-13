@@ -51,7 +51,7 @@ const LOADER_BABEL = {
 	options: {
 		presets: [
 			[ `env`, {}],
-			[ `minify`, {}],
+			// [ `minify`, {}], <-- causing errors in compiled JS.
 		],
 		plugins: [
 			`transform-object-rest-spread`,
