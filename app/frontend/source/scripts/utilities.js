@@ -136,6 +136,86 @@ function setLoadingFinished (cmp) {
 }
 
 /*
+ * Returns only the elements within the scroll container that are in range.
+ */
+function getScrollElementsInRange (scrollContainerId, elementClass, rangeBufferSize, scrollTop, scrollDirection) {
+
+	const $scrollContainer = document.getElementById(scrollContainerId);
+	const scrollContainerHeight = $scrollContainer.clientHeight;
+	const scrollBottom = scrollTop + scrollContainerHeight;
+	const $allElements = Array.from($scrollContainer.getElementsByClassName(elementClass));
+
+	// No items in the DOM.
+	if (!$allElements.length) { return []; }
+
+	const elementHeight = $allElements[0].clientHeight;
+	const maxIndex = $allElements.length - 1;
+	let firstVisibleItemIndex = null;
+	let lastVisibleItemIndex = null;
+
+	// Find the first and last visible element indexes.
+	for (let index = 0; index <= maxIndex; index++) {
+		const $element = $allElements[index];
+		const elementTop = $element.offsetTop;
+		const elementBottom = elementTop + elementHeight;
+
+		// First item that is completely within the scroll view.
+		if (firstVisibleItemIndex === null && elementBottom >= scrollTop && elementTop <= scrollBottom) {
+			firstVisibleItemIndex = index;
+		}
+
+		// First item that is just past the bottom of the scroll view.
+		if (lastVisibleItemIndex === null && elementTop > scrollBottom) {
+			const prevIndex = (index > 0 ? index - 1 : 0);
+			lastVisibleItemIndex = prevIndex;
+		}
+	}
+
+	// If we found the first visible item, but not the last visible one, then the last one must be the last in the list.
+	if (firstVisibleItemIndex && lastVisibleItemIndex === null) {
+		lastVisibleItemIndex = maxIndex;
+	}
+
+	// Find the very top element we want to be fat.
+	const topBufferSize = rangeBufferSize * (scrollDirection === `up` ? 2 : 1);
+	const topInRangeIndex = Math.max(firstVisibleItemIndex - topBufferSize, 0);
+
+	// Find the very bottom element we want to be fat.
+	const bottomBufferSize = rangeBufferSize * (scrollDirection === `down` ? 2 : 1);
+	const bottomInRangeIndex = Math.min(lastVisibleItemIndex + bottomBufferSize, maxIndex);
+
+	// Grab only the elements we want to be fat.
+	const $inRangeElements = $allElements.slice(topInRangeIndex, bottomInRangeIndex + 1);
+
+	// Grab the elements that have just gone out of range.
+	const $lostRangeElements = [];
+
+	if (scrollDirection === `up`) {
+		$lostRangeElements.push(...$allElements.slice(bottomInRangeIndex + 1, maxIndex + 1));
+	}
+	else {
+		$lostRangeElements.push(...$allElements.slice(0, topInRangeIndex));
+	}
+
+	return { $inRangeElements, $lostRangeElements };
+
+}
+
+/*
+ * Returns an array of items to replace the array of elements.
+ */
+function convertElementsToItems ($elements, storeDictionary) {
+
+	const items = $elements.map($element => {
+		const itemId = $element.getAttribute(`data-item-id`);
+		return storeDictionary[itemId];
+	});
+
+	return items;
+
+}
+
+/*
  * Export.
  */
 export {
@@ -146,4 +226,6 @@ export {
 	sortObjectPropertiesByKey,
 	setLoadingStarted,
 	setLoadingFinished,
+	getScrollElementsInRange,
+	convertElementsToItems,
 };
