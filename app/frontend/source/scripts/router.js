@@ -4,15 +4,34 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Messaging from '../components/screens/Messaging/Messaging';
-import ConversationPanel from '../components/screens/Messaging/ConversationPanel';
-import SelectConversation from '../components/screens/Messaging/SelectConversation';
-import Stories from '../components/screens/Stories/Stories';
-import Settings from '../components/screens/Settings/Settings';
-import NotFound from '../components/screens/NotFound/NotFound';
 
+/*
+ * Dynamic imports.
+ */
+const Messaging = () =>
+	import(/* webpackChunkName: "messaging" */ `../components/screens/Messaging/Messaging`);
+const ConversationPanel = () =>
+	import(/* webpackChunkName: "messaging" */ `../components/screens/Messaging/ConversationPanel`);
+const SelectConversation = () =>
+	import(/* webpackChunkName: "messaging" */ `../components/screens/Messaging/SelectConversation`);
+
+const Stories = () =>
+	import(/* webpackChunkName: "stories" */ `../components/screens/Stories/Stories`);
+
+const Settings = () =>
+	import(/* webpackChunkName: "settings" */ `../components/screens/Settings/Settings`);
+
+const NotFound = () =>
+	import(/* webpackChunkName: "not-found" */ `../components/screens/NotFound/NotFound`);
+
+/*
+ * Initialise the router.
+ */
 Vue.use(VueRouter);
 
+/*
+ * Route configs.
+ */
 export default new VueRouter({
 	mode: `history`,
 	routes: [
