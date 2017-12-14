@@ -54,6 +54,7 @@ const LOADER_BABEL = {
 			// [ `minify`, {}], <-- causing errors in compiled JS.
 		],
 		plugins: [
+			`syntax-dynamic-import`,
 			`transform-object-rest-spread`,
 			`transform-runtime`,
 		],
