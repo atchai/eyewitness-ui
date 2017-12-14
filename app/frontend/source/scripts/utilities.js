@@ -140,8 +140,6 @@ function setLoadingFinished (cmp) {
  */
 function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, scrollTop) { // eslint-disable-line max-params
 
-	console.log(scrollContainerId, elementClass, storeUpdateAction, storeProperty, scrollTop);
-
 	// Get the elements.
 	const scrollDirection = (scrollTop >= cmp.lastScrollTop ? `down` : `up`);
 	const { $inRangeElements, $lostRangeElements } =
@@ -150,8 +148,6 @@ function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction
 	// Convert to items.
 	const inRangeItems = convertElementsToItems($inRangeElements, storeProperty);
 	const lostRangeItems = convertElementsToItems($lostRangeElements, storeProperty);
-
-	console.log(`inRangeItems`, inRangeItems);
 
 	// Filter out the thin items that are in range and need fattening up.
 	const thinInRangeItems = inRangeItems.filter(item => !item.isFullFat);
