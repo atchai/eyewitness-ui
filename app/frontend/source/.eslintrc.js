@@ -1,5 +1,6 @@
 module.exports = {
   "extends": "eslint-config-recombix",
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module"
   },
