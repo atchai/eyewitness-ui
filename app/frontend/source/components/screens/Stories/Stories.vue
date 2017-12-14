@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="{ screen: true, padding: true, 'scroll-vertical': true, loading: (loadingState > 0) }">
+	<div id="stories-tab-body" :class="{ screen: true, padding: true, 'scroll-vertical': true, loading: (loadingState > 0) }" v-scroll="onScroll">
 		<ScreenLoader />
 		<ScreenHeader
 			title="Stories"
@@ -31,13 +31,19 @@
 	import ScreenLoader from '../../common/ScreenLoader';
 	import Story from './Story';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
+	import {
+		setLoadingStarted,
+		setLoadingFinished,
+		getScrollElementsInRange,
+		convertElementsToItems,
+	} from '../../../scripts/utilities';
 
 	export default {
 		data: function () {
 			return {
 				loadingState: 0,
 				loadingRoute: ``,
+				lastScrollTop: 0,
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, Story },
@@ -67,6 +73,39 @@
 
 					}
 				);
+
+			},
+
+			async onScroll (event, { scrollTop }) {
+
+				// Get the elements.
+				const scrollDirection = (scrollTop > this.lastScrollTop ? `down` : `up`);
+				const { $inRangeElements, $lostRangeElements } =
+					getScrollElementsInRange(`stories-tab-body`, `story`, APP_CONFIG.pageBufferSize, scrollTop, scrollDirection);
+
+				// Convert to items.
+				const inRangeItems = convertElementsToItems($inRangeElements, this.$store.state.articles);
+				const lostRangeItems = convertElementsToItems($lostRangeElements, this.$store.state.articles);
+
+				// Filter out the thin items that are in range and need fattening up.
+				const thinInRangeItems = inRangeItems.filter(item => !item.isFullFat);
+
+				// Replace the fat items that have just gone out of range with thinner copies.
+				lostRangeItems.forEach(item => {
+					this.$store.commit(`update-article`, {
+						key: item.articleId,
+						data: { articleId: item.articleId },
+					});
+				});
+
+				// Get just the IDs for the next stage.
+				const itemIdsToFetch = thinInRangeItems.map(item => item.articleId);
+
+				// Load in new items, if any.
+				if (itemIdsToFetch.length) { this.fetchTabData(itemIdsToFetch); }
+
+				// Cache this for the next call.
+				this.lastScrollTop = scrollTop;
 
 			},
 
