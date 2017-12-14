@@ -242,8 +242,9 @@ module.exports = {
 
 	output: {
 		filename: `[name].bundle.js`,
+		chunkFilename: `[name].bundle.js`,
 		path: path.join(BASE_PATH, `build`, `static`),
-		publicPath: `/public`,
+		publicPath: `/public/`,
 	},
 
 	watchOptions: {
