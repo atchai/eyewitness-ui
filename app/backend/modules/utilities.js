@@ -41,10 +41,7 @@ async function handleSocketEvent (socket, handler, data, reply) {
 /*
  * Returns the message and date information for the given message, if it is the latest incoming message.
  */
-function getLatestMessageInformation (message) {
-
-	// We only care about messages the user sent.
-	if (!message || message.direction !== `incoming`) { return {}; }
+function parseLatestMessageInformation (message) {
 
 	const latestDate = message.sentAt;
 	let latestMessage = `[No Text]`;
@@ -69,5 +66,5 @@ function getLatestMessageInformation (message) {
 module.exports = {
 	mapListToDictionary,
 	handleSocketEvent,
-	getLatestMessageInformation,
+	parseLatestMessageInformation,
 };
