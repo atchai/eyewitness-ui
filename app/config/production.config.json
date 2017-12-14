@@ -18,8 +18,8 @@
 		}
 	},
 	"facebookPageId": null,
-	"pageSize": 20,
-	"pageIncrement": 5,
+	"pageInitialSize": 20,
+	"pageBufferSize": 5,
 	"build": {
 		"webpackStats": "errors-only",
 		"sourceMapMode": false,

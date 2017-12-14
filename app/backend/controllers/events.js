@@ -37,7 +37,7 @@ module.exports = class EventsController {
 	/*
 	 * Prepares story data for the frontend and maps the list to a dictionary.
 	 */
-	prepareStories (recArticles, pageSize, isHardLimit = false) {
+	prepareStories (recArticles, pageInitialSize, isHardLimit = false) {
 
 		const stories = [];
 
@@ -46,7 +46,7 @@ module.exports = class EventsController {
 			const story = { articleId: recArticle._id.toString() };
 
 			// Full-fat stories contain all properties.
-			if (stories.length < pageSize) {
+			if (stories.length < pageInitialSize) {
 				story.isFullFat = true;
 				story.title = recArticle.title;
 				story.articleUrl = recArticle.articleUrl;
