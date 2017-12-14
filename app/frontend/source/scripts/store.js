@@ -22,7 +22,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	state: {
 		threads: {},
-		articles: {},
+		messages: {},
+		stories: {},
 		welcomeMessages: {},
 	},
 	mutations: {
@@ -59,9 +60,10 @@ export default new Vuex.Store({
 				},
 			});
 		},
-		'update-article': (state, payload) => updateStorePropertyItem(state, `articles`, payload),
-		'update-articles': (state, payload) => updateStoreProperty(state, `articles`, payload),
-		'remove-article': (state, payload) => removeStorePropertyItem(state, `articles`, payload),
+		'update-story': (state, payload) => updateStorePropertyItem(state, `stories`, payload),
+		'update-stories': (state, payload) => updateStoreProperty(state, `stories`, payload),
+		'remove-story': (state, payload) => removeStorePropertyItem(state, `stories`, payload),
+
 		'add-welcome-message': (state, payload) => addStorePropertyItem(state, `welcomeMessages`, payload),
 		'update-welcome-message': (state, payload) => updateStorePropertyItem(state, `welcomeMessages`, payload),
 		'update-welcome-messages': (state, payload) => updateStoreProperty(state, `welcomeMessages`, payload),
@@ -71,7 +73,7 @@ export default new Vuex.Store({
 	getters: {
 		hasThread: state => itemId => Boolean(state.threads[itemId]),
 		threadSet: state => Object.values(state.threads),
-		articleSet: state => Object.values(state.articles),
+		storySet: state => Object.values(state.stories),
 		welcomeMessageSet: state => Object.values(state.welcomeMessages),
 	},
 });

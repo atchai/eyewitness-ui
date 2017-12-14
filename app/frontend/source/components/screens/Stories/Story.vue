@@ -37,7 +37,7 @@
 
 			setArticlePublished (itemId) {
 
-				this.$store.commit(`update-article`, {
+				this.$store.commit(`update-story`, {
 					key: itemId,
 					dataField: `published`,
 					dataValue: true,
@@ -53,7 +53,7 @@
 
 			setArticleUnpublished (itemId) {
 
-				this.$store.commit(`update-article`, {
+				this.$store.commit(`update-story`, {
 					key: itemId,
 					dataField: `published`,
 					dataValue: false,

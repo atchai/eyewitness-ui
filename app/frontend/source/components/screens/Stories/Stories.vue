@@ -11,14 +11,14 @@
 			description="Stories from your feed that are currently being displayed to your users."
 		/>
 		<Story
-			v-for="article in articleSet"
-			:key="article.itemId"
-			:itemId="article.itemId"
-			:isFullFat="article.isFullFat"
-			:title="article.title"
-			:time="article.articleDate | formatDate('HH:MM')"
-			:date="article.articleDate | formatDate('DD/MM/YY')"
-			:published="article.published"
+			v-for="story in storySet"
+			:key="story.itemId"
+			:itemId="story.itemId"
+			:isFullFat="story.isFullFat"
+			:title="story.title"
+			:time="story.articleDate | formatDate('HH:MM')"
+			:date="story.articleDate | formatDate('DD/MM/YY')"
+			:published="story.published"
 		/>
 	</div>
 
@@ -48,7 +48,7 @@
 		components: { ScreenHeader, ScreenLoader, Story },
 		computed: {
 			...mapGetters([
-				`articleSet`,
+				`storySet`,
 			]),
 		},
 		methods: {
@@ -68,7 +68,7 @@
 
 						// Replace all or update some of the stories.
 						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
-						this.$store.commit(`update-articles`, { replaceByKeyField, data: resData.stories });
+						this.$store.commit(`update-stories`, { replaceByKeyField, data: resData.stories });
 
 					}
 				);
@@ -76,7 +76,7 @@
 			},
 
 			async onScroll (event, { scrollTop }) {
-				handleOnScroll(this, `stories-tab-body`, `story`, `update-article`, this.$store.state.articles, scrollTop);
+				handleOnScroll(this, `stories-tab-body`, `story`, `update-story`, this.$store.state.stories, scrollTop);
 			},
 
 		},
