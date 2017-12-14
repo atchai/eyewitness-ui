@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="{ 'story': true, 'full-fat': isFullFat }">
+	<div :data-item-id="articleId" :class="{ 'story': true, 'full-fat': isFullFat }">
 		<div v-if="isFullFat" class="cell title">
 			<div class="inner">{{ title }}</div>
 		</div>
