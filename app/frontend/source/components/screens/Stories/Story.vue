@@ -44,7 +44,7 @@
 				});
 
 				getSocket().emit(
-					`article/set-published`,
+					`stories/set-story-published`,
 					{ articleId, published: true },
 					data => (!data || !data.success ? alert(`There was a problem publishing the story.`) : void (0))
 				);
@@ -60,7 +60,7 @@
 				});
 
 				getSocket().emit(
-					`article/set-published`,
+					`stories/set-story-published`,
 					{ articleId, published: false },
 					data => (!data || !data.success ? alert(`There was a problem unpublishing the story.`) : void (0))
 				);

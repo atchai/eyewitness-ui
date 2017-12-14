@@ -55,7 +55,7 @@
 				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
-					`settings/pull-tab-data`,
+					`settings/get-tab-data`,
 					{},
 					resData => {
 

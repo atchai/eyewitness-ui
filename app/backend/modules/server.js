@@ -56,16 +56,17 @@ function setupWebSocketServer (app, database) {
 		await ctrlEvents.emitWelcomeEvent(socket);
 
 		socket.on(
-			`stories/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.getStoryTabData)
+			`stories/get-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesGetTabData)
 		);
 		socket.on(
-			`article/set-published`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
+			`stories/set-story-published`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPublished)
 		);
+
 		socket.on(
-			`settings/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.getSettingsTabData)
+			`settings/get-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsGetTabData)
 		);
 		socket.on(
 			`settings/set-bot-enabled`,

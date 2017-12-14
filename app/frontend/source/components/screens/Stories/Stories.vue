@@ -59,7 +59,7 @@
 				if (!setLoadingStarted(this, Boolean(itemIdsToFetch))) { return; }
 
 				getSocket().emit(
-					`stories/pull-tab-data`,
+					`stories/get-tab-data`,
 					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
 					resData => {
 

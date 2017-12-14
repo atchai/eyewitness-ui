@@ -123,7 +123,7 @@ module.exports = class EventsController {
 	/*
 	 * Returns the data for the stories tab.
 	 */
-	async getStoryTabData (socket, data, reply) {
+	async storiesGetTabData (socket, data, reply) {
 
 		let records;
 
@@ -145,9 +145,25 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Update the "isPublished" property of the given story.
+	 */
+	async storiesSetStoryPublished (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const articleId = String(data.articleId);
+		const isPublished = Boolean(data.published);
+
+		// Update the database.
+		await this.database.update(`Article`, articleId, { isPublished });
+
+		return reply({ success: true });
+
+	}
+
+	/*
 	 * Returns the data for the settings tab.
 	 */
-	async getSettingsTabData (socket, data, reply) {
+	async settingsGetTabData (socket, data, reply) {
 
 		const records = await this.getItems(`WelcomeMessage`, `weight`, `asc`);
 		const welcomeMessages = this.prepareWelcomeMessages(records);
@@ -387,22 +403,6 @@ module.exports = class EventsController {
 		}
 
 		if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Update the "isPublished" property of the given article.
-	 */
-	async articleSetPublished (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const articleId = String(data.articleId);
-		const isPublished = Boolean(data.published);
-
-		// Update the database.
-		await this.database.update(`Article`, articleId, { isPublished });
 
 		return reply({ success: true });
 
