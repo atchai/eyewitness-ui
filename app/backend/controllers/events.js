@@ -175,7 +175,7 @@ module.exports = class EventsController {
 	/*
 	 * Upserts a welcome message.
 	 */
-	async welcomeMessageUpdate (socket, data, reply) {
+	async settingsWelcomeMessageUpdate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const welcomeMessageId = String(data.welcomeMessageId);
@@ -206,7 +206,7 @@ module.exports = class EventsController {
 	/*
 	 * Upserts a welcome message.
 	 */
-	async welcomeMessageRemove (socket, data, reply) {
+	async settingsWelcomeMessageRemove (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const welcomeMessageId = String(data.welcomeMessageId);

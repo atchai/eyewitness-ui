@@ -29,7 +29,7 @@
 				});
 
 				getSocket().emit(
-					`welcome-message/remove`,
+					`settings/welcome-message/remove`,
 					{ welcomeMessageId },
 					data => (!data || !data.success ? alert(`There was a problem removing the welcome message.`) : void (0))
 				);
@@ -50,7 +50,7 @@
 				});
 
 				getSocket().emit(
-					`welcome-message/update`,
+					`settings/welcome-message/update`,
 					this.$store.state.welcomeMessages[welcomeMessageId],
 					data => (!data || !data.success ? alert(`There was a problem saving the welcome message.`) : void (0))
 				);

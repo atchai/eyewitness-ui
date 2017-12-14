@@ -72,12 +72,12 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
 		);
 		socket.on(
-			`welcome-message/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate)
+			`settings/welcome-message/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsWelcomeMessageUpdate)
 		);
 		socket.on(
-			`welcome-message/remove`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove)
+			`settings/welcome-message/remove`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsWelcomeMessageRemove)
 		);
 
 		socket.on(
