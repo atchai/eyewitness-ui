@@ -80,6 +80,11 @@
 		height: 3.50rem;
 		box-shadow: 1px 1px 5px $panel-shadow-color;
 		margin-bottom: 2.00rem;
+		opacity: 0.50;
+
+		&.full-fat {
+			opacity: 1;
+		}
 
 		>.cell {
 			display: flex;
