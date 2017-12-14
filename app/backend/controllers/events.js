@@ -25,8 +25,7 @@ module.exports = class EventsController {
 	async emitWelcomeEvent (socket) {
 
 		const output = {
-			showStories: true,
-			maxOldThreadMessages: config.maxListSize,
+
 		};
 
 		// Push data to client.
