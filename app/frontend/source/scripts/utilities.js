@@ -102,7 +102,7 @@ function sortObjectPropertiesByKey (existingDictionary, keyProperty, sortPropert
 /*
  * Mark a component as currently loading.
  */
-function setLoadingStarted (cmp, delay = 50) {
+function setLoadingStarted (cmp, force = false, delay = 50) {
 
 	cmp.isLoading = false;
 	cmp.loadingState = 0;
@@ -111,7 +111,7 @@ function setLoadingStarted (cmp, delay = 50) {
 	const matchedTopRoute = cmp.$route.matched[0].path.toLowerCase();
 
 	// If we are already on the top level route path lets not fetch again.
-	if (cmp.loadingRoute === matchedTopRoute) { return false; }
+	if (!force && cmp.loadingRoute === matchedTopRoute) { return false; }
 	cmp.loadingRoute = matchedTopRoute;
 
 	// Show the loader after a short delay to avoid flashing.
