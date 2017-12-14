@@ -81,7 +81,7 @@ module.exports = class EventsController {
 			sort: { [sortField]: sortDirection },
 		});
 
-		return records;
+		return records || [];
 
 	}
 
@@ -94,7 +94,7 @@ module.exports = class EventsController {
 			$or: itemIds.map(id => Object({ _id: id })),
 		});
 
-		return records;
+		return records || [];
 
 	}
 
