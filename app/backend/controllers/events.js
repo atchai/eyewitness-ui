@@ -72,6 +72,29 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Prepares welcome message data for the frontend and maps the list to a dictionary.
+	 */
+	prepareWelcomeMessages (recWelcomeMessages) {
+
+		const welcomeMessages = [];
+
+		for (let index = 0; index < recWelcomeMessages.length; index++) {
+			const recWelcomeMessage = recWelcomeMessages[index];
+			const welcomeMessage = { welcomeMessageId: recWelcomeMessage._id.toString() };
+
+			// Full-fat welcome messages contain all properties.
+			welcomeMessage.isFullFat = true;
+			welcomeMessage.text = recWelcomeMessage.text;
+			welcomeMessage.weight = recWelcomeMessage.weight;
+
+			welcomeMessages.push(welcomeMessage);
+		}
+
+		return mapListToDictionary(welcomeMessages, `welcomeMessageId`);
+
+	}
+
+	/*
 	 * Returns multiple items from the given model.
 	 */
 	async getItems (modelName, sortField, sortDirection) {
@@ -121,7 +144,79 @@ module.exports = class EventsController {
 
 	}
 
+	/*
+	 * Returns the data for the settings tab.
+	 */
+	async getSettingsTabData (socket, data, reply) {
 
+		const records = await this.getItems(`WelcomeMessage`, `weight`, `asc`);
+		const welcomeMessages = this.prepareWelcomeMessages(records);
+
+		return reply({ success: true, welcomeMessages });
+
+	}
+
+	/*
+	 * Allow the bot to be turned on/off for all users.
+	 */
+	async settingsSetBotEnabled (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const isBotEnabled = Boolean(data.enabled);
+
+		// Update the database.
+		const recSettings = await this.database.find(`Settings`, {})[0];
+		await this.database.update(`Settings`, recSettings, { isBotEnabled });
+
+		return reply({ success: true });
+
+	}
+
+	/*
+	 * Upserts a welcome message.
+	 */
+	async welcomeMessageUpdate (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const welcomeMessageId = String(data.welcomeMessageId);
+		const text = String(data.text);
+		const weight = Number(data.weight);
+
+		// Get the welcome message to update.
+		let recWelcomeMessage = await this.database.get(`WelcomeMessage`, { _id: welcomeMessageId });
+
+		// If no welcome message exists lets create a new one.
+		if (!recWelcomeMessage) {
+			recWelcomeMessage = {
+				_id: welcomeMessageId,
+			};
+		}
+
+		// Update the record.
+		recWelcomeMessage.text = text;
+		recWelcomeMessage.weight = weight;
+
+		// Update the database.
+		await this.database.update(`WelcomeMessage`, welcomeMessageId, recWelcomeMessage, { upsert: true });
+
+		return reply({ success: true });
+
+	}
+
+	/*
+	 * Upserts a welcome message.
+	 */
+	async welcomeMessageRemove (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const welcomeMessageId = String(data.welcomeMessageId);
+
+		// Update the database.
+		await this.database.delete(`WelcomeMessage`, welcomeMessageId);
+
+		return reply({ success: true });
+
+	}
 
 
 
@@ -147,28 +242,6 @@ module.exports = class EventsController {
 
 		return {
 			threads: mapListToDictionary(threads, `threadId`),
-		};
-
-	}
-
-	/*
-	 * Amalgamates the data for the settings tab.
-	 */
-	async getDataForSettingsTab () {
-
-		const recWelcomeMessages = await this.database.find(`WelcomeMessage`, {}, {
-			sort: { weight: `asc` },
-		});
-
-		// Prepare welcome messages.
-		const welcomeMessages = recWelcomeMessages.map(recWelcomeMessage => Object({
-			welcomeMessageId: recWelcomeMessage._id,
-			text: recWelcomeMessage.text,
-			weight: recWelcomeMessage.weight,
-		}));
-
-		return {
-			welcomeMessages: mapListToDictionary(welcomeMessages, `welcomeMessageId`),
 		};
 
 	}
@@ -330,76 +403,6 @@ module.exports = class EventsController {
 
 		// Update the database.
 		await this.database.update(`Article`, articleId, { isPublished });
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Returns the tab data for the settings tab.
-	 */
-	async settingsPullTabData (socket, data, reply) {
-		const { welcomeMessages } = await this.getDataForSettingsTab();
-		return reply({ success: true, welcomeMessages });
-	}
-
-	/*
-	 * Allow the bot to be turned on/off for all users.
-	 */
-	async settingsSetBotEnabled (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const isBotEnabled = Boolean(data.enabled);
-
-		// Update the database.
-		const recSettings = await this.database.find(`Settings`, {})[0];
-		await this.database.update(`Settings`, recSettings, { isBotEnabled });
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Upserts a welcome message.
-	 */
-	async welcomeMessageUpdate (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const welcomeMessageId = String(data.welcomeMessageId);
-		const text = String(data.text);
-		const weight = Number(data.weight);
-
-		// Get the welcome message to update.
-		let recWelcomeMessage = await this.database.get(`WelcomeMessage`, { _id: welcomeMessageId });
-
-		// If no welcome message exists lets create a new one.
-		if (!recWelcomeMessage) {
-			recWelcomeMessage = {
-				_id: welcomeMessageId,
-			};
-		}
-
-		// Update the record.
-		recWelcomeMessage.text = text;
-		recWelcomeMessage.weight = weight;
-
-		// Update the database.
-		await this.database.update(`WelcomeMessage`, welcomeMessageId, recWelcomeMessage, { upsert: true });
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Upserts a welcome message.
-	 */
-	async welcomeMessageRemove (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const welcomeMessageId = String(data.welcomeMessageId);
-
-		// Update the database.
-		await this.database.delete(`WelcomeMessage`, welcomeMessageId);
 
 		return reply({ success: true });
 

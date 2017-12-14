@@ -63,6 +63,22 @@ function setupWebSocketServer (app, database) {
 			`article/set-published`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
 		);
+		socket.on(
+			`settings/pull-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.getSettingsTabData)
+		);
+		socket.on(
+			`settings/set-bot-enabled`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
+		);
+		socket.on(
+			`welcome-message/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate)
+		);
+		socket.on(
+			`welcome-message/remove`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove)
+		);
 
 		socket.on(
 			`messaging/pull-tab-data`,
@@ -83,22 +99,6 @@ function setupWebSocketServer (app, database) {
 		socket.on(
 			`thread/send-message`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage)
-		);
-		socket.on(
-			`settings/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData)
-		);
-		socket.on(
-			`settings/set-bot-enabled`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
-		);
-		socket.on(
-			`welcome-message/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageUpdate)
-		);
-		socket.on(
-			`welcome-message/remove`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.welcomeMessageRemove)
 		);
 
 	});
