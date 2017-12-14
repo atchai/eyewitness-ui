@@ -59,6 +59,10 @@ function setupWebSocketServer (app, database) {
 			`stories/pull-tab-data`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.getStoryTabData)
 		);
+		socket.on(
+			`article/set-published`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
+		);
 
 		socket.on(
 			`messaging/pull-tab-data`,
@@ -79,10 +83,6 @@ function setupWebSocketServer (app, database) {
 		socket.on(
 			`thread/send-message`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage)
-		);
-		socket.on(
-			`article/set-published`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
 		);
 		socket.on(
 			`settings/pull-tab-data`,
