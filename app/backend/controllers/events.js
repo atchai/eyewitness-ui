@@ -45,7 +45,7 @@ module.exports = class EventsController {
 			const story = { articleId: recArticle._id.toString() };
 
 			// Full-fat stories contain all properties.
-			if (stories.length < pageInitialSize) {
+			if (index < pageInitialSize) {
 				story.isFullFat = true;
 				story.title = recArticle.title;
 				story.articleUrl = recArticle.articleUrl;
