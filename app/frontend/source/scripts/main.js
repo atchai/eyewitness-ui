@@ -32,7 +32,7 @@ setupWebSocketClient(store);
 /*
  * Miscellaneous plugins.
  */
-Vue.use(vueScroll, { throttle: 500 });
+Vue.use(vueScroll, { throttle: 200 });
 
 /*
  * Prevent drag events on certain elements.
