@@ -24,27 +24,27 @@ function setupWebSocketClient (store) {
 
 	socket.on(`thread/new-message`, data => {
 
-		const threadId = data.threadId;
+		const itemId = data.itemId;
 		const newMessage = data.message;
-		const hasThread = store.getters.hasThread(threadId);
+		const hasThread = store.getters.hasThread(itemId);
 
 		// If we have not spoken to this user before we must ask the backend for the full thread data.
 		if (!hasThread) {
 			return socket.emit(
 				`thread/pull`,
-				{ threadId },
+				{ itemId },
 				resData => {
 
 					if (!resData || !resData.success) { return alert(`There was a problem loading in a new thread.`); }
 
 					// Add the new thread.
 					store.commit(`add-thread`, {
-						key: threadId,
+						key: itemId,
 						data: resData.thread,
 					});
 
 					// Do we need to sort the threads?
-					const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
+					const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `itemId`, `latestDate`, `desc`);
 					store.commit(`update-threads`, { data: newThreadsDictionary });
 
 				}
@@ -53,7 +53,7 @@ function setupWebSocketClient (store) {
 
 		// Add the new message to the thread.
 		store.commit(`add-thread-message`, {
-			key: threadId,
+			key: itemId,
 			newMessage,
 			latestDate: data.latestDate,
 			latestMessage: data.latestMessage,
@@ -61,7 +61,7 @@ function setupWebSocketClient (store) {
 
 		// Do we need to sort the threads?
 		if (newMessage.direction === `incoming`) {
-			const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
+			const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `itemId`, `latestDate`, `desc`);
 			store.commit(`update-threads`, { data: newThreadsDictionary });
 		}
 

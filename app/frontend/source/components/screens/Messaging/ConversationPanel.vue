@@ -17,8 +17,8 @@
 					<span v-if="thread.botEnabled">Enabled</span>
 					<span v-if="!thread.botEnabled">Disabled</span>
 				</div>
-				<a href="JavaScript:void(0);" v-if="thread.botEnabled" @click="setBotDisabled(thread.threadId)"><span >disable</span></a>
-				<a href="JavaScript:void(0);" v-if="!thread.botEnabled" @click="setBotEnabled(thread.threadId)"><span>enable</span></a>
+				<a href="JavaScript:void(0);" v-if="thread.botEnabled" @click="setBotDisabled(thread.itemId)"><span >disable</span></a>
+				<a href="JavaScript:void(0);" v-if="!thread.botEnabled" @click="setBotEnabled(thread.itemId)"><span>enable</span></a>
 			</div>
 		</div>
 
@@ -47,7 +47,7 @@
 				<textarea
 					id="composer-text-input"
 					placeholder="Write a reply..."
-					@keydown.enter.exact.prevent="sendMessage(thread.threadId, $event)"
+					@keydown.enter.exact.prevent="sendMessage(thread.itemId, $event)"
 					>
 				</textarea>
 			</div>
@@ -80,9 +80,9 @@
 		components: { Message },
 		computed: {
 
-			thread () { return this.$store.state.threads[this.$route.params.threadId] || {}; },
+			thread () { return this.$store.state.threads[this.$route.params.itemId] || {}; },
 
-			isThread () { return Boolean(this.$store.state.threads[this.$route.params.threadId]); },
+			isThread () { return Boolean(this.$store.state.threads[this.$route.params.itemId]); },
 
 			providerImageUrl () { return ``; },
 
@@ -103,33 +103,33 @@
 		},
 		methods: {
 
-			setBotEnabled (threadId) {
+			setBotEnabled (itemId) {
 
 				this.$store.commit(`update-thread`, {
-					key: threadId,
+					key: itemId,
 					dataField: `botEnabled`,
 					dataValue: true,
 				});
 
 				getSocket().emit(
 					`thread/set-bot-enabled`,
-					{ threadId, enabled: true },
+					{ itemId, enabled: true },
 					data => (!data || !data.success ? alert(`There was a problem enabling the user's bot.`) : void (0))
 				);
 
 			},
 
-			setBotDisabled (threadId) {
+			setBotDisabled (itemId) {
 
 				this.$store.commit(`update-thread`, {
-					key: threadId,
+					key: itemId,
 					dataField: `botEnabled`,
 					dataValue: false,
 				});
 
 				getSocket().emit(
 					`thread/set-bot-enabled`,
-					{ threadId, enabled: false },
+					{ itemId, enabled: false },
 					data => (!data || !data.success ? alert(`There was a problem disabling the user's bot.`) : void (0))
 				);
 
@@ -144,7 +144,7 @@
 				element.scrollTop = element.scrollHeight;
 			},
 
-			sendMessage (threadId, event) {
+			sendMessage (itemId, event) {
 
 				// No message so nothing to do.
 				const messageText = event.target.value.trim();
@@ -154,7 +154,7 @@
 
 				// Disable the bot in the UI.
 				this.$store.commit(`update-thread`, {
-					key: threadId,
+					key: itemId,
 					dataField: `botEnabled`,
 					dataValue: false,
 				});
@@ -162,7 +162,7 @@
 				// Send the message (also disables the bot).
 				getSocket().emit(
 					`thread/send-message`,
-					{ threadId, messageText },
+					{ itemId, messageText },
 					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
 				);
 
@@ -171,20 +171,20 @@
 			markAsReadByAdmin () {
 
 				// If there's no thread ID present then we don't have anything to mark as read (yet).
-				const threadId = (this.thread && this.thread.threadId);
-				if (!threadId) { return; }
+				const itemId = (this.thread && this.thread.itemId);
+				if (!itemId) { return; }
 
 				const lastRead = moment().toISOString();
 
 				this.$store.commit(`update-thread`, {
-					key: threadId,
+					key: itemId,
 					dataField: `adminLastReadMessages`,
 					dataValue: lastRead,
 				});
 
 				getSocket().emit(
 					`thread/set-admin-read-date`,
-					{ threadId, lastRead },
+					{ itemId, lastRead },
 					data => (!data || !data.success ? alert(`There was a problem marking the thread as read.`) : void (0))
 				);
 

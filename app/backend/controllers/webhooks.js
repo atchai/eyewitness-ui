@@ -26,7 +26,7 @@ module.exports = class WebhooksController {
 
 		// Alert all clients to this incoming message.
 		this.socketServer.emit(`thread/new-message`, {
-			threadId: userId,
+			itemId: userId,
 			message: {
 				messageId: message.messageId,
 				direction: message.direction,

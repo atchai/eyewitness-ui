@@ -9,8 +9,8 @@
 		<div class="threads">
 			<Thread
 				v-for="thread in threadSet"
-				:key="thread.threadId"
-				:threadId="thread.threadId"
+				:key="thread.itemId"
+				:itemId="thread.itemId"
 				:userFullName="thread.userFullName"
 				:date="thread.latestDate"
 				:message="thread.latestMessage"

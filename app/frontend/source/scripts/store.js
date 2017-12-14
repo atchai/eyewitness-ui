@@ -69,7 +69,7 @@ export default new Vuex.Store({
 
 	},
 	getters: {
-		hasThread: state => threadId => Boolean(state.threads[threadId]),
+		hasThread: state => itemId => Boolean(state.threads[itemId]),
 		threadSet: state => Object.values(state.threads),
 		articleSet: state => Object.values(state.articles),
 		welcomeMessageSet: state => Object.values(state.welcomeMessages),

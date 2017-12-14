@@ -4,7 +4,7 @@
 
 <template>
 
-	<router-link :to="`/messaging/thread/${threadId}`" :class="{ 'thread': true, 'unread': unread, 'unread': unread }">
+	<router-link :to="`/messaging/thread/${itemId}`" :class="{ 'thread': true, 'unread': unread, 'unread': unread }">
 		<div class="image">
 			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
 		</div>
@@ -28,7 +28,7 @@
 	import moment from 'moment';
 
 	export default {
-		props: [`threadId`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
+		props: [`itemId`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
 		computed: {
 
 			unread () {

@@ -257,7 +257,7 @@ module.exports = class EventsController {
 		const threads = await Promise.all(threadPromises);
 
 		return {
-			threads: mapListToDictionary(threads, `threadId`),
+			threads: mapListToDictionary(threads, `itemId`),
 		};
 
 	}
@@ -276,9 +276,9 @@ module.exports = class EventsController {
 	async threadPull (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const threadId = String(data.threadId);
+		const itemId = String(data.itemId);
 
-		const recUser = await this.database.get(`User`, { _id: threadId });
+		const recUser = await this.database.get(`User`, { _id: itemId });
 		const thread = await this.buildThread(recUser);
 
 		return reply({ success: true, thread });
@@ -329,7 +329,7 @@ module.exports = class EventsController {
 		const { latestMessage, latestDate } = getLatestMessageInformation(lastIncomingMessage);
 
 		return Object({
-			threadId: recUser._id,
+			itemId: recUser._id,
 			userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
 			messages,
 			latestMessage,
@@ -346,10 +346,10 @@ module.exports = class EventsController {
 	async threadSetBotEnabled (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const threadId = String(data.threadId);
+		const itemId = String(data.itemId);
 		const botDisabled = Boolean(!data.enabled);
 
-		await this.database.update(`User`, threadId, {
+		await this.database.update(`User`, itemId, {
 			'bot.disabled': botDisabled,
 		});
 
@@ -363,10 +363,10 @@ module.exports = class EventsController {
 	async threadSetAdminReadDate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const threadId = String(data.threadId);
+		const itemId = String(data.itemId);
 		const lastRead = moment(data.lastRead).toDate();
 
-		await this.database.update(`User`, threadId, {
+		await this.database.update(`User`, itemId, {
 			'appData.adminLastReadMessages': lastRead,
 		});
 
@@ -380,7 +380,7 @@ module.exports = class EventsController {
 	async threadSendMessage (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const threadId = String(data.threadId);
+		const itemId = String(data.itemId);
 		const text = String(data.messageText);
 
 		const req = new RequestNinja(this.hippocampUrl, {
@@ -391,7 +391,7 @@ module.exports = class EventsController {
 		const res = await req.postJson({
 			fromAdmin: true,
 			messages: [{
-				userId: threadId,
+				userId: itemId,
 				channelName: `facebook`,
 				direction: `outgoing`,
 				text,

@@ -47,7 +47,7 @@ export default new VueRouter({
 				name: `Messaging`,
 				component: SelectConversation,
 			}, {
-				path: `thread/:threadId`,
+				path: `thread/:itemId`,
 				component: ConversationPanel,
 			}],
 		},
