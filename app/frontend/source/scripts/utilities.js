@@ -136,6 +136,46 @@ function setLoadingFinished (cmp) {
 }
 
 /*
+ * Load in new items as the user scrolls a container div.
+ */
+function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, scrollTop) { // eslint-disable-line max-params
+
+	console.log(scrollContainerId, elementClass, storeUpdateAction, storeProperty, scrollTop);
+
+	// Get the elements.
+	const scrollDirection = (scrollTop >= cmp.lastScrollTop ? `down` : `up`);
+	const { $inRangeElements, $lostRangeElements } =
+		getScrollElementsInRange(scrollContainerId, elementClass, APP_CONFIG.pageBufferSize, scrollTop, scrollDirection);
+
+	// Convert to items.
+	const inRangeItems = convertElementsToItems($inRangeElements, storeProperty);
+	const lostRangeItems = convertElementsToItems($lostRangeElements, storeProperty);
+
+	console.log(`inRangeItems`, inRangeItems);
+
+	// Filter out the thin items that are in range and need fattening up.
+	const thinInRangeItems = inRangeItems.filter(item => !item.isFullFat);
+
+	// Replace the fat items that have just gone out of range with thinner copies.
+	lostRangeItems.forEach(item => {
+		cmp.$store.commit(storeUpdateAction, {
+			key: item.itemId,
+			data: { itemId: item.itemId },
+		});
+	});
+
+	// Get just the IDs for the next stage.
+	const itemIdsToFetch = thinInRangeItems.map(item => item.itemId);
+
+	// Load in new items, if any.
+	if (itemIdsToFetch.length) { cmp.fetchTabData(itemIdsToFetch); }
+
+	// Cache this for the next call.
+	cmp.lastScrollTop = scrollTop;
+
+}
+
+/*
  * Returns only the elements within the scroll container that are in range.
  */
 function getScrollElementsInRange (scrollContainerId, elementClass, rangeBufferSize, scrollTop, scrollDirection) {
@@ -226,6 +266,5 @@ export {
 	sortObjectPropertiesByKey,
 	setLoadingStarted,
 	setLoadingFinished,
-	getScrollElementsInRange,
-	convertElementsToItems,
+	handleOnScroll,
 };
