@@ -48,21 +48,22 @@
 		},
 		methods: {
 
-			fetchTabData () {
+			fetchTabData (itemIdsToFetch) {
 
-				if (!setLoadingStarted(this)) { return; }
+				if (!setLoadingStarted(this, Boolean(itemIdsToFetch))) { return; }
 
 				getSocket().emit(
 					`stories/pull-tab-data`,
-					{ pageSize: APP_CONFIG.pageSize },
+					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
 					resData => {
 
 						setLoadingFinished(this);
 
 						if (!resData || !resData.success) { return alert(`There was a problem loading the stories tab.`); }
 
-						// Replace all of the stories.
-						this.$store.commit(`update-articles`, resData.stories);
+						// Replace all or update some of the stories.
+						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `articleId` : null);
+						this.$store.commit(`update-articles`, { replaceByKeyField, data: resData.stories });
 
 					}
 				);
@@ -73,7 +74,7 @@
 		watch: {
 
 			$route: {
-				handler: `fetchTabData`,
+				handler: function () { this.fetchTabData(null); },
 				immediate: true,
 			},
 
