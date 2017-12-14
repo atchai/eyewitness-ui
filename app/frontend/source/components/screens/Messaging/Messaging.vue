@@ -44,7 +44,7 @@
 						if (!resData || !resData.success) { return alert(`There was a problem loading the messaging tab.`); }
 
 						// Replace all of the threads.
-						this.$store.commit(`update-threads`, resData.threads);
+						this.$store.commit(`update-threads`, { data: resData.threads });
 
 					}
 				);

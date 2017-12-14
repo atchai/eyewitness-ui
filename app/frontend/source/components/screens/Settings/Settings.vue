@@ -64,7 +64,7 @@
 						if (!resData || !resData.success) { return alert(`There was a problem loading the settings tab.`); }
 
 						// Replace all of the welcome messages.
-						this.$store.commit(`update-welcome-messages`, resData.welcomeMessages);
+						this.$store.commit(`update-welcome-messages`, { data: resData.welcomeMessages });
 
 					}
 				);

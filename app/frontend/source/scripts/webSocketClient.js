@@ -16,9 +16,9 @@ function setupWebSocketClient (store) {
 
 	socket.on(`welcome`, data => {
 
-		if (data.threads) { store.commit(`update-threads`, data.threads); }
-		if (data.articles) { store.commit(`update-articles`, data.articles); }
-		if (data.welcomeMessages) { store.commit(`update-welcome-messages`, data.welcomeMessages); }
+		if (data.threads) { store.commit(`update-threads`, { data: data.threads }); }
+		if (data.articles) { store.commit(`update-articles`, { data: data.articles }); }
+		if (data.welcomeMessages) { store.commit(`update-welcome-messages`, { data: data.welcomeMessages }); }
 
 	});
 
@@ -45,7 +45,7 @@ function setupWebSocketClient (store) {
 
 					// Do we need to sort the threads?
 					const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
-					store.commit(`update-threads`, newThreadsDictionary);
+					store.commit(`update-threads`, { data: newThreadsDictionary });
 
 				}
 			);
@@ -62,7 +62,7 @@ function setupWebSocketClient (store) {
 		// Do we need to sort the threads?
 		if (newMessage.direction === `incoming`) {
 			const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `threadId`, `latestDate`, `desc`);
-			store.commit(`update-threads`, newThreadsDictionary);
+			store.commit(`update-threads`, { data: newThreadsDictionary });
 		}
 
 	});
