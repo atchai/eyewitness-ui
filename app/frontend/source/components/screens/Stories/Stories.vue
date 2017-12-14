@@ -1,5 +1,5 @@
 <!--
-	SCREEN: ARTICLES
+	SCREEN: STORIES
 -->
 
 <template>

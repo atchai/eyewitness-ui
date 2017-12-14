@@ -123,7 +123,6 @@ module.exports = class EventsController {
 
 
 
-
 	/*
 	 * Amalgamates the data for the messaging tab.
 	 */
