@@ -103,8 +103,17 @@ module.exports = class EventsController {
 	 */
 	async getStoryTabData (socket, data, reply) {
 
-		const records = await this.getItems(`Article`, `articleDate`, `desc`);
-		const stories = this.prepareStories(records, data.pageSize);
+		let records;
+
+		// Get the relevant records.
+		if (data.itemIdsToFetch) {
+			records = await this.getItemsById(`Article`, data.itemIdsToFetch);
+		}
+		else {
+			records = await this.getItems(`Article`, `articleDate`, `desc`);
+		}
+
+		const stories = this.prepareStories(records, data.pageInitialSize);
 
 		return reply({
 			success: true,
