@@ -24,10 +24,9 @@ export default new Vuex.Store({
 		threads: {},
 		articles: {},
 		welcomeMessages: {},
-		showStories: null,
-		maxOldThreadMessages: null,
 	},
 	mutations: {
+
 		'add-thread': (state, payload) => addStorePropertyItem(state, `threads`, payload),
 		'update-thread': (state, payload) => updateStorePropertyItem(state, `threads`, payload),
 		'update-threads': (state, payload) => updateStoreProperty(state, `threads`, payload),
@@ -63,12 +62,11 @@ export default new Vuex.Store({
 		'update-article': (state, payload) => updateStorePropertyItem(state, `articles`, payload),
 		'update-articles': (state, payload) => updateStoreProperty(state, `articles`, payload),
 		'remove-article': (state, payload) => removeStorePropertyItem(state, `articles`, payload),
-		'set-show-stories': (state, payload) => state.showStories = payload,
 		'add-welcome-message': (state, payload) => addStorePropertyItem(state, `welcomeMessages`, payload),
 		'update-welcome-message': (state, payload) => updateStorePropertyItem(state, `welcomeMessages`, payload),
 		'update-welcome-messages': (state, payload) => updateStoreProperty(state, `welcomeMessages`, payload),
 		'remove-welcome-message': (state, payload) => removeStorePropertyItem(state, `welcomeMessages`, payload),
-		'set-max-old-thread-messages': (state, payload) => state.maxOldThreadMessages = payload,
+
 	},
 	getters: {
 		hasThread: state => threadId => Boolean(state.threads[threadId]),
