@@ -42,7 +42,7 @@ module.exports = class EventsController {
 
 		for (let index = 0; index < recArticles.length; index++) {
 			const recArticle = recArticles[index];
-			const story = { articleId: recArticle._id.toString() };
+			const story = { itemId: recArticle._id.toString() };
 
 			// Full-fat stories contain all properties.
 			if (index < pageInitialSize) {
@@ -67,7 +67,7 @@ module.exports = class EventsController {
 			stories.push(story);
 		}
 
-		return mapListToDictionary(stories, `articleId`);
+		return mapListToDictionary(stories, `itemId`);
 
 	}
 
@@ -150,11 +150,11 @@ module.exports = class EventsController {
 	async storiesSetStoryPublished (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const articleId = String(data.articleId);
+		const itemId = String(data.itemId);
 		const isPublished = Boolean(data.published);
 
 		// Update the database.
-		await this.database.update(`Article`, articleId, { isPublished });
+		await this.database.update(`Article`, itemId, { isPublished });
 
 		return reply({ success: true });
 

@@ -12,8 +12,8 @@
 		/>
 		<Story
 			v-for="article in articleSet"
-			:key="article.articleId"
-			:articleId="article.articleId"
+			:key="article.itemId"
+			:itemId="article.itemId"
 			:isFullFat="article.isFullFat"
 			:title="article.title"
 			:time="article.articleDate | formatDate('HH:MM')"
@@ -68,7 +68,7 @@
 						if (!resData || !resData.success) { return alert(`There was a problem loading the stories tab.`); }
 
 						// Replace all or update some of the stories.
-						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `articleId` : null);
+						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
 						this.$store.commit(`update-articles`, { replaceByKeyField, data: resData.stories });
 
 					}

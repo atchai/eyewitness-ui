@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :data-item-id="articleId" :class="{ 'story': true, 'full-fat': isFullFat }">
+	<div :data-item-id="itemId" :class="{ 'story': true, 'full-fat': isFullFat }">
 		<div v-if="isFullFat" class="cell title">
 			<div class="inner">{{ title }}</div>
 		</div>
@@ -19,8 +19,8 @@
 					<span v-if="published">Published</span>
 					<span v-if="!published">Offline</span>
 				</div>
-				<a href="JavaScript:void(0);" v-if="published" @click="setArticleUnpublished(articleId)"><span >take offline</span></a>
-				<a href="JavaScript:void(0);" v-if="!published" @click="setArticlePublished(articleId)"><span>publish</span></a>
+				<a href="JavaScript:void(0);" v-if="published" @click="setArticleUnpublished(itemId)"><span >take offline</span></a>
+				<a href="JavaScript:void(0);" v-if="!published" @click="setArticlePublished(itemId)"><span>publish</span></a>
 			</div>
 		</div>
 	</div>
@@ -32,36 +32,36 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 
 	export default {
-		props: [`articleId`, `isFullFat`, `title`, `time`, `date`, `published`],
+		props: [`itemId`, `isFullFat`, `title`, `time`, `date`, `published`],
 		methods: {
 
-			setArticlePublished (articleId) {
+			setArticlePublished (itemId) {
 
 				this.$store.commit(`update-article`, {
-					key: articleId,
+					key: itemId,
 					dataField: `published`,
 					dataValue: true,
 				});
 
 				getSocket().emit(
 					`stories/set-story-published`,
-					{ articleId, published: true },
+					{ itemId, published: true },
 					data => (!data || !data.success ? alert(`There was a problem publishing the story.`) : void (0))
 				);
 
 			},
 
-			setArticleUnpublished (articleId) {
+			setArticleUnpublished (itemId) {
 
 				this.$store.commit(`update-article`, {
-					key: articleId,
+					key: itemId,
 					dataField: `published`,
 					dataValue: false,
 				});
 
 				getSocket().emit(
 					`stories/set-story-published`,
-					{ articleId, published: false },
+					{ itemId, published: false },
 					data => (!data || !data.success ? alert(`There was a problem unpublishing the story.`) : void (0))
 				);
 
