@@ -337,17 +337,6 @@ module.exports = class EventsController {
 	}
 
 	/*
-	 * Send a broadcast message to all users.
-	 */
-	async breakingNewsSendMessage (socket, data, reply) {
-
-		console.log(`Breaking News Send Message`, data);
-
-		return reply({ success: true });
-
-	}
-
-	/*
 	 * Returns the tab data for the settings tab.
 	 */
 	async settingsPullTabData (socket, data, reply) {

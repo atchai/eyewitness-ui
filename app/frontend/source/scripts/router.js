@@ -8,7 +8,6 @@ import Messaging from '../components/screens/Messaging/Messaging';
 import ConversationPanel from '../components/screens/Messaging/ConversationPanel';
 import SelectConversation from '../components/screens/Messaging/SelectConversation';
 import Stories from '../components/screens/Stories/Stories';
-import BreakingNews from '../components/screens/BreakingNews/BreakingNews';
 import Settings from '../components/screens/Settings/Settings';
 import NotFound from '../components/screens/NotFound/NotFound';
 
@@ -37,11 +36,6 @@ export default new VueRouter({
 			path: `/stories`,
 			name: `Stories`,
 			component: Stories,
-		},
-		{
-			path: `/breaking-news`,
-			name: `BreakingNews`,
-			component: BreakingNews,
 		},
 		{
 			path: `/settings`,

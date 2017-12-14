@@ -85,10 +85,6 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.articleSetPublished)
 		);
 		socket.on(
-			`breaking-news/send-message`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.breakingNewsSendMessage)
-		);
-		socket.on(
 			`settings/pull-tab-data`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData)
 		);
