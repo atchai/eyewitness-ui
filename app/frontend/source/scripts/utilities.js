@@ -8,14 +8,37 @@ import Vue from 'vue';
 /*
  * Adds a single item to the given state property.
  */
-function addStorePropertyItem (state, property, payload) {
+function addStorePropertyItem (state, property, { key, data }) {
 
 	const dictionary = state[property];
 
 	state[property] = Object({
 		...dictionary,
-		[payload.key]: payload.data,
+		[key]: data,
 	});
+
+}
+
+/*
+ * Updates select items in the property if a key field is specified, otherwise replaces all items in the property.
+ */
+function updateStoreProperty (state, property, { replaceByKeyField, data }) {
+
+	// Replace only specific items in the property based on what we have in the payload.
+	if (replaceByKeyField) {
+
+		Object.values(data).forEach(item =>
+			updateStorePropertyItem(state, property, {
+				key: item[replaceByKeyField],
+				data: item,
+			})
+		);
+	}
+
+	// Replace entire property with the new payload.
+	else {
+		state[property] = data;
+	}
 
 }
 
@@ -25,21 +48,21 @@ function addStorePropertyItem (state, property, payload) {
 function updateStorePropertyItem (state, property, payload) {
 
 	const dictionary = state[property];
-	const key = payload.key;
+	const { key, data, dataField, dataValue, dataFunction } = payload;
 
 	// Replace the item in its entirety.
-	if (typeof payload.data !== `undefined`) {
-		dictionary[key] = payload.data;
+	if (typeof data !== `undefined`) {
+		dictionary[key] = data;
 	}
 
 	// Otherwise just replace a single field in the item.
-	else if (typeof payload.dataField !== `undefined` && typeof payload.dataValue !== `undefined`) {
-		dictionary[key][payload.dataField] = payload.dataValue;
+	else if (typeof dataField !== `undefined` && typeof dataValue !== `undefined`) {
+		dictionary[key][dataField] = dataValue;
 	}
 
 	// Otherwise do we have a function we can execute?
-	else if (typeof payload.dataFunction === `function`) {
-		dictionary[key] = payload.dataFunction(dictionary[key], payload);
+	else if (typeof dataFunction === `function`) {
+		dictionary[key] = dataFunction(dictionary[key], payload);
 	}
 
 	// Whoops!
@@ -52,8 +75,8 @@ function updateStorePropertyItem (state, property, payload) {
 /*
  * Removes a single item on the given state property.
  */
-function removeStorePropertyItem (state, property, payload) {
-	Vue.delete(state[property], payload.key);
+function removeStorePropertyItem (state, property, { key }) {
+	Vue.delete(state[property], key);
 }
 
 /*
@@ -117,6 +140,7 @@ function setLoadingFinished (cmp) {
  */
 export {
 	addStorePropertyItem,
+	updateStoreProperty,
 	updateStorePropertyItem,
 	removeStorePropertyItem,
 	sortObjectPropertiesByKey,
