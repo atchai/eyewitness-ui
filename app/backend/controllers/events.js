@@ -101,7 +101,7 @@ module.exports = class EventsController {
 	/*
 	 * Prepares story data for the frontend and maps the list to a dictionary.
 	 */
-	prepareStories (recArticles, pageInitialSize, isHardLimit = false) {
+	async prepareStories (recArticles, pageInitialSize, isHardLimit = false) {
 
 		const stories = [];
 
@@ -139,7 +139,7 @@ module.exports = class EventsController {
 	/*
 	 * Prepares welcome message data for the frontend and maps the list to a dictionary.
 	 */
-	prepareWelcomeMessages (recWelcomeMessages) {
+	async prepareWelcomeMessages (recWelcomeMessages) {
 
 		const welcomeMessages = [];
 
@@ -228,7 +228,7 @@ module.exports = class EventsController {
 			records = await this.getItems(`Article`, `articleDate`, `desc`);
 		}
 
-		const stories = this.prepareStories(records, data.pageInitialSize);
+		const stories = await this.prepareStories(records, data.pageInitialSize);
 
 		return reply({
 			success: true,
@@ -259,7 +259,7 @@ module.exports = class EventsController {
 	async settingsGetTabData (socket, data, reply) {
 
 		const records = await this.getItems(`WelcomeMessage`, `weight`, `asc`);
-		const welcomeMessages = this.prepareWelcomeMessages(records);
+		const welcomeMessages = await this.prepareWelcomeMessages(records);
 
 		return reply({ success: true, welcomeMessages });
 
