@@ -59,6 +59,10 @@ function setupWebSocketServer (app, database) {
 			`messaging/get-threads`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreads)
 		);
+		socket.on(
+			`messaging/get-thread-messages`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreadMessages)
+		);
 
 		socket.on(
 			`stories/get-tab-data`,

@@ -99,6 +99,46 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Prepares message data for the frontend and maps the list to a dictionary.
+	 */
+	async prepareMessages (recMessages, pageInitialSize, isHardLimit = false) {
+
+		const messages = [];
+
+		for (let index = 0; index < recMessages.length; index++) {
+			const recMessage = recMessages[index];
+			const message = { itemId: recMessage._id.toString() };
+
+			// Full-fat messages contain all properties.
+			if (index < pageInitialSize) {
+				message.isFullFat = true;
+				message.direction = recMessage.direction;
+				message.sentAt = moment(recMessage.sentAt).toISOString();
+				message.humanToHuman = recMessage.humanToHuman;
+				message.data = recMessage.data;
+			}
+
+			// Don't add any low-fat messages if we have a hard limit.
+			else if (isHardLimit) {
+				break;
+			}
+
+			// Low-fat messages only contain the item ID.
+			else {
+				message.isFullFat = false;
+			}
+
+			messages.push(message);
+		}
+
+		// We must sort messages by date with newest last.
+		deepSort(messages, `sentAt`, `asc`);
+
+		return mapListToDictionary(messages, `itemId`);
+
+	}
+
+	/*
 	 * Prepares story data for the frontend and maps the list to a dictionary.
 	 */
 	async prepareStories (recArticles, pageInitialSize, isHardLimit = false) {
@@ -213,6 +253,35 @@ module.exports = class EventsController {
 		return reply({
 			success: true,
 			threads,
+		});
+
+	}
+
+	/*
+	 * Returns the list of messages for the given thread.
+	 */
+	async messagingGetThreadMessages (socket, data, reply) {
+
+		let records;
+
+		// Get the relevant message records.
+		if (data.breakPointMessageId) {
+			records = await this.getItems(`Message`, `sentAt`, `desc`, {
+				_id: { $lt: data.breakPointMessageId },
+				_user: data.threadId,
+			}, data.pageInitialSize);
+		}
+		else {
+			records = await this.getItems(`Message`, `sentAt`, `desc`, {
+				_user: data.threadId,
+			}, data.pageInitialSize);
+		}
+
+		const messages = await this.prepareMessages(records, data.pageInitialSize, true);
+
+		return reply({
+			success: true,
+			messages,
 		});
 
 	}
@@ -342,14 +411,6 @@ module.exports = class EventsController {
 
 
 	/*
-	 * Returns the tab data for the messaging tab.
-	 */
-	async messagingPullTabData (socket, data, reply) {
-		const { threads } = await this.getDataForMessagingTab();
-		return reply({ success: true, threads });
-	}
-
-	/*
 	 * Send a full thread to the client that's requesting it.
 	 */
 	async threadPull (socket, data, reply) {
@@ -361,61 +422,6 @@ module.exports = class EventsController {
 		const thread = await this.buildThread(recUser);
 
 		return reply({ success: true, thread });
-
-	}
-
-	/*
-	 * Constructs a thread object that we can send to clients.
-	 */
-	async buildThread (recUser) {
-
-		// Get the last 100 messages for this user.
-		const recMessages = await this.database.find(`Message`, {
-			_user: recUser._id,
-		}, {
-			limit: config.maxOldThreadMessages,
-			sort: { sentAt: `desc` },
-		});
-
-		// Order them with the oldest first, newest last.
-		recMessages.reverse();
-
-		// Prepare messages.
-		const messages = recMessages.map(recMessage =>
-			Object({
-				messageId: recMessage._id.toString(),
-				direction: recMessage.direction,
-				sentAt: recMessage.sentAt,
-				humanToHuman: recMessage.humanToHuman,
-				data: recMessage.data,
-			})
-		);
-
-		// Get the most recent incoming message.
-		let lastIncomingMessage;
-
-		for (let index = messages.length - 1; index >= 0; index--) {
-			const message = messages[index];
-
-			if (message.direction === `incoming`) {
-				lastIncomingMessage = message;
-				break;
-			}
-		}
-
-		// Construct the thread.
-		const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
-		const { latestMessage, latestDate } = getLatestMessageInformation(lastIncomingMessage);
-
-		return Object({
-			itemId: recUser._id,
-			userFullName: `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim(),
-			messages,
-			latestMessage,
-			latestDate,
-			botEnabled: !(recUser.bot && recUser.bot.disabled),
-			adminLastReadMessages: adminLastReadMessages.toISOString(),
-		});
 
 	}
 
