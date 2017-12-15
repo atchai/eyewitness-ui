@@ -114,7 +114,7 @@
 
 			fetchComponentData (breakPointMessageId) {
 
-				if (!setLoadingStarted(this, Boolean(breakPointMessageId))) { return; }
+				if (!setLoadingStarted(this, Boolean(breakPointMessageId), true)) { return; }
 
 				getSocket().emit(
 					`messaging/get-thread-messages`,
