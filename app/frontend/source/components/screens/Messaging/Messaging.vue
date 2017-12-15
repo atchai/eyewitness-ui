@@ -55,7 +55,7 @@
 		watch: {
 
 			$route: {
-				handler: `fetchTabData`,
+				handler: function () { this.fetchTabData(null); },
 				immediate: true,
 			},
 
