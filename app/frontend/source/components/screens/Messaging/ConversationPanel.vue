@@ -237,6 +237,9 @@
 			this.markAsReadByAdmin();
 			this.scrollMessagesToBottom();
 		},
+		beforeDestroy () {
+			this.$store.commit(`remove-all-messages`);
+		},
 	};
 
 </script>

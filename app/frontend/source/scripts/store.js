@@ -37,6 +37,7 @@ export default new Vuex.Store({
 		'update-message': (state, payload) => updateStorePropertyItem(state, `messages`, payload),
 		'update-messages': (state, payload) => updateStoreProperty(state, `messages`, payload),
 		'remove-message': (state, payload) => removeStorePropertyItem(state, `messages`, payload),
+		'remove-all-messages': (state) => state.messages = {},
 
 		'update-story': (state, payload) => updateStorePropertyItem(state, `stories`, payload),
 		'update-stories': (state, payload) => updateStoreProperty(state, `stories`, payload),
