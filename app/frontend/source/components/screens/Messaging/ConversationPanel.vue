@@ -84,8 +84,6 @@
 
 			isThread () { return Boolean(this.$store.state.threads[this.$route.params.itemId]); },
 
-			providerImageUrl () { return ``; },
-
 			numOldMessagesLoadedText () {
 
 				const maxOldThreadMessages = this.$store.state.maxOldThreadMessages;
@@ -191,9 +189,6 @@
 			}
 
 		},
-		/*
-		 * Always scroll messages to the bottom.
-		 */
 		mounted () {
 			this.markAsReadByAdmin();
 			this.scrollMessagesToBottom();
