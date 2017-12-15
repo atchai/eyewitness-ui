@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="{ screen: true, loading: (loadingState > 0) }">
+	<div :class="{ screen: true }">
 		<ScreenLoader />
 		<ThreadsPanel />
 		<router-view></router-view>
@@ -18,48 +18,14 @@
 	import ThreadsPanel from './ThreadsPanel';
 	import ScreenLoader from '../../common/ScreenLoader';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
 	export default {
 		data: function () {
 			return {
-				loadingState: 0,
-				loadingRoute: ``,
+
 			};
 		},
 		components: { ConversationPanel, ScreenLoader, ThreadsPanel },
-		methods: {
-
-			fetchTabData () {
-
-				if (!setLoadingStarted(this)) { return; }
-
-				getSocket().emit(
-					`messaging/get-tab-data`,
-					{ pageInitialSize: APP_CONFIG.pageInitialSize },
-					resData => {
-
-						setLoadingFinished(this);
-
-						if (!resData || !resData.success) { return alert(`There was a problem loading the messaging tab.`); }
-
-						// Replace all of the threads.
-						this.$store.commit(`update-threads`, { data: resData.threads });
-
-					}
-				);
-
-			},
-
-		},
-		watch: {
-
-			$route: {
-				handler: function () { this.fetchTabData(null); },
-				immediate: true,
-			},
-
-		},
 	};
 
 </script>

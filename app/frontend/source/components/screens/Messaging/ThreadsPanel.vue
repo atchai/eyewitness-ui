@@ -6,7 +6,7 @@
 
 	<div class="panel">
 		<div class="inbox">Inbox</div>
-		<div class="threads">
+		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }" v-scroll="onScroll">
 			<Thread
 				v-for="thread in threadSet"
 				:key="thread.itemId"
@@ -25,14 +25,60 @@
 
 	import { mapGetters } from 'vuex';
 	import Thread from './Thread';
+	import { getSocket } from '../../../scripts/webSocketClient';
+	import { setLoadingStarted, setLoadingFinished, handleOnScroll } from '../../../scripts/utilities';
 
 	export default {
+		data: function () {
+			return {
+				loadingState: 0,
+				loadingRoute: ``,
+				lastScrollTop: 0,
+			};
+		},
 		computed: {
 			...mapGetters([
 				`threadSet`,
 			]),
 		},
 		components: { Thread },
+		methods: {
+
+			fetchComponentData (itemIdsToFetch) {
+
+				if (!setLoadingStarted(this, Boolean(itemIdsToFetch))) { return; }
+
+				getSocket().emit(
+					`messaging/get-threads`,
+					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
+					resData => {
+
+						setLoadingFinished(this);
+
+						if (!resData || !resData.success) { return alert(`There was a problem loading the threads.`); }
+
+						// Replace all or update some of the threads.
+						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
+						this.$store.commit(`update-threads`, { replaceByKeyField, data: resData.threads });
+
+					}
+				);
+
+			},
+
+			async onScroll (event, { scrollTop }) {
+				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop);
+			},
+
+		},
+		watch: {
+
+			$route: {
+				handler: function () { this.fetchComponentData(null); },
+				immediate: true,
+			},
+
+		},
 	};
 
 </script>
