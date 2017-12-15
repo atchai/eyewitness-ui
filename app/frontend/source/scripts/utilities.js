@@ -102,17 +102,24 @@ function sortObjectPropertiesByKey (existingDictionary, keyProperty, sortPropert
 /*
  * Mark a component as currently loading.
  */
-function setLoadingStarted (cmp, force = false, delay = 50) {
+function setLoadingStarted (cmp, force = false, maxRouteSpecificity = false, delay = 50) {
 
 	cmp.isLoading = false;
 	cmp.loadingState = 0;
 
-	// Find the top level route path that matched.
-	const matchedTopRoute = cmp.$route.matched[0].path.toLowerCase();
+	// Find the route path that matched (depending on whether we need to match just the tab part or the full path).
+	let matchedRoute;
 
-	// If we are already on the top level route path lets not fetch again.
-	if (!force && cmp.loadingRoute === matchedTopRoute) { return false; }
-	cmp.loadingRoute = matchedTopRoute;
+	if (maxRouteSpecificity) {
+		matchedRoute = cmp.$route.fullPath.toLowerCase();
+	}
+	else {
+		matchedRoute = cmp.$route.matched[0].path.toLowerCase();
+	}
+
+	// If we are already on the route path lets not fetch again.
+	if (!force && cmp.loadingRoute === matchedRoute) { return false; }
+	cmp.loadingRoute = matchedRoute;
 
 	// Show the loader after a short delay to avoid flashing.
 	setTimeout(() => {
