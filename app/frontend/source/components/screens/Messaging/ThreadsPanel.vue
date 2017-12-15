@@ -7,6 +7,7 @@
 	<div class="panel">
 		<div class="inbox">Inbox</div>
 		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }" v-scroll="onScroll">
+			<ScreenLoader />
 			<Thread
 				v-for="thread in threadSet"
 				:key="thread.itemId"
@@ -24,6 +25,7 @@
 <script>
 
 	import { mapGetters } from 'vuex';
+	import ScreenLoader from '../../common/ScreenLoader';
 	import Thread from './Thread';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished, handleOnScroll } from '../../../scripts/utilities';
@@ -41,7 +43,7 @@
 				`threadSet`,
 			]),
 		},
-		components: { Thread },
+		components: { ScreenLoader, Thread },
 		methods: {
 
 			fetchComponentData (itemIdsToFetch) {
@@ -105,6 +107,7 @@
 		}
 
 		>.threads {
+			position: relative;
 			flex: 1;
 			@include scroll-vertical();
 		}
