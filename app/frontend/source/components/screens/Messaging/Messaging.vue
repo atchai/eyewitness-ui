@@ -35,8 +35,8 @@
 				if (!setLoadingStarted(this)) { return; }
 
 				getSocket().emit(
-					`messaging/pull-tab-data`,
-					{},
+					`messaging/get-tab-data`,
+					{ pageInitialSize: APP_CONFIG.pageInitialSize },
 					resData => {
 
 						setLoadingFinished(this);
