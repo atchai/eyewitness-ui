@@ -6,9 +6,10 @@
 
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
+const deepSort = require(`deep-sort`);
 const moment = require(`moment`);
 const RequestNinja = require(`request-ninja`);
-const { mapListToDictionary, getLatestMessageInformation } = require(`../modules/utilities`);
+const { mapListToDictionary, parseLatestMessageInformation } = require(`../modules/utilities`);
 
 module.exports = class EventsController {
 
@@ -30,6 +31,70 @@ module.exports = class EventsController {
 
 		// Push data to client.
 		socket.emit(`welcome`, output);
+
+	}
+
+	/*
+	 * Returns the information for the latest human to human or incoming message.
+	 */
+	async getLatestThreadMessage (userId) {
+
+		const recMessages = await this.database.find(`Message`, {
+			_user: userId,
+			$or: [
+				{ humanToHuman: true },
+				{ direction: `incoming` },
+			],
+		}, {
+			limit: 1,
+			sort: { sentAt: `desc` },
+		});
+
+		return parseLatestMessageInformation(recMessages[0]);
+
+	}
+
+	/*
+	 * Prepares thread data for the frontend and maps the list to a dictionary.
+	 */
+	async prepareThreads (recUsers, pageInitialSize, isHardLimit = false) {
+
+		const threads = [];
+
+		for (let index = 0; index < recUsers.length; index++) {
+			const recUser = recUsers[index];
+			const thread = { itemId: recUser._id.toString() };
+
+			// Full-fat threads contain all properties.
+			if (index < pageInitialSize) {
+				const { latestMessage, latestDate } = await this.getLatestThreadMessage(recUser._id); // eslint-disable-line no-await-in-loop
+				const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+
+				thread.isFullFat = true;
+				thread.userFullName = `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim();
+				thread.latestMessage = latestMessage;
+				thread.latestDate = latestDate;
+				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
+				thread.adminLastReadMessages = adminLastReadMessages.toISOString();
+			}
+
+			// Don't add any low-fat threads if we have a hard limit.
+			else if (isHardLimit) {
+				break;
+			}
+
+			// Low-fat threads only contain the item ID.
+			else {
+				thread.isFullFat = false;
+			}
+
+			threads.push(thread);
+		}
+
+		// We must sort threads by their latest message date.
+		deepSort(threads, `latestDate`, `desc`);
+
+		return mapListToDictionary(threads, `itemId`);
 
 	}
 
@@ -117,6 +182,30 @@ module.exports = class EventsController {
 		});
 
 		return records || [];
+
+	}
+
+	/*
+	 * Returns the list of threads for the messaging tab.
+	 */
+	async messagingGetThreads (socket, data, reply) {
+
+		let records;
+
+		// Get the relevant thread records.
+		if (data.itemIdsToFetch) {
+			records = await this.getItemsById(`User`, data.itemIdsToFetch);
+		}
+		else {
+			records = await this.getItems(`User`);
+		}
+
+		const threads = await this.prepareThreads(records, data.pageInitialSize);
+
+		return reply({
+			success: true,
+			threads,
+		});
 
 	}
 
@@ -242,25 +331,7 @@ module.exports = class EventsController {
 
 
 
-	/*
-	 * Amalgamates the data for the messaging tab.
-	 */
-	async getDataForMessagingTab (data) {
 
-		const recUsers = await this.database.find(`User`, {}, {
-			sort: { 'conversation.lastMessageSentAt': `desc` },
-			limit: config.maxListSize,
-		});
-
-		// Prepare threads.
-		const threadPromises = recUsers.map(recUser => this.buildThread(recUser));
-		const threads = await Promise.all(threadPromises);
-
-		return {
-			threads: mapListToDictionary(threads, `itemId`),
-		};
-
-	}
 
 	/*
 	 * Returns the tab data for the messaging tab.
