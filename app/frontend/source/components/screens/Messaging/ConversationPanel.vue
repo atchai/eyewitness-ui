@@ -276,7 +276,7 @@
 		>.messages {
 			flex: 1;
 			padding: 1.00rem;
-			@include scroll-horizontal();
+			@include scroll-vertical();
 
 			>.top-ruler {
 				display: flex;
