@@ -162,12 +162,16 @@ module.exports = class EventsController {
 	/*
 	 * Returns multiple items from the given model.
 	 */
-	async getItems (modelName, sortField = null, sortDirection = null, conditions = {}) {
+	async getItems (modelName, sortField = null, sortDirection = null, conditions = {}, hardLimit = false) {
 
 		const options = {};
 
 		if (sortField && sortDirection) {
 			options.sort = { [sortField]: sortDirection };
+		}
+
+		if (hardLimit) {
+			options.limit = hardLimit;
 		}
 
 		const records = await this.database.find(modelName, conditions, options);
