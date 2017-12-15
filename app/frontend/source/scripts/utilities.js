@@ -164,7 +164,7 @@ function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction
 	const itemIdsToFetch = thinInRangeItems.map(item => item.itemId);
 
 	// Load in new items, if any.
-	if (itemIdsToFetch.length) { cmp.fetchTabData(itemIdsToFetch); }
+	if (itemIdsToFetch.length) { cmp.fetchComponentData(itemIdsToFetch); }
 
 	// Cache this for the next call.
 	cmp.lastScrollTop = scrollTop;

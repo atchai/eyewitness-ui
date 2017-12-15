@@ -53,7 +53,7 @@
 		},
 		methods: {
 
-			fetchTabData (itemIdsToFetch) {
+			fetchComponentData (itemIdsToFetch) {
 
 				if (!setLoadingStarted(this, Boolean(itemIdsToFetch))) { return; }
 
@@ -83,7 +83,7 @@
 		watch: {
 
 			$route: {
-				handler: function () { this.fetchTabData(null); },
+				handler: function () { this.fetchComponentData(null); },
 				immediate: true,
 			},
 
