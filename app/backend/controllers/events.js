@@ -162,7 +162,7 @@ module.exports = class EventsController {
 	/*
 	 * Returns multiple items from the given model.
 	 */
-	async getItems (modelName, sortField = null, sortDirection = null) {
+	async getItems (modelName, sortField = null, sortDirection = null, conditions = {}) {
 
 		const options = {};
 
@@ -170,7 +170,7 @@ module.exports = class EventsController {
 			options.sort = { [sortField]: sortDirection };
 		}
 
-		const records = await this.database.find(modelName, {}, options);
+		const records = await this.database.find(modelName, conditions, options);
 
 		return records || [];
 
