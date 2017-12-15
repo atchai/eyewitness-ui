@@ -22,16 +22,17 @@
 			</div>
 		</div>
 
-		<div class="messages">
+		<div id="message-list" :class="{ messages: true, loading: (loadingState > 0) }" v-scroll="onScroll">
+			<ScreenLoader />
 			<div class="top-ruler">
 				<div class="rule"></div>
 				<div class="label">{{ numOldMessagesLoadedText }}</div>
 				<div class="rule"></div>
 			</div>
 			<Message
-				v-for="message in thread.messages"
-				:key="message.messageId"
-				:messageId="message.messageId"
+				v-for="message in messageSet"
+				:key="message.itemId"
+				:itemId="message.itemId"
 				:direction="message.direction"
 				:humanToHuman="message.humanToHuman"
 				:sentAt="message.sentAt"
@@ -67,18 +68,28 @@
 
 	import ObjectId from 'bson-objectid';
 	import moment from 'moment';
+	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
+	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
+	import ScreenLoader from '../../common/ScreenLoader';
 	import Message from './Message';
 
 	export default {
 		props: [`botEnabled`],
 		data: function () {
 			return {
+				loadingState: 0,
+				loadingRoute: ``,
+				lastScrollTop: 0,
 				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
 			};
 		},
-		components: { Message },
+		components: { Message, ScreenLoader },
 		computed: {
+
+			...mapGetters([
+				`messageSet`,
+			]),
 
 			thread () { return this.$store.state.threads[this.$route.params.itemId] || {}; },
 
@@ -100,6 +111,28 @@
 
 		},
 		methods: {
+
+			fetchComponentData (breakPointMessageId) {
+
+				if (!setLoadingStarted(this, Boolean(breakPointMessageId))) { return; }
+
+				getSocket().emit(
+					`messaging/get-thread-messages`,
+					{ threadId: this.$route.params.itemId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
+					resData => {
+
+						setLoadingFinished(this);
+
+						if (!resData || !resData.success) { return alert(`There was a problem loading the thread's messages.`); }
+
+						// Replace all or update some of the messages.
+						// const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
+						this.$store.commit(`update-messages`, { /* replaceByKeyField, */ data: resData.messages });
+
+					}
+				);
+
+			},
 
 			setBotEnabled (itemId) {
 
@@ -187,6 +220,13 @@
 				);
 
 			}
+		},
+		watch: {
+
+			$route: {
+				handler: function () { this.fetchComponentData(null); },
+				immediate: true,
+			},
 
 		},
 		mounted () {
@@ -269,6 +309,7 @@
 		}
 
 		>.messages {
+			position: relative;
 			flex: 1;
 			padding: 1.00rem;
 			@include scroll-vertical();

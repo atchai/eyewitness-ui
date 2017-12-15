@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="[`message`, direction]">
+	<div :data-item-id="itemId" :class="[`message`, direction]">
 		<div class="bubble">
 
 			<div v-if="data.text && !(data.attachments && data.attachments.length)" class="inner text">
@@ -54,7 +54,7 @@
 <script>
 
 	export default {
-		props: [`messageId`, `direction`, `humanToHuman`, `sentAt`, `data`],
+		props: [`itemId`, `direction`, `humanToHuman`, `sentAt`, `data`],
 		methods: {
 
 			openAttachmentUrl () {
