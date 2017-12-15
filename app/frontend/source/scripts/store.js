@@ -32,34 +32,12 @@ export default new Vuex.Store({
 		'update-thread': (state, payload) => updateStorePropertyItem(state, `threads`, payload),
 		'update-threads': (state, payload) => updateStoreProperty(state, `threads`, payload),
 		'remove-thread': (state, payload) => removeStorePropertyItem(state, `threads`, payload),
-		'add-thread-message': (state, payload) => {
-			updateStorePropertyItem(state, `threads`, {
-				key: payload.key,
-				dataFunction: thread => {
 
-					const newMessage = payload.newMessage;
-					const messages = Array.from(thread.messages);
+		'add-message': (state, payload) => addStorePropertyItem(state, `messages`, payload),
+		'update-message': (state, payload) => updateStorePropertyItem(state, `messages`, payload),
+		'update-messages': (state, payload) => updateStoreProperty(state, `messages`, payload),
+		'remove-message': (state, payload) => removeStorePropertyItem(state, `messages`, payload),
 
-					messages.push({
-						messageId: newMessage.messageId,
-						direction: newMessage.direction,
-						humanToHuman: newMessage.humanToHuman,
-						sentAt: newMessage.sentAt,
-						data: newMessage.data,
-					});
-
-					thread.messages = messages;
-
-					if (payload.latestDate && payload.latestMessage) {
-						thread.latestDate = payload.latestDate;
-						thread.latestMessage = payload.latestMessage;
-					}
-
-					return thread;
-
-				},
-			});
-		},
 		'update-story': (state, payload) => updateStorePropertyItem(state, `stories`, payload),
 		'update-stories': (state, payload) => updateStoreProperty(state, `stories`, payload),
 		'remove-story': (state, payload) => removeStorePropertyItem(state, `stories`, payload),
@@ -73,6 +51,7 @@ export default new Vuex.Store({
 	getters: {
 		hasThread: state => itemId => Boolean(state.threads[itemId]),
 		threadSet: state => Object.values(state.threads),
+		messageSet: state => Object.values(state.messages),
 		storySet: state => Object.values(state.stories),
 		welcomeMessageSet: state => Object.values(state.welcomeMessages),
 	},
