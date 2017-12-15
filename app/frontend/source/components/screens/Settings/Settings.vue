@@ -4,7 +4,7 @@
 
 <template>
 
-	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
+	<div :class="{ screen: true, padding: true, 'scroll-vertical': true, loading: (loadingState > 0) }">
 		<ScreenLoader />
 		<ScreenHeader
 			title="Settings"
