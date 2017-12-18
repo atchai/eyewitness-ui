@@ -11,7 +11,6 @@ import '../styles/main.scss';
 /*
  * Import dependencies.
  */
-import dialogPolyfill from 'dialog-polyfill';
 import Vue from 'vue';
 import vueScroll from 'vue-scroll';
 import router from './router';

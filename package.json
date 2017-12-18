@@ -46,7 +46,6 @@
   "clean-webpack-plugin": "^0.1.17",
   "concurrently": "^3.5.0",
   "css-loader": "^0.28.7",
-  "dialog-polyfill": "^0.4.9",
   "eslint": "^4.11.0",
   "eslint-config-recombix": "latest",
   "eslint-config-vue": "latest",
