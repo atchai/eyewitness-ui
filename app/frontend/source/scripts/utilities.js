@@ -6,16 +6,23 @@ import deepSort from 'deep-sort';
 import Vue from 'vue';
 
 /*
- * Adds a single item to the given state property.
+ * Adds a single item to the given state property and resorts the keys.
  */
-function addStorePropertyItem (state, property, { key, data }) {
+function addStorePropertyItem (state, property, { key, data, keyField, sortField, sortDirection }) {
 
 	const dictionary = state[property];
 
-	state[property] = Object({
+	const newDictionary = Object({
 		...dictionary,
 		[key]: data,
 	});
+
+	if (sortField && sortDirection) {
+		state[property] = sortObjectPropertiesByKey(dictionary, keyField || `itemId`, sortField, sortDirection);
+	}
+	else {
+		state[property] = newDictionary;
+	}
 
 }
 
