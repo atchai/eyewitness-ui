@@ -68,9 +68,10 @@
 
 	import ObjectId from 'bson-objectid';
 	import moment from 'moment';
+	import Vue from 'vue';
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
+	import { setLoadingStarted, setLoadingFinished, browserNextTick } from '../../../scripts/utilities';
 	import ScreenLoader from '../../common/ScreenLoader';
 	import Message from './Message';
 
@@ -221,7 +222,30 @@
 					data => (!data || !data.success ? alert(`There was a problem marking the thread as read.`) : void (0))
 				);
 
-			}
+			},
+
+			async onScroll (event, { scrollTop }) {
+
+				const scrollDirection = (scrollTop >= this.lastScrollTop ? `down` : `up`);
+				const scrollHeightBefore = event.target.scrollHeight;
+
+				console.log(`scrollDirection`, scrollDirection, scrollTop);
+
+				if (scrollDirection === `up` && scrollTop <= APP_CONFIG.scrollBufferPx) {
+					event.target.className += ` lock-scrolling`;
+					await browserNextTick();
+					this.fetchComponentData(true);
+					await browserNextTick();
+					const scrollHeightAfter = event.target.scrollHeight;
+					event.target.scrollTop += (scrollHeightAfter - scrollHeightBefore);
+					event.target.className = event.target.className.replace(/lock-scrolling/gi, ``).trim();
+				}
+
+				// Cache this for the next call.
+				this.lastScrollTop = scrollTop;
+
+			},
+
 		},
 		watch: {
 
@@ -233,11 +257,11 @@
 		},
 		mounted () {
 			this.markAsReadByAdmin();
-			this.scrollMessagesToBottom();
+			// this.scrollMessagesToBottom();
 		},
 		updated () {
 			this.markAsReadByAdmin();
-			this.scrollMessagesToBottom();
+			// this.scrollMessagesToBottom();
 		},
 		beforeDestroy () {
 			this.$store.commit(`remove-all-messages`);
