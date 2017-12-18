@@ -112,9 +112,11 @@
 		},
 		methods: {
 
-			fetchComponentData (breakPointMessageId) {
+			fetchComponentData (loadOlderMessages = false) {
 
-				if (!setLoadingStarted(this, Boolean(breakPointMessageId), true)) { return; }
+				if (!setLoadingStarted(this, loadOlderMessages, true)) { return; }
+
+				const breakPointMessageId = (loadOlderMessages ? this.$store.getters.messageSet[0].itemId : null);
 
 				getSocket().emit(
 					`messaging/get-thread-messages`,
@@ -126,8 +128,8 @@
 						if (!resData || !resData.success) { return alert(`There was a problem loading the thread's messages.`); }
 
 						// Replace all or update some of the messages.
-						// const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
-						this.$store.commit(`update-messages`, { /* replaceByKeyField, */ data: resData.messages });
+						const commitAction = (loadOlderMessages ? `add-messages` : `update-messages`);
+						this.$store.commit(commitAction, { data: resData.messages, sortField: `sentAt`, sortDirection: `asc` });
 
 					}
 				);
@@ -224,7 +226,7 @@
 		watch: {
 
 			$route: {
-				handler: function () { this.fetchComponentData(null); },
+				handler: function () { this.fetchComponentData(false); },
 				immediate: true,
 			},
 
