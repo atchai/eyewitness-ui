@@ -6,6 +6,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {
 	addStorePropertyItem,
+	addStorePropertyItems,
 	updateStoreProperty,
 	updateStorePropertyItem,
 	removeStorePropertyItem,
@@ -34,6 +35,7 @@ export default new Vuex.Store({
 		'remove-thread': (state, payload) => removeStorePropertyItem(state, `threads`, payload),
 
 		'add-message': (state, payload) => addStorePropertyItem(state, `messages`, payload),
+		'add-messages': (state, payload) => addStorePropertyItems(state, `messages`, payload),
 		'update-message': (state, payload) => updateStorePropertyItem(state, `messages`, payload),
 		'update-messages': (state, payload) => updateStoreProperty(state, `messages`, payload),
 		'remove-message': (state, payload) => removeStorePropertyItem(state, `messages`, payload),
