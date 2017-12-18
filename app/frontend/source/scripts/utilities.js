@@ -27,6 +27,22 @@ function addStorePropertyItem (state, property, { key, data, keyField, sortField
 }
 
 /*
+ * Adds multiple item to the given state property and resorts the keys after adding them all.
+ */
+function addStorePropertyItems (state, property, { data, keyField, sortField, sortDirection }) {
+
+	Object.values(data).forEach(item => {
+		const itemPayload = { key: item.itemId, data: item };
+		addStorePropertyItem(state, property, itemPayload);
+	});
+
+	if (sortField && sortDirection) {
+		state[property] = sortObjectPropertiesByKey(state[property], keyField || `itemId`, sortField, sortDirection);
+	}
+
+}
+
+/*
  * Updates select items in the property if a key field is specified, otherwise replaces all items in the property.
  */
 function updateStoreProperty (state, property, { replaceByKeyField, data }) {
@@ -270,6 +286,7 @@ function convertElementsToItems ($elements, storeDictionary) {
  */
 export {
 	addStorePropertyItem,
+	addStorePropertyItems,
 	updateStoreProperty,
 	updateStorePropertyItem,
 	removeStorePropertyItem,
