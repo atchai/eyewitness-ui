@@ -18,6 +18,7 @@ module.exports = class HomeController {
 			appConfig: JSON.stringify({
 				pageInitialSize: config.pageInitialSize,
 				pageBufferSize: config.pageBufferSize,
+				scrollBufferPx: config.scrollBufferPx,
 				providerPhotoUrl: `https://graph.facebook.com/${config.facebookPageId}/picture?type=large`,
 			}),
 		});
