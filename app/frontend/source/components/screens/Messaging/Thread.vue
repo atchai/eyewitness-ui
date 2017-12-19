@@ -28,7 +28,7 @@
 	import moment from 'moment';
 
 	export default {
-		props: [`itemId`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
+		props: [`itemId`, `isFullFat`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
 		computed: {
 
 			unread () {
