@@ -102,7 +102,7 @@
 						flex-wrap: nowrap;
 						align-items: stretch;
 						border-radius: inherit;
-						@include scroll-vertical();
+						@include scroll-horizontal();
 
 						>.item {
 							display: flex;
