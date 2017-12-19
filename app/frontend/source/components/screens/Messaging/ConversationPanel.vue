@@ -131,7 +131,7 @@
 					}
 
 					getSocket().emit(
-						`messaging/get-thread-messages`,
+						`messaging/thread/get-messages`,
 						{ threadId: this.$route.params.itemId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
 						resData => {
 
@@ -170,7 +170,7 @@
 				});
 
 				getSocket().emit(
-					`thread/set-bot-enabled`,
+					`messaging/thread/set-bot-enabled`,
 					{ itemId, enabled: true },
 					data => (!data || !data.success ? alert(`There was a problem enabling the user's bot.`) : void (0))
 				);
@@ -186,7 +186,7 @@
 				});
 
 				getSocket().emit(
-					`thread/set-bot-enabled`,
+					`messaging/thread/set-bot-enabled`,
 					{ itemId, enabled: false },
 					data => (!data || !data.success ? alert(`There was a problem disabling the user's bot.`) : void (0))
 				);
@@ -219,7 +219,7 @@
 
 				// Send the message (also disables the bot).
 				getSocket().emit(
-					`thread/send-message`,
+					`messaging/thread/send-message`,
 					{ itemId, messageText },
 					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
 				);
@@ -241,7 +241,7 @@
 				});
 
 				getSocket().emit(
-					`thread/set-admin-read-date`,
+					`messaging/thread/set-admin-read-date`,
 					{ itemId, lastRead },
 					data => (!data || !data.success ? alert(`There was a problem marking the thread as read.`) : void (0))
 				);

@@ -22,7 +22,7 @@ function setupWebSocketClient (store) {
 
 	});
 
-	socket.on(`thread/new-message`, data => {
+	socket.on(`messaging/thread/new-message`, data => {
 
 		const itemId = data.itemId;
 		const newMessage = data.message;
@@ -31,7 +31,7 @@ function setupWebSocketClient (store) {
 		// If we have not spoken to this user before we must ask the backend for the full thread data.
 		if (!hasThread) {
 			return socket.emit(
-				`thread/pull`,
+				`messaging/thread/get-info`,
 				{ itemId },
 				resData => {
 
