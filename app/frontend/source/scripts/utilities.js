@@ -45,7 +45,7 @@ function addStorePropertyItems (state, property, { data, keyField, sortField, so
 /*
  * Updates select items in the property if a key field is specified, otherwise replaces all items in the property.
  */
-function updateStoreProperty (state, property, { replaceByKeyField, data }) {
+function updateStoreProperty (state, property, { replaceByKeyField, data, keyField, sortField, sortDirection }) {
 
 	// Replace only specific items in the property based on what we have in the payload.
 	if (replaceByKeyField) {
@@ -63,6 +63,11 @@ function updateStoreProperty (state, property, { replaceByKeyField, data }) {
 		state[property] = data;
 	}
 
+	// Do we need to sort the store property.
+	if (sortField && sortDirection) {
+		state[property] = sortObjectPropertiesByKey(state[property], keyField || `itemId`, sortField, sortDirection);
+	}
+
 }
 
 /*
@@ -71,7 +76,7 @@ function updateStoreProperty (state, property, { replaceByKeyField, data }) {
 function updateStorePropertyItem (state, property, payload) {
 
 	const dictionary = state[property];
-	const { key, data, dataField, dataValue, dataFunction } = payload;
+	const { key, data, dataField, dataValue, dataFunction, keyField, sortField, sortDirection } = payload;
 
 	// Replace the item in its entirety.
 	if (typeof data !== `undefined`) {
@@ -91,6 +96,11 @@ function updateStorePropertyItem (state, property, payload) {
 	// Whoops!
 	else {
 		throw new Error(`You must specify either "data" or "dataField" and "dataValue" when updating store items.`);
+	}
+
+	// Do we need to sort the store property.
+	if (sortField && sortDirection) {
+		state[property] = sortObjectPropertiesByKey(state[property], keyField || `itemId`, sortField, sortDirection);
 	}
 
 }
