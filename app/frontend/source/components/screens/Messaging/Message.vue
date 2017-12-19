@@ -147,6 +147,8 @@
 							}
 
 							>.buttons {
+								@include user-select-off();
+
 								>a {
 									display: block;
 									height: 2.50rem;
