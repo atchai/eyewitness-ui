@@ -49,19 +49,18 @@ module.exports = class EventsController {
 
 		for (let index = 0; index < recUsers.length; index++) {
 			const recUser = recUsers[index];
-			const thread = { itemId: recUser._id.toString() };
-			const { latestMessage, latestDate } = await this.getLatestThreadMessage(recUser._id); // eslint-disable-line no-await-in-loop
+			const thread = { itemId: recUser._id.toString(), latestDate: recUser.conversation.lastMessageReceivedAt };
 
 			// Full-fat threads contain all properties.
 			if (index < pageInitialSize) {
 				const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+				const { latestMessage } = await this.getLatestThreadMessage(recUser._id); // eslint-disable-line no-await-in-loop
 				const firstName = recUser.profile.firstName || ``;
 				const lastName = recUser.profile.lastName || ``;
 
 				thread.isFullFat = true;
 				thread.userFullName = `${firstName} ${lastName}`.trim() || `[Name Hidden]`;
 				thread.latestMessage = latestMessage;
-				thread.latestDate = latestDate;
 				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
 				thread.adminLastReadMessages = adminLastReadMessages.toISOString();
 			}
@@ -74,7 +73,6 @@ module.exports = class EventsController {
 			// Low-fat threads only contain the item ID.
 			else {
 				thread.isFullFat = false;
-				thread.latestDate = latestDate;
 			}
 
 			threads.push(thread);
@@ -234,7 +232,7 @@ module.exports = class EventsController {
 			records = await this.getItemsById(`User`, data.itemIdsToFetch);
 		}
 		else {
-			records = await this.getItems(`User`);
+			records = await this.getItems(`User`, `conversation.lastMessageReceivedAt`, `desc`);
 		}
 
 		const threads = await this.prepareThreads(records, data.pageInitialSize);
