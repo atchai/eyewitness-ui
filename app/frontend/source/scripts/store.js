@@ -21,6 +21,7 @@ Vue.use(Vuex);
  * Export a configured store.
  */
 export default new Vuex.Store({
+	strict: true,
 	state: {
 		threads: {},
 		messages: {},
