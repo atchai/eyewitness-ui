@@ -4,7 +4,7 @@
  * CONTROLLER: Webhooks
  */
 
-const { getLatestMessageInformation } = require(`../modules/utilities`);
+const { parseLatestMessageInformation } = require(`../modules/utilities`);
 
 module.exports = class WebhooksController {
 
@@ -22,7 +22,7 @@ module.exports = class WebhooksController {
 
 		const userId = req.body.userId;
 		const message = req.body.message;
-		const { latestMessage, latestDate } = getLatestMessageInformation(message);
+		const { latestMessage, latestDate } = parseLatestMessageInformation(message);
 
 		// Alert all clients to this incoming message.
 		this.socketServer.emit(`thread/new-message`, {
