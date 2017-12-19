@@ -55,9 +55,11 @@ module.exports = class EventsController {
 			if (index < pageInitialSize) {
 				const { latestMessage, latestDate } = await this.getLatestThreadMessage(recUser._id); // eslint-disable-line no-await-in-loop
 				const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
+				const firstName = recUser.profile.firstName || ``;
+				const lastName = recUser.profile.lastName || ``;
 
 				thread.isFullFat = true;
-				thread.userFullName = `${recUser.profile.firstName} ${recUser.profile.lastName}`.trim();
+				thread.userFullName = `${firstName} ${lastName}`.trim() || `[Name Hidden]`;
 				thread.latestMessage = latestMessage;
 				thread.latestDate = latestDate;
 				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
