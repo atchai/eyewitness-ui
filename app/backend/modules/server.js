@@ -60,8 +60,24 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreads)
 		);
 		socket.on(
-			`messaging/get-thread-messages`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreadMessages)
+			`messaging/thread/get-info`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetInfo)
+		);
+		socket.on(
+			`messaging/thread/get-messages`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetMessages)
+		);
+		socket.on(
+			`messaging/thread/set-bot-enabled`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetBotEnabled)
+		);
+		socket.on(
+			`messaging/thread/set-admin-read-date`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetAdminReadDate)
+		);
+		socket.on(
+			`messaging/thread/send-message`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSendMessage)
 		);
 
 		socket.on(
@@ -88,23 +104,6 @@ function setupWebSocketServer (app, database) {
 		socket.on(
 			`settings/welcome-message/remove`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsWelcomeMessageRemove)
-		);
-
-		socket.on(
-			`thread/pull`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadPull)
-		);
-		socket.on(
-			`thread/set-bot-enabled`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetBotEnabled)
-		);
-		socket.on(
-			`thread/set-admin-read-date`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSetAdminReadDate)
-		);
-		socket.on(
-			`thread/send-message`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.threadSendMessage)
 		);
 
 	});

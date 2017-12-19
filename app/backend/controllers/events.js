@@ -258,9 +258,24 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Send a full thread to the client that's requesting it.
+	 */
+	async messagingThreadGetInfo (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+
+		const recUser = await this.database.get(`User`, { _id: itemId });
+		const thread = await this.buildThread(recUser);
+
+		return reply({ success: true, thread });
+
+	}
+
+	/*
 	 * Returns the list of messages for the given thread.
 	 */
-	async messagingGetThreadMessages (socket, data, reply) {
+	async messagingThreadGetMessages (socket, data, reply) {
 
 		let records;
 
@@ -283,6 +298,74 @@ module.exports = class EventsController {
 			success: true,
 			messages,
 		});
+
+	}
+
+	/*
+	 * Update the "bot.disabled" property on the user's document.
+	 */
+	async messagingThreadSetBotEnabled (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+		const botDisabled = Boolean(!data.enabled);
+
+		await this.database.update(`User`, itemId, {
+			'bot.disabled': botDisabled,
+		});
+
+		return reply({ success: true });
+
+	}
+
+	/*
+	 * Update the "adminLastReadMessages" property on the user's document.
+	 */
+	async messagingThreadSetAdminReadDate (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+		const lastRead = moment(data.lastRead).toDate();
+
+		await this.database.update(`User`, itemId, {
+			'appData.adminLastReadMessages': lastRead,
+		});
+
+		return reply({ success: true });
+
+	}
+
+	/*
+	 * Send an admin message to the given user.
+	 */
+	async messagingThreadSendMessage (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+		const text = String(data.messageText);
+
+		const req = new RequestNinja(this.hippocampUrl, {
+			timeout: (1000 * 30),
+			returnResponseObject: true,
+		});
+
+		const res = await req.postJson({
+			fromAdmin: true,
+			messages: [{
+				userId: itemId,
+				channelName: `facebook`,
+				direction: `outgoing`,
+				text,
+			}],
+		});
+
+		if (res.statusCode !== 200) {
+			throw new Error(`Non 200 HTTP status code "${res.statusCode}" returned by Hippocamp.`);
+		}
+
+		if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
+
+		return reply({ success: true });
 
 	}
 
@@ -395,99 +478,6 @@ module.exports = class EventsController {
 
 		// Update the database.
 		await this.database.delete(`WelcomeMessage`, welcomeMessageId);
-
-		return reply({ success: true });
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-	/*
-	 * Send a full thread to the client that's requesting it.
-	 */
-	async threadPull (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const itemId = String(data.itemId);
-
-		const recUser = await this.database.get(`User`, { _id: itemId });
-		const thread = await this.buildThread(recUser);
-
-		return reply({ success: true, thread });
-
-	}
-
-	/*
-	 * Update the "bot.disabled" property on the user's document.
-	 */
-	async threadSetBotEnabled (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const itemId = String(data.itemId);
-		const botDisabled = Boolean(!data.enabled);
-
-		await this.database.update(`User`, itemId, {
-			'bot.disabled': botDisabled,
-		});
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Update the "adminLastReadMessages" property on the user's document.
-	 */
-	async threadSetAdminReadDate (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const itemId = String(data.itemId);
-		const lastRead = moment(data.lastRead).toDate();
-
-		await this.database.update(`User`, itemId, {
-			'appData.adminLastReadMessages': lastRead,
-		});
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Send an admin message to the given user.
-	 */
-	async threadSendMessage (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const itemId = String(data.itemId);
-		const text = String(data.messageText);
-
-		const req = new RequestNinja(this.hippocampUrl, {
-			timeout: (1000 * 30),
-			returnResponseObject: true,
-		});
-
-		const res = await req.postJson({
-			fromAdmin: true,
-			messages: [{
-				userId: itemId,
-				channelName: `facebook`,
-				direction: `outgoing`,
-				text,
-			}],
-		});
-
-		if (res.statusCode !== 200) {
-			throw new Error(`Non 200 HTTP status code "${res.statusCode}" returned by Hippocamp.`);
-		}
-
-		if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
 
 		return reply({ success: true });
 
