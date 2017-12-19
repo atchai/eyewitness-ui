@@ -152,6 +152,12 @@
 								this.loadedAllMessages = true;
 							}
 
+							// If we're loading in the initial messages we need to scroll to the bottom and mark as read.
+							if (!loadOlderMessages) {
+								this.scrollMessagesToBottom(true);
+								this.markAsReadByAdmin();
+							}
+
 							return resolve();
 
 						}
@@ -197,7 +203,7 @@
 				document.getElementById(`composer-text-input`).focus();
 			},
 
-			scrollMessagesToBottom () {
+			scrollMessagesToBottom (force = false) {
 
 				// Nothing to do if the element hasn't been rendered yet.
 				if (!this.$el) { return; }
@@ -206,7 +212,7 @@
 				const isStuckToBottom = (element.scrollTop === element.scrollHeight - element.clientHeight);
 
 				// Only autoscroll if the user has already scrolled to the bottom.
-				if (isStuckToBottom) {
+				if (isStuckToBottom || force) {
 					this.$nextTick(() => element.scrollTop = element.scrollHeight);
 				}
 
@@ -261,8 +267,15 @@
 			async onScroll (event, { scrollTop }) {
 
 				const scrollDirection = (scrollTop >= this.lastScrollTop ? `down` : `up`);
+				const isScrolledToBottom = (scrollTop === event.target.scrollHeight - event.target.clientHeight);
 
-				if (scrollDirection === `up` && scrollTop <= 0) { await this.loadMoreMessages(event.target); }
+				if (scrollDirection === `up` && scrollTop <= 0) {
+					this.loadMoreMessages(event.target);
+				}
+
+				else if (scrollDirection === `down` && isScrolledToBottom) {
+					this.markAsReadByAdmin();
+				}
 
 				// Cache this for the next call.
 				this.lastScrollTop = scrollTop;
@@ -298,12 +311,6 @@
 				immediate: true,
 			}
 
-		},
-		mounted () {
-			this.markAsReadByAdmin();
-		},
-		updated () {
-			this.markAsReadByAdmin();
 		},
 		beforeDestroy () {
 			this.$store.commit(`remove-all-messages`);
