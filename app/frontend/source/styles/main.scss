@@ -11,6 +11,7 @@
 html {
 	font: 16px/1.5 "Lato", Verdana, Helvetica, sans-serif;
 	color: $font-color-dark;
+	overflow: hidden;
 }
 
 html,
@@ -21,6 +22,9 @@ body {
 
 body {
 	background: #D8D7D7;
+	margin: 0;
+	padding: 0;
+	overflow: auto;
 }
 
 .lock-scrolling {
