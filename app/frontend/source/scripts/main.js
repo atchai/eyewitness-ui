@@ -26,7 +26,7 @@ import App from '../components/App';
 /*
  * Connect to the socket server.
  */
-setupWebSocketClient(store);
+setupWebSocketClient(store, router);
 
 /*
  * Miscellaneous plugins.

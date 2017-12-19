@@ -3,59 +3,65 @@
  */
 
 import socketClient from 'socket.io-client';
-import { sortObjectPropertiesByKey } from './utilities';
 
 let socket;
 
 /*
  * Connect to the server and setup event listeners.
  */
-function setupWebSocketClient (store) {
+function setupWebSocketClient (store, router) {
 
 	socket = socketClient.connect(process.env.SERVER_URI);
 
 	socket.on(`messaging/thread/new-message`, data => {
 
-		const itemId = data.itemId;
-		const newMessage = data.message;
-		const hasThread = store.getters.hasThread(itemId);
+		const hasThread = store.getters.hasThread(data.threadId);
 
 		// If we have not spoken to this user before we must ask the backend for the full thread data.
 		if (!hasThread) {
+
 			return socket.emit(
 				`messaging/thread/get-info`,
-				{ itemId },
+				{ itemId: data.threadId },
 				resData => {
 
 					if (!resData || !resData.success) { return alert(`There was a problem loading in a new thread.`); }
 
 					// Add the new thread.
 					store.commit(`add-thread`, {
-						key: itemId,
+						key: data.threadId,
 						data: resData.thread,
+						sortField: `latestDate`,
+						sortDirection: `desc`,
 					});
-
-					// Do we need to sort the threads?
-					const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `itemId`, `latestDate`, `desc`);
-					store.commit(`update-threads`, { data: newThreadsDictionary });
 
 				}
 			);
+
 		}
+
+		const { path: curPath, params: curParams } = router.history.current;
+		const isThreadVisible = (curPath.match(/^\/messaging\/thread/) && curParams.itemId === data.threadId);
 
 		// Add the new message to the thread.
-		store.commit(`add-thread-message`, {
-			key: itemId,
-			newMessage,
-			latestDate: data.latestDate,
-			latestMessage: data.latestMessage,
-		});
-
-		// Do we need to sort the threads?
-		if (newMessage.direction === `incoming`) {
-			const newThreadsDictionary = sortObjectPropertiesByKey(store.state.threads, `itemId`, `latestDate`, `desc`);
-			store.commit(`update-threads`, { data: newThreadsDictionary });
+		if (isThreadVisible) {
+			store.commit(`add-message`, {
+				key: data.message.itemId,
+				data: data.message,
+			});
 		}
+
+		// Update thread meta.
+		store.commit(`update-thread`, {
+			key: data.threadId,
+			dataFunction: (stateProperty) => {
+				stateProperty.latestDate = data.latestDate;
+				stateProperty.latestMessage = data.latestMessage;
+				return stateProperty;
+			},
+			sortField: `latestDate`,
+			sortDirection: `desc`,
+		});
 
 	});
 
