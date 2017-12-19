@@ -75,7 +75,7 @@
 	import Vue from 'vue';
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import { setLoadingStarted, setLoadingFinished, browserNextTick } from '../../../scripts/utilities';
+	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 	import Message from './Message';
 
 	export default {
@@ -198,8 +198,18 @@
 			},
 
 			scrollMessagesToBottom () {
+
+				// Nothing to do if the element hasn't been rendered yet.
+				if (!this.$el) { return; }
+
 				const element = this.$el.querySelector(`.messages`);
-				element.scrollTop = element.scrollHeight;
+				const isStuckToBottom = (element.scrollTop === element.scrollHeight - element.clientHeight);
+
+				// Only autoscroll if the user has already scrolled to the bottom.
+				if (isStuckToBottom) {
+					this.$nextTick(() => element.scrollTop = element.scrollHeight);
+				}
+
 			},
 
 			sendMessage (itemId, event) {
@@ -283,14 +293,17 @@
 				immediate: true,
 			},
 
+			'$store.state.messages': {
+				handler: function () { this.scrollMessagesToBottom(); },
+				immediate: true,
+			}
+
 		},
 		mounted () {
 			this.markAsReadByAdmin();
-			// this.scrollMessagesToBottom();
 		},
 		updated () {
 			this.markAsReadByAdmin();
-			// this.scrollMessagesToBottom();
 		},
 		beforeDestroy () {
 			this.$store.commit(`remove-all-messages`);
