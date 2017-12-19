@@ -23,10 +23,14 @@
 		</div>
 
 		<div id="message-list" :class="{ messages: true, loading: (loadingState > 0) }" v-scroll="onScroll">
-			<ScreenLoader />
 			<div class="top-ruler">
 				<div class="rule"></div>
-				<div class="label">{{ numOldMessagesLoadedText }}</div>
+				<div class="label">
+					<span>{{ numOldMessagesLoadedText }}</span>
+					<span v-if="!this.loadedAllMessages">
+						- <a href="JavaScript:void(0);" @click="loadMoreMessages()">Load More</a>
+					</span>
+				</div>
 				<div class="rule"></div>
 			</div>
 			<Message
@@ -72,7 +76,6 @@
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished, browserNextTick } from '../../../scripts/utilities';
-	import ScreenLoader from '../../common/ScreenLoader';
 	import Message from './Message';
 
 	export default {
@@ -82,10 +85,11 @@
 				loadingState: 0,
 				loadingRoute: ``,
 				lastScrollTop: 0,
+				loadedAllMessages: false,
 				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
 			};
 		},
-		components: { Message, ScreenLoader },
+		components: { Message },
 		computed: {
 
 			...mapGetters([
@@ -98,14 +102,12 @@
 
 			numOldMessagesLoadedText () {
 
-				const maxOldThreadMessages = this.$store.state.maxOldThreadMessages;
-				const loadedMaxMessages = (this.thread.messages && this.thread.messages.length >= maxOldThreadMessages);
-
-				if (loadedMaxMessages) {
-					return `Loaded ${maxOldThreadMessages} old message${maxOldThreadMessages !== 1 ? `s` : ``}`;
+				if (this.loadedAllMessages) {
+					return `No more messages`;
 				}
 				else {
-					return `Loaded all messages`;
+					const numMessages = Object.keys(this.$store.state.messages).length;
+					return `Loaded ${numMessages} message${numMessages !== 1 ? `s` : ``}`;
 				}
 
 			},
@@ -115,25 +117,47 @@
 
 			fetchComponentData (loadOlderMessages = false) {
 
-				if (!setLoadingStarted(this, loadOlderMessages, true)) { return; }
+				return new Promise((resolve) => {
 
-				const breakPointMessageId = (loadOlderMessages ? this.$store.getters.messageSet[0].itemId : null);
+					if (!setLoadingStarted(this, loadOlderMessages, true)) { return resolve(); }
 
-				getSocket().emit(
-					`messaging/get-thread-messages`,
-					{ threadId: this.$route.params.itemId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
-					resData => {
+					let breakPointMessageId;
 
-						setLoadingFinished(this);
+					if (loadOlderMessages) {
+						const $messageList = document.getElementById(`message-list`);
+						const $messages = $messageList.getElementsByClassName(`message`);
 
-						if (!resData || !resData.success) { return alert(`There was a problem loading the thread's messages.`); }
-
-						// Replace all or update some of the messages.
-						const commitAction = (loadOlderMessages ? `add-messages` : `update-messages`);
-						this.$store.commit(commitAction, { data: resData.messages, sortField: `sentAt`, sortDirection: `asc` });
-
+						breakPointMessageId = $messages[0].getAttribute(`data-item-id`);
 					}
-				);
+
+					getSocket().emit(
+						`messaging/get-thread-messages`,
+						{ threadId: this.$route.params.itemId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
+						resData => {
+
+							setLoadingFinished(this);
+
+							if (!resData || !resData.success) {
+								alert(`There was a problem loading the thread's messages.`);
+								return resolve();
+							}
+
+							// Replace all or update some of the messages.
+							if (resData.messages && Object.keys(resData.messages).length) {
+								const commitAction = (loadOlderMessages ? `add-messages` : `update-messages`);
+								this.$store.commit(commitAction, { data: resData.messages, sortField: `sentAt`, sortDirection: `asc` });
+								this.loadedAllMessages = (Object.keys(resData.messages).length < APP_CONFIG.pageInitialSize);
+							}
+							else {
+								this.loadedAllMessages = true;
+							}
+
+							return resolve();
+
+						}
+					);
+
+				});
 
 			},
 
@@ -227,22 +251,27 @@
 			async onScroll (event, { scrollTop }) {
 
 				const scrollDirection = (scrollTop >= this.lastScrollTop ? `down` : `up`);
-				const scrollHeightBefore = event.target.scrollHeight;
 
-				console.log(`scrollDirection`, scrollDirection, scrollTop);
-
-				if (scrollDirection === `up` && scrollTop <= APP_CONFIG.scrollBufferPx) {
-					event.target.className += ` lock-scrolling`;
-					await browserNextTick();
-					this.fetchComponentData(true);
-					await browserNextTick();
-					const scrollHeightAfter = event.target.scrollHeight;
-					event.target.scrollTop += (scrollHeightAfter - scrollHeightBefore);
-					event.target.className = event.target.className.replace(/lock-scrolling/gi, ``).trim();
-				}
+				if (scrollDirection === `up` && scrollTop <= 0) { await this.loadMoreMessages(event.target); }
 
 				// Cache this for the next call.
 				this.lastScrollTop = scrollTop;
+
+			},
+
+			async loadMoreMessages (_scrollContainer) {
+
+				const scrollContainer = _scrollContainer || document.getElementById(`message-list`);
+				const scrollHeightBefore = scrollContainer.scrollHeight;
+
+				// Load in new messages.
+				await this.fetchComponentData(true);
+
+				// Scroll down to where we were before.
+				const scrollHeightAfter = scrollContainer.scrollHeight;
+				const scrollHeightDiff = scrollHeightAfter - scrollHeightBefore;
+
+				scrollContainer.scrollTop = scrollHeightDiff;
 
 			},
 
