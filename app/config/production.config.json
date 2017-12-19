@@ -20,7 +20,6 @@
 	"facebookPageId": null,
 	"pageInitialSize": 20,
 	"pageBufferSize": 5,
-	"scrollBufferPx": 500,
 	"build": {
 		"webpackStats": "errors-only",
 		"sourceMapMode": false,
