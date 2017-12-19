@@ -25,7 +25,7 @@ module.exports = class WebhooksController {
 		const { latestMessage, latestDate } = parseLatestMessageInformation(message);
 
 		// Alert all clients to this incoming message.
-		this.socketServer.emit(`thread/new-message`, {
+		this.socketServer.emit(`messaging/thread/new-message`, {
 			itemId: userId,
 			message: {
 				messageId: message.messageId,
