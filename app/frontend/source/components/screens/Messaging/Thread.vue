@@ -11,7 +11,7 @@
 		<div class="meta">
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
-				<div class="date">{{ date | formatDateAsRelative() }}</div>
+				<div class="date"><span v-if="date">{{ date | formatDateAsRelative() }}</span></div>
 			</div>
 			<div class="message">
 				<div class="text">{{ message }}</div>
