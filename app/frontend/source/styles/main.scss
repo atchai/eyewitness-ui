@@ -27,6 +27,15 @@ body {
 	overflow: auto;
 }
 
+a {
+	color: $blue-color;
+	text-decoration: underline;
+
+	&:hover {
+		opacity: 0.80;
+	}
+}
+
 .lock-scrolling {
 	overflow: hidden !important;
 }
