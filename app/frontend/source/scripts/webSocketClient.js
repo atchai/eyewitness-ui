@@ -14,14 +14,6 @@ function setupWebSocketClient (store) {
 
 	socket = socketClient.connect(process.env.SERVER_URI);
 
-	socket.on(`welcome`, data => {
-
-		if (data.threads) { store.commit(`update-threads`, { data: data.threads }); }
-		if (data.stories) { store.commit(`update-stories`, { data: data.stories }); }
-		if (data.welcomeMessages) { store.commit(`update-welcome-messages`, { data: data.welcomeMessages }); }
-
-	});
-
 	socket.on(`messaging/thread/new-message`, data => {
 
 		const itemId = data.itemId;

@@ -21,20 +21,6 @@ module.exports = class EventsController {
 	}
 
 	/*
-	 * Sends the welcome event to a new client.
-	 */
-	async emitWelcomeEvent (socket) {
-
-		const output = {
-
-		};
-
-		// Push data to client.
-		socket.emit(`welcome`, output);
-
-	}
-
-	/*
 	 * Returns the information for the latest human to human or incoming message.
 	 */
 	async getLatestThreadMessage (userId) {

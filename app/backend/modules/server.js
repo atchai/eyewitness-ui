@@ -53,8 +53,6 @@ function setupWebSocketServer (app, database) {
 
 	socketServer.on(`connection`, async socket => {
 
-		await ctrlEvents.emitWelcomeEvent(socket);
-
 		socket.on(
 			`messaging/get-threads`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreads)
