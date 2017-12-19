@@ -101,8 +101,16 @@
 			isThread () { return Boolean(this.$store.state.threads[this.$route.params.itemId]); },
 
 			numOldMessagesLoadedText () {
+
 				const numMessages = Object.keys(this.$store.state.messages).length;
-				return `Loaded ${(this.loadedAllMessages ? `all ` : ``)}${numMessages} message${numMessages !== 1 ? `s` : ``}`;
+
+				if (this.loadedAllMessages) {
+					return `Loaded all ${numMessages} messages`;
+				}
+				else {
+					return `Loaded ${numMessages} message${numMessages !== 1 ? `s` : ``}`;
+				}
+
 			},
 
 		},
