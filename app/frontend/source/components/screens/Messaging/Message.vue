@@ -160,7 +160,7 @@
 									display: block;
 									height: 2.50rem;
 									line-height: 2.50rem;
-									color: #2E8EFF !important;
+									color: $blue-color !important;
 									text-align: center;
 									text-decoration: none;
 									border-top: 1px solid $panel-border-color;
@@ -201,7 +201,7 @@
 			justify-content: flex-end;
 
 			>.bubble {
-				background: #0683FF;
+				background: $blue-color;
 				color: $font-color-light;
 
 				a {

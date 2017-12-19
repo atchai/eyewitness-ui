@@ -140,7 +140,7 @@
 						width: 0.50rem;
 						height: 0.50rem;
 						border-radius: 50%;
-						background: #0583FF;
+						background: $blue-color;
 						margin: auto;
 						margin-right: 0;
 						visibility: hidden;
