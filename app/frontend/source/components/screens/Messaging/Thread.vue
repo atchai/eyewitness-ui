@@ -5,15 +5,15 @@
 <template>
 
 	<router-link :to="`/messaging/thread/${itemId}`" :data-item-id="itemId" :class="{ 'thread': true, 'unread': unread }">
-		<div class="image">
+		<div class="image" v-if="isFullFat">
 			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
 		</div>
-		<div class="meta">
+		<div class="meta" v-if="isFullFat">
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
-				<div class="date"><span v-if="date">{{ date | formatDateAsRelative() }}</span></div>
+				<div class="date">{{ date | formatDateAsRelative() }}</div>
 			</div>
-			<div class="message">
+			<div class="message" v-if="isFullFat">
 				<div class="text">{{ message }}</div>
 				<div class="unread-container"><div class="orb"></div></div>
 			</div>

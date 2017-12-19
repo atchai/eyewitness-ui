@@ -13,6 +13,7 @@
 					v-for="thread in threadSet"
 					:key="thread.itemId"
 					:itemId="thread.itemId"
+					:isFullFat="thread.isFullFat"
 					:userFullName="thread.userFullName"
 					:date="thread.latestDate"
 					:message="thread.latestMessage"
