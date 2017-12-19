@@ -51,9 +51,14 @@
 		height: 4.75rem;
 		padding: 0 0.50rem;
 		border-bottom: 1px solid $panel-border-color;
+		background: $panel-background-color;
 		text-decoration: none;
 		color: inherit;
 		cursor: pointer;
+
+		&.thread-move {
+			transition: transform 0.5s;
+		}
 
 		&.router-link-active {
 			background: #D8D7D7;

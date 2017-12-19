@@ -8,15 +8,17 @@
 		<div class="inbox">Inbox</div>
 		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }" v-scroll="onScroll">
 			<ScreenLoader />
-			<Thread
-				v-for="thread in threadSet"
-				:key="thread.itemId"
-				:itemId="thread.itemId"
-				:userFullName="thread.userFullName"
-				:date="thread.latestDate"
-				:message="thread.latestMessage"
-				:adminLastReadMessages="thread.adminLastReadMessages"
-			/>
+			<transition-group name="thread" tag="div">
+				<Thread
+					v-for="thread in threadSet"
+					:key="thread.itemId"
+					:itemId="thread.itemId"
+					:userFullName="thread.userFullName"
+					:date="thread.latestDate"
+					:message="thread.latestMessage"
+					:adminLastReadMessages="thread.adminLastReadMessages"
+				/>
+			</transition-group>
 		</div>
 	</div>
 
