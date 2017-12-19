@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		<div id="message-list" :class="{ messages: true, loading: (loadingState > 0) }" v-scroll="onScroll">
+		<div id="message-list" class="messages" v-scroll="onScroll">
 			<div class="top-ruler">
 				<div class="rule"></div>
 				<div class="label">
