@@ -27,6 +27,10 @@ async function handleSocketEvent (socket, handler, data, reply) {
 
 	try {
 
+		if (typeof handler !== `function`) {
+			throw new Error(`The second parameter "handler" must be a function but was "${typeof handler}"!`);
+		}
+
 		// Call the handler function and pass down the scope of its controller.
 		await handler.call(this, socket, data, reply);
 
