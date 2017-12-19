@@ -49,7 +49,10 @@ module.exports = class EventsController {
 
 		for (let index = 0; index < recUsers.length; index++) {
 			const recUser = recUsers[index];
-			const thread = { itemId: recUser._id.toString(), latestDate: recUser.conversation.lastMessageReceivedAt };
+			const thread = {
+				itemId: recUser._id.toString(),
+				latestDate: recUser.conversation.lastMessageReceivedAt,
+			};
 
 			// Full-fat threads contain all properties.
 			if (index < pageInitialSize) {
