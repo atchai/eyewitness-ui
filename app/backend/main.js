@@ -14,7 +14,7 @@ const env = process.env.NODE_ENV || `development`;
 const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(`..`, `config`), {
-	localConfig: (localConfigName ? [localConfigName] : []),
+	localConfig: (localConfigName ? [ localConfigName ] : []),
 	requireLocalConfig: loadProviderConfig,
 });
 
@@ -24,7 +24,7 @@ const server = require(`./modules/server`);
 // If there is no listener for unhandled promise rejections then we add our own to output a stack trace and quit.
 if (!process.eventNames().includes(`unhandledRejection`)) {
 
-	process.on(`unhandledRejection`, err => {
+	process.on(`unhandledRejection`, err => { // eslint-disable-line promise/prefer-await-to-callbacks
 		/* eslint no-console: 0 */
 		console.error(``);
 		console.error(`Unhandled promise rejection!`);
@@ -51,4 +51,4 @@ async function main () {
  * Execute.
  */
 main()
-	.catch(err => console.error(err.stack)); // eslint-disable-line no-console
+	.catch(err => console.error(err.stack)); // eslint-disable-line
