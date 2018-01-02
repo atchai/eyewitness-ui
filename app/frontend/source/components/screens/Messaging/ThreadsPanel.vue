@@ -39,6 +39,7 @@
 				loadingState: 0,
 				loadingRoute: ``,
 				lastScrollTop: 0,
+				lastLoadTimeout: null,
 			};
 		},
 		computed: {
@@ -72,7 +73,18 @@
 			},
 
 			async onScroll (event, { scrollTop }) {
+
+				// Load in new items immediately.
 				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop);
+
+				// Cope with onScroll not being called when scrolling has finished because the event is being throttled.
+				if (this.lastLoadTimeout) { clearTimeout(lastLoadTimeout); }
+
+				this.lastLoadTimeout = setTimeout(
+					() => handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop),
+					APP_CONFIG.scrollThrottleThreshold
+				);
+
 			},
 
 		},
