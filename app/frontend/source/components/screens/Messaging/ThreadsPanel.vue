@@ -73,7 +73,13 @@
 			},
 
 			async onScroll (event, { scrollTop }) {
-				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop);
+
+				const threads = this.$store.state.threads;
+				const selecedItemId = this.$route.params.itemId || null;
+				const keepItemsFat = (selecedItemId ? [ this.$route.params.itemId ] : null);
+
+				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, threads, scrollTop, keepItemsFat);
+
 			},
 
 		},
