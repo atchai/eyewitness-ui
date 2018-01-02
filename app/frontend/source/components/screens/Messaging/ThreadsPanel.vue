@@ -86,7 +86,7 @@
 						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop)
 						this.lastLoadTimeout = null;
 					},
-					APP_CONFIG.scrollThrottleThreshold
+					APP_CONFIG.scrollThrottleThreshold * 2
 				);
 
 			},
