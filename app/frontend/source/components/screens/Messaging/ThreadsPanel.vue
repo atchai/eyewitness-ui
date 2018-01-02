@@ -73,22 +73,7 @@
 			},
 
 			async onScroll (event, { scrollTop }) {
-
-				// Load in new items immediately.
 				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop);
-
-				// Cope with onScroll not being called when scrolling has finished because the event is being throttled.
-				if (this.lastLoadTimeout) { clearTimeout(this.lastLoadTimeout); }
-
-				this.lastLoadTimeout = setTimeout(
-					() => {
-						const finalScrollTop = document.getElementById(`thread-list`).scrollTop;
-						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, finalScrollTop)
-						this.lastLoadTimeout = null;
-					},
-					APP_CONFIG.scrollThrottleThreshold * 2
-				);
-
 			},
 
 		},

@@ -178,7 +178,15 @@ function setLoadingFinished (cmp) {
 /*
  * Load in new items as the user scrolls a container div.
  */
-function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, scrollTop) { // eslint-disable-line max-params
+function handleOnScroll ( // eslint-disable-line max-params
+	cmp,
+	scrollContainerId,
+	elementClass,
+	storeUpdateAction,
+	storeProperty,
+	scrollTop,
+	recursive = false
+) {
 
 	// Get the elements.
 	const scrollDirection = (scrollTop >= cmp.lastScrollTop ? `down` : `up`);
@@ -208,6 +216,22 @@ function handleOnScroll (cmp, scrollContainerId, elementClass, storeUpdateAction
 
 	// Cache this for the next call.
 	cmp.lastScrollTop = scrollTop;
+
+	// Cope with onScroll not being called when scrolling has finished because the event is being throttled.
+	if (!recursive) {
+
+		if (cmp.lastLoadTimeout) { clearTimeout(cmp.lastLoadTimeout); }
+
+		cmp.lastLoadTimeout = setTimeout(
+			() => {
+				const finalScrollTop = document.getElementById(scrollContainerId).scrollTop;
+				handleOnScroll(cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, finalScrollTop, true);
+				cmp.lastLoadTimeout = null;
+			},
+			APP_CONFIG.scrollThrottleThreshold * 2
+		);
+
+	}
 
 }
 
