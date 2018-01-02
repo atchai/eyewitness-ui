@@ -113,6 +113,10 @@
 			position: relative;
 			flex: 1;
 			@include scroll-vertical();
+
+			&.loading > * {
+				filter: none !important;
+			}
 		}
 	}
 
