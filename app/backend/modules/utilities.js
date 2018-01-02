@@ -47,7 +47,6 @@ async function handleSocketEvent (socket, handler, data, reply) {
  */
 function parseLatestMessageInformation (message) {
 
-	const latestDate = message.sentAt;
 	let latestMessage = `[No Text]`;
 	const text = message.text || (message.data && message.data.text) || null;
 	const attachments = message.attachments || (message.data && message.data.attachments) || [];
@@ -60,7 +59,7 @@ function parseLatestMessageInformation (message) {
 		latestMessage = `[${type[0].toUpperCase()}${type.substr(1)} Attachment]`;
 	}
 
-	return { latestDate, latestMessage };
+	return latestMessage;
 
 }
 
