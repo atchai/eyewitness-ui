@@ -4,13 +4,19 @@
  * MIDDLEWARE
  */
 
+const packageJson = require(`../../../package.json`);
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
 /*
  * Respond with a HTTP 200 to any requests to the health check endpoint.
  */
 function healthCheck (req, res) {
-	return res.end(`OK`);
+
+	return res.json({
+		healthy: true,
+		version: packageJson.version,
+	});
+
 }
 
 /*
