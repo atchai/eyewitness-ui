@@ -83,7 +83,7 @@
 				this.lastLoadTimeout = setTimeout(
 					() => {
 						const finalScrollTop = document.getElementById(`thread-list`).scrollTop;
-						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop)
+						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, finalScrollTop)
 						this.lastLoadTimeout = null;
 					},
 					APP_CONFIG.scrollThrottleThreshold * 2
