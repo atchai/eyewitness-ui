@@ -78,10 +78,13 @@
 				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop);
 
 				// Cope with onScroll not being called when scrolling has finished because the event is being throttled.
-				if (this.lastLoadTimeout) { clearTimeout(lastLoadTimeout); }
+				if (this.lastLoadTimeout) { clearTimeout(this.lastLoadTimeout); }
 
 				this.lastLoadTimeout = setTimeout(
-					() => handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop),
+					() => {
+						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop)
+						this.lastLoadTimeout = null;
+					},
 					APP_CONFIG.scrollThrottleThreshold
 				);
 
