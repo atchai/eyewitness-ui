@@ -20,6 +20,7 @@
 	"facebookPageId": null,
 	"pageInitialSize": 20,
 	"pageBufferSize": 5,
+	"scrollThrottleThreshold": 200,
 	"build": {
 		"webpackStats": "errors-only",
 		"sourceMapMode": false,

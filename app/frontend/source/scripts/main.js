@@ -31,7 +31,7 @@ setupWebSocketClient(store, router);
 /*
  * Miscellaneous plugins.
  */
-Vue.use(vueScroll, { throttle: 200 });
+Vue.use(vueScroll, { throttle: APP_CONFIG.scrollThrottleThreshold });
 
 /*
  * Prevent drag events on certain elements.
