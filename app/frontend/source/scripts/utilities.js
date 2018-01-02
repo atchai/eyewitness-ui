@@ -185,6 +185,7 @@ function handleOnScroll ( // eslint-disable-line max-params
 	storeUpdateAction,
 	storeProperty,
 	scrollTop,
+	keepItemsFat,
 	recursive = false
 ) {
 
@@ -197,15 +198,38 @@ function handleOnScroll ( // eslint-disable-line max-params
 	const inRangeItems = convertElementsToItems($inRangeElements, storeProperty);
 	const lostRangeItems = convertElementsToItems($lostRangeElements, storeProperty);
 
-	// Filter out the thin items that are in range and need fattening up.
+	// Filter down to just the thin items that are in range and need fattening up.
 	const thinInRangeItems = inRangeItems.filter(item => !item.isFullFat);
+
+	// Ensure we are keeping items that must remain fat!
+	const hasItemsToKeep = (Array.isArray(keepItemsFat) && keepItemsFat.length);
+	if (hasItemsToKeep) {
+
+		keepItemsFat.forEach(keepItemId => {
+			const alreadyExists = inRangeItems.find(inRangeItem => inRangeItem.itemId === keepItemId);
+			if (alreadyExists) { return; }
+
+			inRangeItems.push(storeProperty[keepItemId]);
+		});
+
+	}
 
 	// Replace the fat items that have just gone out of range with thinner copies.
 	lostRangeItems.forEach(item => {
+
+		// Skip items that must remain fat.
+		const mustRemainFat =
+			(hasItemsToKeep ? keepItemsFat.find(keepItemId => keepItemId === item.itemId) : null) ||
+			inRangeItems.find(inRangeItem => inRangeItem.itemId === item.itemId);
+
+		if (mustRemainFat) { return; }
+
+		// Put item on a diet and make it thin!
 		cmp.$store.commit(storeUpdateAction, {
 			key: item.itemId,
 			data: { itemId: item.itemId },
 		});
+
 	});
 
 	// Get just the IDs for the next stage.
@@ -228,7 +252,16 @@ function handleOnScroll ( // eslint-disable-line max-params
 				if (!$scrollContainer) { return; }
 
 				const finalScrollTop = $scrollContainer.scrollTop;
-				handleOnScroll(cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, finalScrollTop, true);
+				handleOnScroll(
+					cmp,
+					scrollContainerId,
+					elementClass,
+					storeUpdateAction,
+					storeProperty,
+					finalScrollTop,
+					keepItemsFat,
+					true
+				);
 
 				cmp.lastLoadTimeout = null;
 			},
