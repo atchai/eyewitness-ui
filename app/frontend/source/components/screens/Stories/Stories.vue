@@ -43,6 +43,7 @@
 				loadingState: 0,
 				loadingRoute: ``,
 				lastScrollTop: 0,
+				lastLoadTimeout: null,
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, Story },
