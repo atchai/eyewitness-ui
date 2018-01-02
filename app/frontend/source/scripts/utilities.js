@@ -113,7 +113,7 @@ function removeStorePropertyItem (state, property, { key }) {
 }
 
 /*
- *
+ * Helper to sort object properties.
  */
 function sortObjectPropertiesByKey (existingDictionary, keyProperty, sortProperty, sortDirection) {
 
