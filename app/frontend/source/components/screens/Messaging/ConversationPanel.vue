@@ -72,7 +72,6 @@
 
 	import ObjectId from 'bson-objectid';
 	import moment from 'moment';
-	import Vue from 'vue';
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
@@ -303,7 +302,10 @@
 		watch: {
 
 			$route: {
-				handler: function () { this.fetchComponentData(false); },
+				handler: function () {
+					this.fetchComponentData(false);
+					this.$nextTick(this.selectTextInput);
+				},
 				immediate: true,
 			},
 
