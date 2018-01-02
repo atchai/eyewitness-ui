@@ -57,13 +57,11 @@ module.exports = class EventsController {
 			// Full-fat threads contain all properties.
 			if (index < pageInitialSize) {
 				const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
-				const { latestMessage } = await this.getLatestThreadMessage(recUser._id); // eslint-disable-line no-await-in-loop
 				const firstName = recUser.profile.firstName || ``;
 				const lastName = recUser.profile.lastName || ``;
 
 				thread.isFullFat = true;
 				thread.userFullName = `${firstName} ${lastName}`.trim() || `[Name Hidden]`;
-				thread.latestMessage = latestMessage;
 				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
 				thread.adminLastReadMessages = adminLastReadMessages.toISOString();
 			}
@@ -80,6 +78,15 @@ module.exports = class EventsController {
 
 			threads.push(thread);
 		}
+
+		// Get latest message for each full-fat thread outside of for-loop to improve performance.
+		const latestMessagePromises = threads.map(async thread => {
+			if (thread.isFullFat) {
+				thread.latestMessage = await this.getLatestThreadMessage(thread.itemId);
+			}
+		});
+
+		await Promise.all(latestMessagePromises);
 
 		// We must sort threads by their latest message date.
 		deepSort(threads, `latestDate`, `desc`);
