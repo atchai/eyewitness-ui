@@ -82,6 +82,7 @@
 
 				this.lastLoadTimeout = setTimeout(
 					() => {
+						const finalScrollTop = document.getElementById(`thread-list`).scrollTop;
 						handleOnScroll(this, `thread-list`, `thread`, `update-thread`, this.$store.state.threads, scrollTop)
 						this.lastLoadTimeout = null;
 					},
