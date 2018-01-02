@@ -224,8 +224,12 @@ function handleOnScroll ( // eslint-disable-line max-params
 
 		cmp.lastLoadTimeout = setTimeout(
 			() => {
-				const finalScrollTop = document.getElementById(scrollContainerId).scrollTop;
+				const $scrollContainer = document.getElementById(scrollContainerId);
+				if (!$scrollContainer) { return; }
+
+				const finalScrollTop = $scrollContainer.scrollTop;
 				handleOnScroll(cmp, scrollContainerId, elementClass, storeUpdateAction, storeProperty, finalScrollTop, true);
+
 				cmp.lastLoadTimeout = null;
 			},
 			APP_CONFIG.scrollThrottleThreshold * 2
