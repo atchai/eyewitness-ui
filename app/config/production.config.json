@@ -17,10 +17,11 @@
 			}
 		}
 	},
-	"facebookPageId": null,
+	"pageTitle": "Eyewitness UI",
 	"pageInitialSize": 20,
 	"pageBufferSize": 5,
 	"scrollThrottleThreshold": 200,
+	"facebookPageId": null,
 	"build": {
 		"webpackStats": "errors-only",
 		"sourceMapMode": false,
