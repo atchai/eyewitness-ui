@@ -353,13 +353,6 @@ function convertElementsToItems ($elements, storeDictionary) {
 }
 
 /*
- * Wait until the browser has started the next tick of the event loop.
- */
-async function browserNextTick () {
-	return await new Promise(resolve => setTimeout(resolve, 0));
-}
-
-/*
  * Export.
  */
 export {
@@ -372,5 +365,4 @@ export {
 	setLoadingStarted,
 	setLoadingFinished,
 	handleOnScroll,
-	browserNextTick,
 };
