@@ -36,10 +36,6 @@ a {
 	}
 }
 
-.lock-scrolling {
-	overflow: hidden !important;
-}
-
 /*
  * Tags.
  */
@@ -115,6 +111,7 @@ button {
 /*
  * Loader.
  */
+
 .loading-container {
 	position: absolute;
 	display: none;
