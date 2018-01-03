@@ -13,7 +13,7 @@ module.exports = class HomeController {
 	 */
 	renderHomePage (req, res) {
 
-		res.render(`home`, {
+		return res.render(`home`, {
 			pageTitle: config.pageTitle,
 			appConfig: JSON.stringify({
 				pageInitialSize: config.pageInitialSize,
