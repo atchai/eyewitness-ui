@@ -242,17 +242,17 @@
 				const itemId = (this.thread && this.thread.itemId);
 				if (!itemId) { return; }
 
-				const lastRead = moment().toISOString();
-
+				// Update last read timestamp.
 				this.$store.commit(`update-thread`, {
 					key: itemId,
 					dataField: `adminLastReadMessages`,
-					dataValue: lastRead,
+					dataValue: moment().toISOString(),
 				});
 
+				// Update the last read field properly.
 				getSocket().emit(
 					`messaging/thread/set-admin-read-date`,
-					{ itemId, lastRead },
+					{ itemId },
 					data => (!data || !data.success ? alert(`There was a problem marking the thread as read.`) : void (0))
 				);
 
