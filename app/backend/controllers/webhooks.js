@@ -22,7 +22,7 @@ module.exports = class WebhooksController {
 
 		const userId = req.body.userId;
 		const message = req.body.message;
-		const { latestMessage, latestDate } = parseLatestMessageInformation(message);
+		const latestMessage = parseLatestMessageInformation(message);
 
 		// Alert all clients to this incoming message.
 		this.socketServer.emit(`messaging/thread/new-message`, {
@@ -35,7 +35,7 @@ module.exports = class WebhooksController {
 				data: message,
 			},
 			latestMessage,
-			latestDate,
+			latestDate: message.sentAt,
 		});
 
 		return res.json({
