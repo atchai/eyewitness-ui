@@ -304,7 +304,22 @@
 			},
 
 			'$store.state.messages': {
-				handler: function () { this.scrollMessagesToBottom(); },
+				handler: function () {
+
+					const $messageList = document.getElementById(`message-list`);
+					if (!$messageList) { return; }
+
+					// We're able to scroll.
+					if ($messageList.scrollHeight > $messageList.clientHeight) {
+						this.scrollMessagesToBottom();
+					}
+
+					// We can't scroll, but must still mark the new messages as read.
+					else {
+						this.markAsReadByAdmin();
+					}
+
+				},
 				immediate: true,
 			}
 
