@@ -96,6 +96,14 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Prepares a single thread.
+	 */
+	async prepareSingleThread (recUser) {
+		const threads = await this.prepareThreads([ recUser ], 1);
+		return Object.values(threads)[0];
+	}
+
+	/*
 	 * Prepares message data for the frontend and maps the list to a dictionary.
 	 */
 	async prepareMessages (recMessages, pageInitialSize, isHardLimit = false) {
@@ -263,7 +271,7 @@ module.exports = class EventsController {
 		const itemId = String(data.itemId);
 
 		const recUser = await this.database.get(`User`, { _id: itemId });
-		const thread = await this.buildThread(recUser);
+		const thread = await this.prepareSingleThread(recUser);
 
 		return reply({ success: true, thread });
 
