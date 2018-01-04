@@ -26,7 +26,11 @@ module.exports = class WebhooksController {
 
 		// Alert all clients to this incoming message.
 		this.socketServer.emit(`messaging/thread/new-message`, {
-			threadId: userId,
+			thread: {
+				itemId: userId,
+				latestMessage,
+				latestDate: message.sentAt,
+			},
 			message: {
 				itemId: message.messageId,
 				direction: message.direction,
@@ -34,8 +38,6 @@ module.exports = class WebhooksController {
 				humanToHuman: message.humanToHuman,
 				data: message,
 			},
-			latestMessage,
-			latestDate: message.sentAt,
 		});
 
 		return res.json({
