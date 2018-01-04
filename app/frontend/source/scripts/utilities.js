@@ -12,16 +12,14 @@ function addStorePropertyItem (state, property, { key, data, keyField, sortField
 
 	const dictionary = state[property];
 
-	const newDictionary = Object({
+	// Add the new item to the store.
+	state[property] = Object({
 		...dictionary,
 		[key]: data,
 	});
 
 	if (sortField && sortDirection) {
-		state[property] = sortObjectPropertiesByKey(dictionary, keyField || `itemId`, sortField, sortDirection);
-	}
-	else {
-		state[property] = newDictionary;
+		state[property] = sortObjectPropertiesByKey(state[property], keyField || `itemId`, sortField, sortDirection);
 	}
 
 }
