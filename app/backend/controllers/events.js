@@ -330,7 +330,9 @@ module.exports = class EventsController {
 
 		// Make sure the client passed in safe values.
 		const itemId = String(data.itemId);
-		const lastRead = moment(data.lastRead).toDate();
+
+		const recUser = await this.database.get(`User`, { _id: itemId });
+		const lastRead = Math.max(recUser.conversation.lastMessageReceivedAt, recUser.conversation.lastMessageSentAt);
 
 		await this.database.update(`User`, itemId, {
 			'appData.adminLastReadMessages': lastRead,
