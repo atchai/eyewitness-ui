@@ -15,21 +15,21 @@ function setupWebSocketClient (store, router) {
 
 	socket.on(`messaging/thread/new-message`, data => {
 
-		const hasThread = store.getters.hasThread(data.threadId);
+		const hasThread = store.getters.hasThread(data.thread.itemId);
 
 		// If we have not spoken to this user before we must ask the backend for the full thread data.
 		if (!hasThread) {
 
 			return socket.emit(
 				`messaging/thread/get-info`,
-				{ itemId: data.threadId },
+				{ itemId: data.thread.itemId },
 				resData => {
 
 					if (!resData || !resData.success) { return alert(`There was a problem loading in a new thread.`); }
 
 					// Add the new thread.
 					store.commit(`add-thread`, {
-						key: data.threadId,
+						key: resData.thread.itemId,
 						data: resData.thread,
 						sortField: `latestDate`,
 						sortDirection: `desc`,
@@ -41,9 +41,9 @@ function setupWebSocketClient (store, router) {
 		}
 
 		const { path: curPath, params: curParams } = router.history.current;
-		const isThreadVisible = (curPath.match(/^\/messaging\/thread/) && curParams.itemId === data.threadId);
+		const isThreadVisible = (curPath.match(/^\/messaging\/thread/) && curParams.itemId === data.thread.itemId);
 
-		// Add the new message to the thread.
+		// Add the new message to the store, if the thread is currently visible.
 		if (isThreadVisible) {
 			store.commit(`add-message`, {
 				key: data.message.itemId,
@@ -53,10 +53,10 @@ function setupWebSocketClient (store, router) {
 
 		// Update thread meta.
 		store.commit(`update-thread`, {
-			key: data.threadId,
+			key: data.thread.itemId,
 			dataFunction: (stateProperty) => {
-				stateProperty.latestDate = data.latestDate;
-				stateProperty.latestMessage = data.latestMessage;
+				stateProperty.latestDate = data.thread.latestDate;
+				stateProperty.latestMessage = data.thread.latestMessage;
 				return stateProperty;
 			},
 			sortField: `latestDate`,
