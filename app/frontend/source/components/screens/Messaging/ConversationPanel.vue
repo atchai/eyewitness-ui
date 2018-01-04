@@ -56,12 +56,6 @@
 					>
 				</textarea>
 			</div>
-			<div class="tools">
-				<div class="icon">A</div>
-				<div class="icon">B</div>
-				<div class="icon">C</div>
-				<div class="icon">D</div>
-			</div>
 		</div>
 
 	</div>
@@ -452,22 +446,6 @@
 					resize: none;
 					border: 0;
 					outline: 0;
-				}
-			}
-
-			>.tools {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 10.00rem;
-				height: 100%;
-				flex-shrink: 0;
-				@include user-select-off();
-
-				>.icon {
-					width: 2.00rem;
-					text-align: center;
-					visibility: hidden;
 				}
 			}
 		}
