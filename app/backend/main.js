@@ -41,9 +41,10 @@ if (!process.eventNames().includes(`unhandledRejection`)) {
  */
 async function main () {
 
+	const port = process.env.PORT || config.server.port;
 	const database = await connectToEyewitnessDatabase();
 
-	await server.start(config.server.port, database);
+	await server.start(port, database);
 
 }
 
