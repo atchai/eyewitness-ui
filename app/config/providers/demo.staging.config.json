@@ -1,0 +1,14 @@
+{
+	"server": {
+		"externalUri": "https://eyewitness-ui-demo-staging.atchai.com"
+	},
+	"databases": {
+		"mongo": {
+			"connectionString": "mongodb://user-34kUeovNyUZA7u0AGQ5f:Er3qI1jFjcWVYuZurZb9T8wai2fCmMBMFDqdYe2LqzmMrcrBzXi1E7aUl4i4@ds159187.mlab.com:59187/demo-staging"
+		}
+	},
+	"facebookPageId": "1943278265923959",
+	"hippocampServer": {
+		"baseUrl": "https://eyewitness-bot-demo-staging.atchai.com"
+	}
+}
