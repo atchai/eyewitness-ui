@@ -1,6 +1,6 @@
 {
 	"server": {
-		"externalUri": "https://eyewitness-demo-ui.atchai.com"
+		"externalUri": "https://eyewitness-ui-demo.atchai.com"
 	},
 	"databases": {
 		"mongo": {

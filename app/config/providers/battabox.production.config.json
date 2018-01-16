@@ -1,6 +1,6 @@
 {
 	"server": {
-		"externalUri": "https://eyewitness-battabox-production.atchai.com:9002"
+		"externalUri": "https://eyewitness-ui-battabox.atchai.com"
 	},
 	"databases": {
 		"mongo": {
@@ -9,6 +9,6 @@
 	},
 	"facebookPageId": "battabox",
 	"hippocampServer": {
-		"baseUrl": "https://eyewitness-battabox-production.atchai.com:9000"
+		"baseUrl": "https://eyewitness-bot-battabox.atchai.com"
 	}
 }

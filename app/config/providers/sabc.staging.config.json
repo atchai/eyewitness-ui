@@ -1,6 +1,6 @@
 {
 	"server": {
-		"externalUri": "https://eyewitness-sabc-staging.atchai.com:9002"
+		"externalUri": "https://eyewitness-ui-sabc-staging.atchai.com"
 	},
 	"databases": {
 		"mongo": {
@@ -8,6 +8,6 @@
 		}
 	},
 	"hippocampServer": {
-		"baseUrl": "https://eyewitness-sabc-staging.atchai.com:9000"
+		"baseUrl": "https://eyewitness-bot-sabc-staging.atchai.com"
 	}
 }

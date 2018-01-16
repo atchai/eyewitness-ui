@@ -1,6 +1,6 @@
 {
 	"server": {
-		"externalUri": "https://eyewitness-thestar-production.atchai.com:9002"
+		"externalUri": "https://eyewitness-ui-thestar.atchai.com"
 	},
 	"databases": {
 		"mongo": {
@@ -9,6 +9,6 @@
 	},
 	"facebookPageId": "TheStarKenya",
 	"hippocampServer": {
-		"baseUrl": "https://eyewitness-thestar-production.atchai.com:9000"
+		"baseUrl": "https://eyewitness-bot-thestar.atchai.com"
 	}
 }

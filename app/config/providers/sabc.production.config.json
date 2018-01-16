@@ -1,6 +1,6 @@
 {
 	"server": {
-		"externalUri": "https://eyewitness-sabc-production.atchai.com:9002"
+		"externalUri": "https://eyewitness-ui-sabc.atchai.com"
 	},
 	"databases": {
 		"mongo": {
@@ -9,6 +9,6 @@
 	},
 	"facebookPageId": "SABCNewsOnline",
 	"hippocampServer": {
-		"baseUrl": "https://eyewitness-sabc-production.atchai.com:9000"
+		"baseUrl": "https://eyewitness-bot-sabc.atchai.com"
 	}
 }
