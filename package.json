@@ -12,7 +12,7 @@
   "deploy-thestar-production": "heroku container:push web -a eyewitness-ui-thestar",
   "deploy-all-staging": "npm run deploy-demo-staging && npm run deploy-battabox-staging && npm run deploy-sabc-staging && npm run deploy-thestar-staging",
   "deploy-demo-staging": "heroku container:push web -a eyewitness-ui-demo-staging",
-  "deploy-battabox-staging": "heroku container:push web -a eyewitness-ui-battabox-staging",
+  "deploy-battabox-staging": "heroku container:push web -a eyewitness-ui-battabox-stag",
   "deploy-sabc-staging": "heroku container:push web -a eyewitness-ui-sabc-staging",
   "deploy-thestar-staging": "heroku container:push web -a eyewitness-ui-thestar-staging",
   "ngrok": "ngrok http 6000 --region eu -subdomain=eyewitness",
