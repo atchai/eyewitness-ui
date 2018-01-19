@@ -8,7 +8,7 @@
 
 		<div class="toolbar">
 			<div class="image">
-				<div class="image-circle"></div>
+				<div class="image-circle" :style="`background-image: url('${thread.profilePicUrl}')`"></div>
 			</div>
 			<div class="name">{{ thread.userFullName }}</div>
 			<div class="actions">

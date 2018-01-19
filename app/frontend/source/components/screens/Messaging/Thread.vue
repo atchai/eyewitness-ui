@@ -6,7 +6,7 @@
 
 	<router-link :to="`/messaging/thread/${itemId}`" :data-item-id="itemId" :class="{ 'thread': true, 'unread': unread }">
 		<div class="image" v-if="isFullFat">
-			<div class="image-circle" style="`background-image: url('${imageUrl}')`"></div>
+			<div class="image-circle" :style="`background-image: url('${imageUrl}')`"></div>
 		</div>
 		<div class="meta" v-if="isFullFat">
 			<div class="details">

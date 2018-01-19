@@ -62,6 +62,7 @@ module.exports = class EventsController {
 
 				thread.isFullFat = true;
 				thread.userFullName = `${firstName} ${lastName}`.trim() || `[Name Hidden]`;
+				thread.profilePicUrl = recUser.profile.profilePicUrl;
 				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
 				thread.adminLastReadMessages = adminLastReadMessages.toISOString();
 			}

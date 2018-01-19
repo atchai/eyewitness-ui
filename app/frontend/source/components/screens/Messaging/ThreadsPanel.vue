@@ -15,6 +15,7 @@
 					:itemId="thread.itemId"
 					:isFullFat="thread.isFullFat"
 					:userFullName="thread.userFullName"
+					:imageUrl="thread.profilePicUrl"
 					:date="thread.latestDate"
 					:message="thread.latestMessage"
 					:adminLastReadMessages="thread.adminLastReadMessages"
