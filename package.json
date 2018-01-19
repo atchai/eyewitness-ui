@@ -5,7 +5,7 @@
  "description": "User interface to allow admins to interact with their Eyewitness bot.",
  "main": "app/backend/main.js",
  "scripts": {
-  "deploy-all-production": "npm run deploy-demo && npm run deploy-battabox && npm run deploy-sabc && npm run deploy-thestar",
+  "deploy-all-production": "npm run deploy-demo-production && npm run deploy-battabox-production && npm run deploy-sabc-production && npm run deploy-thestar-production",
   "deploy-demo-production": "heroku container:push web -a eyewitness-ui-demo",
   "deploy-battabox-production": "heroku container:push web -a eyewitness-ui-battabox",
   "deploy-sabc-production": "heroku container:push web -a eyewitness-ui-sabc",
