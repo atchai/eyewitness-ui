@@ -11,6 +11,7 @@
 		<div class="meta" v-if="isFullFat">
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
+				<div class="enquiry-type">{{ enquiryType | enquiryType() }}</div>
 				<div class="date">{{ date | formatDateAsRelative() }}</div>
 			</div>
 			<div class="message" v-if="isFullFat">
@@ -28,7 +29,9 @@
 	import moment from 'moment';
 
 	export default {
-		props: [`itemId`, `isFullFat`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`],
+		props: [
+			`itemId`, `isFullFat`, `imageUrl`, `userFullName`, `date`, `message`, `adminLastReadMessages`, `enquiryType`,
+		],
 		computed: {
 
 			unread () {
@@ -114,6 +117,19 @@
 					white-space: nowrap;
 					text-overflow: ellipsis;
 					overflow: hidden;
+				}
+
+				>.enquiry-type {
+					flex-shrink: 0;
+					font-style: italic;
+					white-space: nowrap;
+					color: $faded-color;
+					margin: 0 0.25rem;
+
+					&:not(:empty):before,
+					&:not(:empty):after {
+						content: "-";
+					}
 				}
 
 				>.date {

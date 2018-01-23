@@ -19,6 +19,7 @@
 					:date="thread.latestDate"
 					:message="thread.latestMessage"
 					:adminLastReadMessages="thread.adminLastReadMessages"
+					:enquiryType="thread.enquiryType"
 				/>
 			</transition-group>
 		</div>
