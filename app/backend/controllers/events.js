@@ -52,6 +52,7 @@ module.exports = class EventsController {
 			const thread = {
 				itemId: recUser._id.toString(),
 				latestDate: recUser.conversation.lastMessageReceivedAt,
+				conversationState: recUser.appData.conversationState || `open`,
 			};
 
 			// Full-fat threads contain all properties.
@@ -63,6 +64,7 @@ module.exports = class EventsController {
 				thread.isFullFat = true;
 				thread.userFullName = `${firstName} ${lastName}`.trim() || `[Name Hidden]`;
 				thread.profilePicUrl = recUser.profile.profilePicUrl;
+				thread.enquiryType = recUser.appData.enquiryType || null;
 				thread.botEnabled = !(recUser.bot && recUser.bot.disabled);
 				thread.adminLastReadMessages = adminLastReadMessages.toISOString();
 			}
