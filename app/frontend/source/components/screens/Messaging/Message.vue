@@ -5,7 +5,7 @@
 <template>
 
 	<div :data-item-id="itemId" :class="[`message`, direction]">
-		<div class="bubble" :title="sentAt | formatDate('DD/MM/YYYY HH:MM')">
+		<div class="bubble" :title="sentAt | formatDate('DD/MM/YYYY HH:mm')">
 
 			<div v-if="data.text && !(data.attachments && data.attachments.length)" class="inner text">
 				{{data.text}}
