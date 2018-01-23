@@ -20,3 +20,15 @@ Vue.filter(`formatDateAsRelative`, (value) => {
 	const date = moment(value);
 	return date.from(moment());
 });
+
+/*
+ * Format the enquiry type to make it more user friendly.
+ */
+Vue.filter(`enquiryType`, (value) => {
+	switch (value) {
+		case `submit a tip`: return `story`;
+		case `advertise`: return `advertise`;
+		case `other`: return `other`;
+		default: return ``;
+	}
+});
