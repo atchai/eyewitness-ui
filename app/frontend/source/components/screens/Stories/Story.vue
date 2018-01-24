@@ -15,12 +15,13 @@
 
 		<div v-if="isFullFat" class="cell actions">
 			<div class="inner">
-				<div :class="{ 'tag': true, 'on': published }">
-					<span v-if="published">Published</span>
-					<span v-if="!published">Offline</span>
-				</div>
-				<a href="JavaScript:void(0);" v-if="published" @click="setArticleUnpublished(itemId)"><span >take offline</span></a>
-				<a href="JavaScript:void(0);" v-if="!published" @click="setArticlePublished(itemId)"><span>publish</span></a>
+				<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': priority }">
+					<span>Send Alert</span>
+				</a>
+				<a href="JavaScript:void(0);" @click="setArticlePublishedState(itemId, published)" :class="{ 'tag': true, 'published': true, 'on': published }">
+					<span v-if="published">Unpublish</span>
+					<span v-if="!published">Publish</span>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -32,37 +33,23 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 
 	export default {
-		props: [`itemId`, `isFullFat`, `title`, `time`, `date`, `published`],
+		props: [`itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority`],
 		methods: {
 
-			setArticlePublished (itemId) {
+			setArticlePublishedState (itemId, oldState) {
+
+				const newState = !oldState;
 
 				this.$store.commit(`update-story`, {
 					key: itemId,
 					dataField: `published`,
-					dataValue: true,
+					dataValue: newState,
 				});
 
 				getSocket().emit(
 					`stories/set-story-published`,
-					{ itemId, published: true },
-					data => (!data || !data.success ? alert(`There was a problem publishing the story.`) : void (0))
-				);
-
-			},
-
-			setArticleUnpublished (itemId) {
-
-				this.$store.commit(`update-story`, {
-					key: itemId,
-					dataField: `published`,
-					dataValue: false,
-				});
-
-				getSocket().emit(
-					`stories/set-story-published`,
-					{ itemId, published: false },
-					data => (!data || !data.success ? alert(`There was a problem unpublishing the story.`) : void (0))
+					{ itemId, published: newState },
+					data => (!data || !data.success ? alert(`There was a problem setting the story's publish state.`) : void (0))
 				);
 
 			},
@@ -123,16 +110,34 @@
 
 			&.actions {
 				flex-shrink: 0;
-				width: 14.00rem;
+				width: 16.00rem;
 				@include user-select-off();
 
 				>.inner {
 					margin-left: 0;
 
 					a {
-						margin-left: 0.50rem;
-						color: $faded-color;
+						margin: 0 0.25rem;
+						color: white;
 						text-decoration: none;
+
+						&.tag.priority {
+							background: #4990E2;
+
+							&.on {
+								background: $tag-off-background-color;
+								cursor: not-allowed;
+								opacity: 1.00 !important;
+							}
+						}
+
+						&.tag.published {
+							background: $tag-on-background-color;
+
+							&.on {
+								background: #d6411e;
+							}
+						}
 					}
 				}
 			}

@@ -19,6 +19,7 @@
 			:time="story.articleDate | formatDate('HH:MM')"
 			:date="story.articleDate | formatDate('DD/MM/YY')"
 			:published="story.published"
+			:priority="story.priority"
 		/>
 	</div>
 
