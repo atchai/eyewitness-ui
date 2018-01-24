@@ -32,6 +32,7 @@
 			margin-top: 8.00rem;
 			margin-bottom: auto;
 			text-align: center;
+			font-size: 120%;
 		}
 	}
 
