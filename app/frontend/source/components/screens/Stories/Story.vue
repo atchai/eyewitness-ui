@@ -159,7 +159,7 @@
 							background: $tag-on-background-color;
 
 							&.on {
-								background: #d6411e;
+								background: $red-color;
 							}
 						}
 					}
