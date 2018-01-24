@@ -68,7 +68,8 @@
 		}
 
 		&:hover {
-			background: #E8E7E7;
+			background: $panel-hover-color;
+			opacity: 1.00;
 		}
 
 		&.unread {
