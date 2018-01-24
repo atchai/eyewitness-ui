@@ -336,6 +336,7 @@ module.exports = class EventsController {
 
 		await this.database.update(`User`, itemId, {
 			'appData.conversationState': `closed`,
+			'bot.disabled': false,
 		});
 
 		return reply({ success: true });

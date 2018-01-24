@@ -240,8 +240,13 @@
 				// Close the thread in the UI.
 				this.$store.commit(`update-thread`, {
 					key: itemId,
-					dataField: `conversationState`,
-					dataValue: `closed`,
+					dataFunction: thread => {
+						return {
+							...thread,
+							conversationState: `closed`,
+							botEnabled: true,
+						};
+					},
 				});
 
 				// Close the thread.
