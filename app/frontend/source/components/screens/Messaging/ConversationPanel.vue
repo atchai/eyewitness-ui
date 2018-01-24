@@ -188,22 +188,6 @@
 
 			},
 
-			setBotDisabled (itemId) {
-
-				this.$store.commit(`update-thread`, {
-					key: itemId,
-					dataField: `botEnabled`,
-					dataValue: false,
-				});
-
-				getSocket().emit(
-					`messaging/thread/set-bot-enabled`,
-					{ itemId, enabled: false },
-					data => (!data || !data.success ? alert(`There was a problem disabling the user's bot.`) : void (0))
-				);
-
-			},
-
 			selectTextInput () {
 				document.getElementById(`composer-text-input`).focus();
 			},
