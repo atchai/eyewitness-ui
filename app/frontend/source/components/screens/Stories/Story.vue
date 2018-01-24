@@ -146,7 +146,7 @@
 						text-decoration: none;
 
 						&.tag.priority {
-							background: #4990E2;
+							background: $blue-color;
 
 							&.on {
 								background: $tag-off-background-color;
