@@ -70,6 +70,10 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetBotEnabled)
 		);
 		socket.on(
+			`messaging/thread/close`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadClose)
+		);
+		socket.on(
 			`messaging/thread/set-admin-read-date`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetAdminReadDate)
 		);

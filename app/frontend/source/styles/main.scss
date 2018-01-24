@@ -90,9 +90,27 @@ button {
 	cursor: pointer;
 	@include user-select-off();
 
+	&.shrunk {
+		width: auto;
+		height: auto;
+		line-height: normal;
+		padding: 0.50rem 0.50rem;
+		border-radius: 0.50rem;
+	}
+
 	&.primary {
 		background: $accent-color;
-		color: white;
+		color: $font-color-light;
+	}
+
+	&.action {
+		background: $blue-color;
+		color: $font-color-light;
+	}
+
+	&.danger {
+		background: $red-color;
+		color: $font-color-light;
 	}
 
 	&:hover {

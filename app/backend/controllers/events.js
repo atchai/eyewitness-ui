@@ -327,6 +327,22 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Update the "conversationState" property on the user's document.
+	 */
+	async messagingThreadClose (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+
+		await this.database.update(`User`, itemId, {
+			'appData.conversationState': `closed`,
+		});
+
+		return reply({ success: true });
+
+	}
+
+	/*
 	 * Update the "adminLastReadMessages" property on the user's document.
 	 */
 	async messagingThreadSetAdminReadDate (socket, data, reply) {

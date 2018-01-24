@@ -14,13 +14,17 @@
 			<div class="enquiry-type">{{ thread.enquiryType | enquiryType() }}</div>
 			<div class="filler"></div>
 			<div class="actions">
-				<span class="label">Bot:</span>
-				<div :class="{ 'tag': true, 'on': thread.botEnabled }">
-					<span v-if="thread.botEnabled">Enabled</span>
-					<span v-if="!thread.botEnabled">Disabled</span>
+				<div class="bot-toggle">
+					<button href="JavaScript:void(0);" @click="setBotEnabledState(thread.itemId, thread.botEnabled)" :class="{ 'shrunk': true, 'danger': thread.botEnabled, 'primary': !thread.botEnabled }">
+						<span v-if="thread.botEnabled">Disable bot</span>
+						<span v-if="!thread.botEnabled">Enable bot</span>
+					</button>
 				</div>
-				<a href="JavaScript:void(0);" v-if="thread.botEnabled" @click="setBotDisabled(thread.itemId)"><span >disable</span></a>
-				<a href="JavaScript:void(0);" v-if="!thread.botEnabled" @click="setBotEnabled(thread.itemId)"><span>enable</span></a>
+				<div class="conversation-done">
+					<button :class="{ 'shrunk': true, 'primary': thread.conversationState === `open`, 'closed': thread.conversationState === `closed` }" @click="closeThread(thread.itemId, thread.conversationState)">
+						Done
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -54,9 +58,12 @@
 				<textarea
 					id="composer-text-input"
 					placeholder="Write a reply..."
-					@keydown.enter.exact.prevent="sendMessage(thread.itemId, $event)"
+					@keydown.enter.exact.prevent="sendMessage(thread.itemId)"
 					>
 				</textarea>
+			</div>
+			<div class="actions">
+				<button class="primary shrunk" @click="sendMessage(thread.itemId)">Send</button>
 			</div>
 		</div>
 
@@ -163,18 +170,20 @@
 
 			},
 
-			setBotEnabled (itemId) {
+			setBotEnabledState (itemId, oldState) {
+
+				const newState = !oldState;
 
 				this.$store.commit(`update-thread`, {
 					key: itemId,
 					dataField: `botEnabled`,
-					dataValue: true,
+					dataValue: newState,
 				});
 
 				getSocket().emit(
 					`messaging/thread/set-bot-enabled`,
-					{ itemId, enabled: true },
-					data => (!data || !data.success ? alert(`There was a problem enabling the user's bot.`) : void (0))
+					{ itemId, enabled: newState },
+					data => (!data || !data.success ? alert(`There was a problem changing the user's bot status.`) : void (0))
 				);
 
 			},
@@ -214,13 +223,14 @@
 
 			},
 
-			sendMessage (itemId, event) {
+			sendMessage (itemId) {
 
 				// No message so nothing to do.
-				const messageText = event.target.value.trim();
+				const $textarea = document.getElementById(`composer-text-input`);
+				const messageText = $textarea.value.trim();
 				if (!messageText) { return; }
 
-				event.target.value = ``;
+				$textarea.value = ``;
 
 				// Disable the bot in the UI.
 				this.$store.commit(`update-thread`, {
@@ -234,6 +244,32 @@
 					`messaging/thread/send-message`,
 					{ itemId, messageText },
 					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
+				);
+
+			},
+
+			closeThread (itemId, oldState) {
+
+				// Don't do anything if the thread is already closed.
+				if (oldState === `closed`) { return; }
+
+				// Close the thread in the UI.
+				this.$store.commit(`update-thread`, {
+					key: itemId,
+					dataField: `conversationState`,
+					dataValue: `closed`,
+				});
+
+				// Close the thread.
+				getSocket().emit(
+					`messaging/thread/close`,
+					{ itemId },
+					data => {
+
+						if (!data || !data.success) { return alert(`There was a problem closing the conversation.`); }
+
+
+					}
 				);
 
 			},
@@ -389,7 +425,6 @@
 			}
 
 			>.actions {
-				max-width: 18.00rem;
 				flex-shrink: 0;
 				text-align: right;
 				white-space: nowrap;
@@ -397,18 +432,29 @@
 				margin-right: 0.50rem;
 				@include user-select-off();
 
-				.label {
-					font-size: 1.30rem;
+				>.bot-toggle {
+					display: inline-flex;
+					flex-shrink: 0;
+					padding-left: 0.50rem;
+
+					>button {
+						margin: auto;
+					}
 				}
 
-				.tag {
-					margin-left: 0.50rem;
-				}
+				>.conversation-done {
+					display: inline-flex;
+					flex-shrink: 0;
+					padding-left: 0.50rem;
 
-				a {
-					margin-left: 0.50rem;
-					color: $faded-color;
-					text-decoration: none;
+					>button {
+						margin: auto;
+
+						&.closed {
+							cursor: not-allowed;
+							filter: none !important;
+						}
+					}
 				}
 			}
 		}
@@ -476,6 +522,16 @@
 					resize: none;
 					border: 0;
 					outline: 0;
+				}
+			}
+
+			>.actions {
+				display: flex;
+				flex-shrink: 0;
+				padding: 1.00rem;
+
+				>button {
+					margin: auto;
 				}
 			}
 		}
