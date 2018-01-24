@@ -19,6 +19,7 @@
 			<transition-group name="thread" tag="div">
 				<Thread
 					v-for="thread in threadSet"
+					v-if="thread.conversationState === inbox"
 					:key="thread.itemId"
 					:itemId="thread.itemId"
 					:isFullFat="thread.isFullFat"
