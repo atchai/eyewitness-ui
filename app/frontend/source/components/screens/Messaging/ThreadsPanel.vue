@@ -5,7 +5,15 @@
 <template>
 
 	<div class="panel">
-		<div class="inbox">Inbox</div>
+		<div class="inbox-chooser">
+			<div :class="{ 'box': true, 'open': true, on: (inbox === `open`) }" @click="openInbox(`open`)">
+				<span>Inbox</span>
+			</div>
+			<div class="divider"></div>
+			<div :class="{ 'box': true, 'closed': true, on: (inbox === `closed`) }" @click="openInbox(`closed`)">
+				<span>Done</span>
+			</div>
+		</div>
 		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }" v-scroll="onScroll">
 			<ScreenLoader />
 			<transition-group name="thread" tag="div">
@@ -42,6 +50,7 @@
 				loadingRoute: ``,
 				lastScrollTop: 0,
 				lastLoadTimeout: null,
+				inbox: `open`,
 			};
 		},
 		computed: {
@@ -72,6 +81,10 @@
 					}
 				);
 
+			},
+
+			openInbox (newInbox) {
+				this.inbox = newInbox;
 			},
 
 			async onScroll (event, { scrollTop }) {
@@ -108,14 +121,38 @@
 		border-right: 1px solid $panel-border-color;
 		@include user-select-off();
 
-		>.inbox {
+		>.inbox-chooser {
+			display: flex;
 			height: 5.00rem;
-			line-height: 5.00rem;
-			text-align: center;
-			text-transform: uppercase;
-			color: $panel-grey-text;
-			letter-spacing: 1px;
 			border-bottom: 1px solid $panel-border-color;
+
+			>.box {
+				display: flex;
+				flex: 1;
+				cursor: pointer;
+
+				&.on {
+					background: $panel-border-color;
+					font-weight: bold;
+				}
+
+				&:hover {
+					background: $panel-hover-color;
+				}
+
+				>span {
+					margin: auto;
+					text-transform: uppercase;
+					color: $panel-grey-text;
+				}
+			}
+
+			>.divider {
+				background: $panel-border-color;
+				width: 1px;
+				flex-shrink: 0;
+				flex-grow: 0;
+			}
 		}
 
 		>.threads {
