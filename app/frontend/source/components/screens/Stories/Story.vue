@@ -39,7 +39,12 @@
 			sendBreakingNewsAlert (itemId, oldPriority) {
 
 				// Do nothing if the story is already marked priority.
-				if (oldPriority) { return; }
+				if (oldPriority) {
+					alert(`Whoops! This story has already been sent out.`);
+					return;
+				}
+
+				if (!confirm(`Are you sure you want to send this story out as breaking news?`)) { return; }
 
 				this.$store.commit(`update-story`, {
 					key: itemId,
