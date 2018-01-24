@@ -12,6 +12,7 @@
 			<div class="details">
 				<div class="name">{{ userFullName }}</div>
 				<div class="enquiry-type">{{ enquiryType | enquiryType() }}</div>
+				<div class="filler"></div>
 				<div class="date">{{ date | formatDateAsRelative() }}</div>
 			</div>
 			<div class="message" v-if="isFullFat">
@@ -113,7 +114,6 @@
 				height: 1.25rem;
 
 				>.name {
-					flex: 1;
 					font-weight: bold;
 					white-space: nowrap;
 					text-overflow: ellipsis;
@@ -125,17 +125,17 @@
 					font-style: italic;
 					white-space: nowrap;
 					color: $faded-color;
-					margin: 0 0.25rem;
+					margin: 0 0.50rem;
+				}
 
-					&:not(:empty):before,
-					&:not(:empty):after {
-						content: "-";
-					}
+				>.filler {
+					flex: 1;
 				}
 
 				>.date {
 					flex-shrink: 0;
-					width: 7.00rem;
+					white-space: nowrap;
+					min-width: 5.00rem;
 					color: $faded-color;
 					text-align: right;
 				}

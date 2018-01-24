@@ -11,6 +11,8 @@
 				<div class="image-circle" :style="`background-image: url('${thread.profilePicUrl}')`"></div>
 			</div>
 			<div class="name">{{ thread.userFullName }}</div>
+			<div class="enquiry-type">{{ thread.enquiryType | enquiryType() }}</div>
+			<div class="filler"></div>
 			<div class="actions">
 				<span class="label">Bot:</span>
 				<div :class="{ 'tag': true, 'on': thread.botEnabled }">
@@ -365,12 +367,25 @@
 			}
 
 			>.name {
-				flex: 1;
 				font-size: 1.30rem;
 				font-weight: bold;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
+			}
+
+			>.enquiry-type {
+				flex-shrink: 0;
+				font-style: italic;
+				font-size: 1.30rem;
+				font-weight: bold;
+				white-space: nowrap;
+				color: $faded-color;
+				margin: 0 1.00rem;
+			}
+
+			>.filler {
+				flex: 1;
 			}
 
 			>.actions {
