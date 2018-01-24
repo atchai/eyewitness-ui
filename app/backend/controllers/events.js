@@ -404,6 +404,22 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Update the "isPriority" property of the given story.
+	 */
+	async storiesSetStoryPriority (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.itemId);
+		const isPriority = Boolean(data.priority);
+
+		// Update the database.
+		await this.database.update(`Article`, itemId, { isPriority });
+
+		return reply({ success: true });
+
+	}
+
+	/*
 	 * Update the "isPublished" property of the given story.
 	 */
 	async storiesSetStoryPublished (socket, data, reply) {

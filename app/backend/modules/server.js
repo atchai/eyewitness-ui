@@ -83,6 +83,10 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesGetTabData)
 		);
 		socket.on(
+			`stories/set-story-priority`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPriority)
+		);
+		socket.on(
 			`stories/set-story-published`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPublished)
 		);

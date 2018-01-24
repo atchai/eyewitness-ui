@@ -36,19 +36,38 @@
 		props: [`itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority`],
 		methods: {
 
-			setArticlePublishedState (itemId, oldState) {
+			sendBreakingNewsAlert (itemId, oldPriority) {
 
-				const newState = !oldState;
+				// Do nothing if the story is already marked priority.
+				if (oldPriority) { return; }
+
+				this.$store.commit(`update-story`, {
+					key: itemId,
+					dataField: `priority`,
+					dataValue: true,
+				});
+
+				getSocket().emit(
+					`stories/set-story-priority`,
+					{ itemId, priority: true },
+					data => (!data || !data.success ? alert(`There was a problem sending the breaking news alert.`) : void (0))
+				);
+
+			},
+
+			setArticlePublishedState (itemId, oldPublished) {
+
+				const newPublished = !oldPublished;
 
 				this.$store.commit(`update-story`, {
 					key: itemId,
 					dataField: `published`,
-					dataValue: newState,
+					dataValue: newPublished,
 				});
 
 				getSocket().emit(
 					`stories/set-story-published`,
-					{ itemId, published: newState },
+					{ itemId, published: newPublished },
 					data => (!data || !data.success ? alert(`There was a problem setting the story's publish state.`) : void (0))
 				);
 
