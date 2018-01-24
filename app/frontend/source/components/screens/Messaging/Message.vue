@@ -71,11 +71,12 @@
 	.message {
 		display: flex;
 		justify-content: flex-start;
-		margin: 1.00rem 0;
+		margin: 0.25rem 0;
+		font-size: 90%;
 
 		>.bubble {
 			display: inline-block;
-			border-radius: 1.00rem;
+			border-radius: 1.25rem;
 			background: #EFEFEF;
 			max-width: 85%;
 			overflow: hidden;
@@ -92,6 +93,7 @@
 
 				&.text {
 					padding: 0.50rem 0.75rem;
+					line-height: 1.25em;
 				}
 
 				&.carousel {
