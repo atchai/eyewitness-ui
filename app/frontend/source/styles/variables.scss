@@ -1,12 +1,16 @@
+$accent-color: #7ED321;
+$faded-color: #9B9B9B;
+$blue-color: #0683FF;
 $font-color-dark: black;
 $font-color-light: white;
 $panel-background-color: #EFEFEF;
 $panel-border-color: #D8D7D7;
 $panel-shadow-color: #B0B0B0;
 $panel-grey-text: #6F6F6F;
-$accent-color: #7ED321;
-$faded-color: #9B9B9B;
-$blue-color: #0683FF;
+$tag-off-background-color: #E4E4E4;
+$tag-off-font-color: #B6B6B6;
+$tag-on-background-color: $accent-color;
+$tag-on-font-color: white;
 
 @mixin user-select-off () {
 	user-select: none;

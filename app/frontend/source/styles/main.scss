@@ -46,12 +46,12 @@ a {
 	line-height: normal;
 	border-radius: 0.50rem;
 	padding: 0.25rem 0.35rem;
-	background: #E4E4E4;
-	color: #B6B6B6;
+	background: $tag-off-background-color;
+	color: $tag-off-font-color;
 
 	&.on {
-		background: $accent-color;
-		color: white;
+		background: $tag-on-background-color;
+		color: $tag-on-font-color;
 	}
 }
 
