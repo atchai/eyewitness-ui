@@ -188,6 +188,37 @@
 
 			},
 
+			closeThread (itemId, oldState) {
+
+				// Don't do anything if the thread is already closed.
+				if (oldState === `closed`) { return; }
+
+				// Close the thread in the UI.
+				this.$store.commit(`update-thread`, {
+					key: itemId,
+					dataFunction: thread => {
+						return {
+							...thread,
+							conversationState: `closed`,
+							botEnabled: true,
+						};
+					},
+				});
+
+				// Close the thread.
+				getSocket().emit(
+					`messaging/thread/close`,
+					{ itemId },
+					data => {
+
+						if (!data || !data.success) { return alert(`There was a problem closing the conversation.`); }
+
+
+					}
+				);
+
+			},
+
 			selectTextInput () {
 				document.getElementById(`composer-text-input`).focus();
 			},
@@ -228,37 +259,6 @@
 					`messaging/thread/send-message`,
 					{ itemId, messageText },
 					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
-				);
-
-			},
-
-			closeThread (itemId, oldState) {
-
-				// Don't do anything if the thread is already closed.
-				if (oldState === `closed`) { return; }
-
-				// Close the thread in the UI.
-				this.$store.commit(`update-thread`, {
-					key: itemId,
-					dataFunction: thread => {
-						return {
-							...thread,
-							conversationState: `closed`,
-							botEnabled: true,
-						};
-					},
-				});
-
-				// Close the thread.
-				getSocket().emit(
-					`messaging/thread/close`,
-					{ itemId },
-					data => {
-
-						if (!data || !data.success) { return alert(`There was a problem closing the conversation.`); }
-
-
-					}
 				);
 
 			},
