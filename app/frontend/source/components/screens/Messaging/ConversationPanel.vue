@@ -193,7 +193,7 @@
 
 				const newState = (oldState === `open` ? `closed` : `open`);
 
-				// Close the thread in the UI.
+				// Update the thread state in the UI.
 				this.$store.commit(`update-thread`, {
 					key: itemId,
 					dataFunction: thread => {
@@ -205,7 +205,7 @@
 					},
 				});
 
-				// Close the thread.
+				// Update the thread state.
 				getSocket().emit(
 					`messaging/thread/set-state`,
 					{ itemId, conversationState: newState },
