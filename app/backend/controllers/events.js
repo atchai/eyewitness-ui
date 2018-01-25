@@ -377,6 +377,7 @@ module.exports = class EventsController {
 		const itemId = String(data.itemId);
 		const text = String(data.messageText);
 
+		// Send the message to Hippocamp which will disable the bot.
 		const req = new RequestNinja(this.hippocampUrl, {
 			timeout: (1000 * 30),
 			returnResponseObject: true,
@@ -397,6 +398,11 @@ module.exports = class EventsController {
 		}
 
 		if (!res.body || !res.body.success) { throw new Error(`Hippocamp returned an error: "${res.body.error}".`); }
+
+		// Manually re-open the conversation.
+		await this.database.update(`User`, itemId, {
+			'appData.conversationState': `open`,
+		});
 
 		return reply({ success: true });
 

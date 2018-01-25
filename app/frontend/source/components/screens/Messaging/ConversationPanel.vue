@@ -242,14 +242,19 @@
 
 				$textarea.value = ``;
 
-				// Disable the bot in the UI.
+				// Update the thread state in the UI.
 				this.$store.commit(`update-thread`, {
 					key: itemId,
-					dataField: `botEnabled`,
-					dataValue: false,
+					dataFunction: thread => {
+						return {
+							...thread,
+							conversationState: `open`,
+							botEnabled: false,
+						};
+					},
 				});
 
-				// Send the message (also disables the bot).
+				// Send the message (also disables the bot and opens the conversation).
 				getSocket().emit(
 					`messaging/thread/send-message`,
 					{ itemId, messageText },
