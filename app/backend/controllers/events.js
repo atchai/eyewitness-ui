@@ -329,13 +329,19 @@ module.exports = class EventsController {
 	/*
 	 * Update the "conversationState" property on the user's document.
 	 */
-	async messagingThreadClose (socket, data, reply) {
+	async messagingThreadSetState (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
 		const itemId = String(data.itemId);
+		const conversationState = String(data.conversationState);
+		const allowedConversationStates = [ `open`, `closed` ];
+
+		if (!allowedConversationStates.includes(conversationState)) {
+			throw new Error(`Invalid conversation state "${conversationState}".`);
+		}
 
 		await this.database.update(`User`, itemId, {
-			'appData.conversationState': `closed`,
+			'appData.conversationState': conversationState,
 			'bot.disabled': false,
 		});
 

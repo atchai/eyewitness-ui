@@ -21,8 +21,9 @@
 					</button>
 				</div>
 				<div class="conversation-done">
-					<button :class="{ 'shrunk': true, 'primary': thread.conversationState === `open`, 'closed': thread.conversationState === `closed` }" @click="closeThread(thread.itemId, thread.conversationState)">
-						Done
+					<button :class="{ 'shrunk': true, 'primary': (thread.conversationState === `open`) }" @click="setThreadState(thread.itemId, thread.conversationState)">
+						<span v-if="thread.conversationState === `open`">Done</span>
+						<span v-if="thread.conversationState === `closed`">Open</span>
 					</button>
 				</div>
 			</div>
@@ -188,10 +189,9 @@
 
 			},
 
-			closeThread (itemId, oldState) {
+			setThreadState (itemId, oldState) {
 
-				// Don't do anything if the thread is already closed.
-				if (oldState === `closed`) { return; }
+				const newState = (oldState === `open` ? `closed` : `open`);
 
 				// Close the thread in the UI.
 				this.$store.commit(`update-thread`, {
@@ -199,22 +199,17 @@
 					dataFunction: thread => {
 						return {
 							...thread,
-							conversationState: `closed`,
-							botEnabled: true,
+							conversationState: newState,
+							botEnabled: (newState === `closed`),
 						};
 					},
 				});
 
 				// Close the thread.
 				getSocket().emit(
-					`messaging/thread/close`,
-					{ itemId },
-					data => {
-
-						if (!data || !data.success) { return alert(`There was a problem closing the conversation.`); }
-
-
-					}
+					`messaging/thread/set-state`,
+					{ itemId, conversationState: newState },
+					data => (!data || !data.success ? alert(`There was a problem updating the conversation state.`) : void (0))
 				);
 
 			},
