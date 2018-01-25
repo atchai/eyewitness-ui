@@ -64,7 +64,7 @@
 				</textarea>
 			</div>
 			<div class="actions">
-				<button class="primary shrunk" @click="sendMessage(thread.itemId)">Send</button>
+				<button class="primary shrunk" @click="sendMessageViaSendButton(thread.itemId)">Send</button>
 			</div>
 		</div>
 
@@ -256,6 +256,11 @@
 					data => (!data || !data.success ? alert(`There was a problem sending your message.`) : void (0))
 				);
 
+			},
+
+			sendMessageViaSendButton (itemId) {
+				this.selectTextInput();
+				this.sendMessage(itemId);
 			},
 
 			markAsReadByAdmin () {
