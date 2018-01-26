@@ -37,7 +37,11 @@
 					<source :src="data.attachments[0].remoteUrl" :type="data.attachments[0].mimeType" />
 				</video>
 				<div v-if="data.attachments[0].type === `location`" class="media-attachment location">
-					<strong>📍 User sent a location:</strong><br>
+					<strong>📍&nbsp;&nbsp;User sent a location:</strong><br>
+					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
+				</div>
+				<div v-if="data.attachments[0].type === `file`" class="media-attachment file">
+					<strong>📄&nbsp;&nbsp;User sent a file:</strong><br>
 					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
 				</div>
 				<div v-if="data.attachments[0].type === `link`" class="media-attachment link">
