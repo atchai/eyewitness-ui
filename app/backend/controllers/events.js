@@ -340,10 +340,11 @@ module.exports = class EventsController {
 			throw new Error(`Invalid conversation state "${conversationState}".`);
 		}
 
-		await this.database.update(`User`, itemId, {
-			'appData.conversationState': conversationState,
-			'bot.disabled': false,
-		});
+		// Figure out the changes we need to make.
+		const changes = { 'appData.conversationState': conversationState };
+		if (conversationState === `closed`) { changes[`bot.disabled`] = false; }
+
+		await this.database.update(`User`, itemId, changes);
 
 		return reply({ success: true });
 

@@ -197,10 +197,11 @@
 				this.$store.commit(`update-thread`, {
 					key: itemId,
 					dataFunction: thread => {
+						const changes = {  conversationState: newState };
+						if (newState === `closed`) { changes.botEnabled = true; }
 						return {
 							...thread,
-							conversationState: newState,
-							botEnabled: (newState === `closed`),
+							...changes,
 						};
 					},
 				});
