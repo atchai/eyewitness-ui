@@ -41,7 +41,7 @@
 					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
 				</div>
 				<div v-if="data.attachments[0].type === `link`" class="media-attachment link">
-					<strong>🔗 User sent a link:</strong><br>
+					<strong>🔗&nbsp;&nbsp;User sent a link:</strong><br>
 					<a :href="data.attachments[0].remoteUrl" target="_blank">{{ data.attachments[0].filename }}</a>
 				</div>
 			</div>
@@ -185,6 +185,7 @@
 					}
 
 					>.media-attachment.location,
+					>.media-attachment.file,
 					>.media-attachment.link {
 						padding: 0.50rem 0.75rem;
 					}
