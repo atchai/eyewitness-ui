@@ -52,7 +52,7 @@ module.exports = class EventsController {
 			const thread = {
 				itemId: recUser._id.toString(),
 				latestDate: recUser.conversation.lastMessageReceivedAt,
-				conversationState: recUser.appData.conversationState || `open`,
+				conversationState: recUser.appData.conversationState || `closed`,
 			};
 
 			// Full-fat threads contain all properties.
