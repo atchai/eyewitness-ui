@@ -23,6 +23,7 @@ const ExtractTextPlugin = require(`extract-text-webpack-plugin`);
 const HtmlWebpackPlugin = require(`html-webpack-plugin`);
 const NpmInstallPlugin = require(`npm-install-webpack-plugin`);
 const webpack = require(`webpack`);
+const UglifyJsPlugin = require(`uglifyjs-webpack-plugin`);
 
 const BASE_PATH = path.resolve(__dirname, `app`, `frontend`);
 
@@ -159,6 +160,15 @@ module.exports = {
 			exclude: [ `.gitkeep` ],
 		}),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+		// new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: `common-modules`,
+		}),
+		new UglifyJsPlugin({
+			parallel: true,
+			sourceMap: Boolean(config.build.sourceMapMode),
+			uglifyOptions: {},
+		}),
 		new HtmlWebpackPlugin({
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
 			template: path.join(BASE_PATH, `source`, `views`, `home.handlebars.html`),
