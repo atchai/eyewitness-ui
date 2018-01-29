@@ -158,6 +158,7 @@ module.exports = {
 			verbose: true,
 			exclude: [ `.gitkeep` ],
 		}),
+		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
 		new HtmlWebpackPlugin({
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
 			template: path.join(BASE_PATH, `source`, `views`, `home.handlebars.html`),
