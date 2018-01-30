@@ -160,7 +160,7 @@ module.exports = {
 			exclude: [ `.gitkeep` ],
 		}),
 		new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
-		// new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: `common-modules`,
 		}),
