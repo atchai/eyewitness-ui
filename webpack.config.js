@@ -167,7 +167,12 @@ module.exports = {
 		new UglifyJsPlugin({
 			parallel: true,
 			sourceMap: Boolean(config.build.sourceMapMode),
-			uglifyOptions: {},
+			uglifyOptions: {
+				ecma: 5,
+				ie8: false,
+				safari10: false,
+				warnings: true,
+			},
 		}),
 		new HtmlWebpackPlugin({
 			filename: path.join(BASE_PATH, `build`, `views`, `home.handlebars.html`),
