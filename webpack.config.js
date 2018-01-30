@@ -168,7 +168,7 @@ module.exports = {
 			parallel: true,
 			sourceMap: Boolean(config.build.sourceMapMode),
 			uglifyOptions: {
-				ecma: 5,
+				ecma: 8,
 				ie8: false,
 				safari10: false,
 				warnings: true,
