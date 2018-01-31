@@ -7,6 +7,7 @@
 /* eslint-disable node/no-unpublished-require */
 
 const path = require(`path`);
+const packageJson = require(`./package.json`);
 const providerId = process.env.PROVIDER_ID;
 const loadProviderConfig = Boolean(providerId);
 const env = process.env.NODE_ENV || `development`;
@@ -52,7 +53,9 @@ const LOADER_BABEL = {
 	loader: `babel-loader`,
 	options: {
 		presets: [
-			[ `env`, {}],
+			[ `babel-preset-env`, {
+				targets: { browsers: packageJson.browserslist },
+			}],
 			// [ `minify`, {}], <-- causing errors in compiled JS.
 		],
 		plugins: [
