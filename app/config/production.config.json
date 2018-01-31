@@ -22,6 +22,9 @@
 	"pageBufferSize": 5,
 	"scrollThrottleThreshold": 200,
 	"facebookPageId": null,
+	"caching": {
+		"maxAge": "7d"
+	},
 	"build": {
 		"webpackStats": "errors-only",
 		"sourceMapMode": false,
