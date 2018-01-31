@@ -15,7 +15,7 @@
 
 		<div v-if="isFullFat" class="cell actions">
 			<div class="inner">
-				<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': priority }">
+				<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': (priority && published) }">
 					<span>Send Alert</span>
 				</a>
 				<a href="JavaScript:void(0);" @click="setArticlePublishedState(itemId, published)" :class="{ 'tag': true, 'published': true, 'on': published }">
@@ -37,6 +37,12 @@
 		methods: {
 
 			sendBreakingNewsAlert (itemId, oldPriority) {
+
+				// Don't do anything if the article isn't published.
+				if (!this.published) {
+					alert(`Whoops! You can't send out breaking news if the story isn't published.`);
+					return;
+				}
 
 				// Do nothing if the story is already marked priority.
 				if (oldPriority) {
