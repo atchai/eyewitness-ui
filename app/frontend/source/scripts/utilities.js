@@ -183,9 +183,13 @@ function handleOnScroll ( // eslint-disable-line max-params
 	storeUpdateAction,
 	storeProperty,
 	scrollTop,
-	keepItemsFat,
+	_essentialFields,
+	_keepItemsFat,
 	recursive = false
 ) {
+
+	const essentialFields = (Array.isArray(_essentialFields) ? _essentialFields : []);
+	const keepItemsFat = (Array.isArray(_keepItemsFat) ? _keepItemsFat : []);
 
 	// Get the elements.
 	const scrollDirection = (scrollTop >= cmp.lastScrollTop ? `down` : `up`);
@@ -200,32 +204,31 @@ function handleOnScroll ( // eslint-disable-line max-params
 	const thinInRangeItems = inRangeItems.filter(item => !item.isFullFat);
 
 	// Ensure we are keeping items that must remain fat!
-	const hasItemsToKeep = (Array.isArray(keepItemsFat) && keepItemsFat.length);
-	if (hasItemsToKeep) {
+	keepItemsFat.forEach(keepItemId => {
+		const alreadyExists = inRangeItems.find(inRangeItem => inRangeItem.itemId === keepItemId);
+		if (alreadyExists) { return; }
 
-		keepItemsFat.forEach(keepItemId => {
-			const alreadyExists = inRangeItems.find(inRangeItem => inRangeItem.itemId === keepItemId);
-			if (alreadyExists) { return; }
-
-			inRangeItems.push(storeProperty[keepItemId]);
-		});
-
-	}
+		inRangeItems.push(storeProperty[keepItemId]);
+	});
 
 	// Replace the fat items that have just gone out of range with thinner copies.
 	lostRangeItems.forEach(item => {
 
 		// Skip items that must remain fat.
 		const mustRemainFat =
-			(hasItemsToKeep ? keepItemsFat.find(keepItemId => keepItemId === item.itemId) : null) ||
+			keepItemsFat.find(keepItemId => keepItemId === item.itemId) ||
 			inRangeItems.find(inRangeItem => inRangeItem.itemId === item.itemId);
 
 		if (mustRemainFat) { return; }
 
+		// Keep the essential data when shrinking items, and always keep the ID.
+		const newData = { itemId: item.itemId };
+		essentialFields.forEach(essentialField => newData[essentialField] = item[essentialField]);
+
 		// Put item on a diet and make it thin!
 		cmp.$store.commit(storeUpdateAction, {
 			key: item.itemId,
-			data: { itemId: item.itemId },
+			data: newData,
 		});
 
 	});
@@ -257,6 +260,7 @@ function handleOnScroll ( // eslint-disable-line max-params
 					storeUpdateAction,
 					storeProperty,
 					finalScrollTop,
+					essentialFields,
 					keepItemsFat,
 					true
 				);

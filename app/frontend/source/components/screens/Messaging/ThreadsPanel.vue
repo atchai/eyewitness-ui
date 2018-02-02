@@ -52,6 +52,7 @@
 				lastScrollTop: 0,
 				lastLoadTimeout: null,
 				inbox: `open`,
+				essentialThreadFields: [`latestDate`, `conversationState`],
 			};
 		},
 		computed: {
@@ -66,6 +67,10 @@
 
 				if (!setLoadingStarted(this, Boolean(itemIdsToFetch))) { return; }
 
+				// Remember the inbox that is selected before starting the async request.
+				const selectedInboxAtRequestStart = this.inbox;
+
+				// Start the request.
 				getSocket().emit(
 					`messaging/get-threads`,
 					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
@@ -73,6 +78,10 @@
 
 						setLoadingFinished(this);
 
+						// Don't do anything if the selected inbox has been changed since the network request was started.
+						if (this.inbox !== selectedInboxAtRequestStart) { return; }
+
+						// Handle errors.
 						if (!resData || !resData.success) { return alert(`There was a problem loading the threads.`); }
 
 						// Replace all or update some of the threads.
@@ -86,6 +95,8 @@
 
 			openInbox (newInbox) {
 				this.inbox = newInbox;
+				this.lastScrollTop = 0;
+				document.getElementById(`thread-list`).scrollTop = 0;
 			},
 
 			async onScroll (event, { scrollTop }) {
@@ -94,7 +105,16 @@
 				const selecedItemId = this.$route.params.itemId || null;
 				const keepItemsFat = (selecedItemId ? [ this.$route.params.itemId ] : null);
 
-				handleOnScroll(this, `thread-list`, `thread`, `update-thread`, threads, scrollTop, keepItemsFat);
+				handleOnScroll(
+					this,
+					`thread-list`,
+					`thread`,
+					`update-thread`,
+					threads,
+					scrollTop,
+					this.essentialThreadFields,
+					keepItemsFat
+				);
 
 			},
 

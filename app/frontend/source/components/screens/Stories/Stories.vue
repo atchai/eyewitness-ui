@@ -79,7 +79,7 @@
 
 			async onScroll (event, { scrollTop }) {
 				const stories = this.$store.state.stories;
-				handleOnScroll(this, `stories-tab-body`, `story`, `update-story`, stories, scrollTop, null);
+				handleOnScroll(this, `stories-tab-body`, `story`, `update-story`, stories, scrollTop);
 			},
 
 		},
