@@ -94,9 +94,15 @@
 			},
 
 			openInbox (newInbox) {
+
+				// Update the selected inbox.
 				this.inbox = newInbox;
+
+				// Scroll to top of list.
 				this.lastScrollTop = 0;
 				document.getElementById(`thread-list`).scrollTop = 0;
+				this.onScroll(null, { scrollTop: 0 });
+
 			},
 
 			async onScroll (event, { scrollTop }) {
