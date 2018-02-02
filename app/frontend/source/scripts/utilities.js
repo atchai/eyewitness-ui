@@ -281,7 +281,9 @@ function getScrollElementsInRange (scrollContainerId, elementClass, rangeBufferS
 	const $allElements = Array.from($scrollContainer.getElementsByClassName(elementClass));
 
 	// No items in the DOM.
-	if (!$allElements.length) { return []; }
+	if (!$allElements.length) {
+		return { $inRangeElements: [], $lostRangeElements: [] };
+	}
 
 	const elementHeight = $allElements[0].clientHeight;
 	const maxIndex = $allElements.length - 1;
