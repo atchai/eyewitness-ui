@@ -9,5 +9,10 @@ module.exports = {
   },
   "rules": {
     "filenames/match-regex": [2, /^(?:[a-zA-Z][a-z0-9]+)*$/g],  // Allows "HeaderBar.vue" or "someFile.js".
+    "no-multiple-empty-lines": [2, {
+      "max": 1,
+      "maxBOF": 2,
+    }],
+    "node/no-unsupported-features": 0,
   },
 };
