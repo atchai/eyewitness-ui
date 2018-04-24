@@ -10,3 +10,4 @@ app/frontend/build/styles/*
 !app/frontend/build/styles/.gitkeep
 app/frontend/build/views/*
 !app/frontend/build/views/.gitkeep
+.idea
