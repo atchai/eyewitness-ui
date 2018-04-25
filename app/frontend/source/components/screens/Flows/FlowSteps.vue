@@ -6,13 +6,13 @@
 
 	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<ScreenLoader />
-		<div v:if="flow !== null && flow.steps !== null" class="flow-editor">
+		<div v-if="flow !== null && flow.actions !== null" class="flow-editor">
 			<ScreenHeader
 				:title="`Editing flow: ${flow.name}`"
 			/>
 			<label><strong>Name: </strong></label>
 			<input type="text" v-model="flow.name" size="30"/>
-			<p>{{flow.steps.length}} steps</p>
+			<p>{{flow.actions.length}} actions</p>
 			<br />
 			<p><strong>Flow Interruptions:</strong></p>
 			<p>
@@ -38,20 +38,12 @@
 			</div>
 			<hr>
 
-			<!-- <draggable v-model="flow.steps">
-				<transition-group>
-					<div class="test" v-for="step in flow.steps" :key="step._id">{{step.shortId}}</div>
-				</transition-group>
-			</draggable> -->
-
 			<transition-group  name="flow-step-list" tag="ol">
-			<!-- <draggable :list="flow.steps"> -->
-				<FlowStep v-for="(step, index) in flow.steps" :key="step.shortId" :index="index" :step="step" :flow="flow" :flows="flows" :memoryKeys="memoryKeys" :quoteSets="quoteSets"/>
-			<!-- </draggable> -->
+				<FlowStep v-for="(action, index) in flow.actions" :key="action.shortId" :index="index" :action="action" :flow="flow" :flows="flows" :memoryKeys="memoryKeys"/>
 			</transition-group>
 
 			<div class="actions">
-				<button class="primary" @click="addStep">Add Step</button>
+				<button class="primary" @click="addAction">Add Action</button>
 			</div>
 
 			<datalist id="memoryKeys">
@@ -92,7 +84,8 @@
 				loadingState: 0,
 				loadingRoute: ``,
 				saved: true,
-				commonMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/gif', 'video/mpeg', 'video/webm', 'audio/mpeg3'],
+				commonMimeTypes: [ `image/jpeg`, `image/png`, `image/gif`, `image/gif`,
+					`video/mpeg`, `video/webm`, `audio/mpeg3` ],
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, FlowStep, draggable },
@@ -101,34 +94,35 @@
 				if (this.loadingState >= 0) {
 					return [];
 				}
-				else { // check every step of every flow for possible memory keys
+				else { // check every action of every flow for possible memory keys
 					const allMemory = Object.values(this.flows)
-						.map(flow => flow.steps)
-						.reduce((allSteps, steps) => allSteps.concat(steps), [])
-						.filter(step => step.stepType === `prompt`)
-						.map(step => step.prompt.memory)
+						.map(flow => flow.actions)
+						.reduce((allActions, actions) => allActions.concat(actions), [])
+						.filter(action => action.type === `prompt`)
+						.map(action => action.prompt.memory)
 						.filter(memory => typeof memory !== `undefined`)
-						.reduce((allMemory, memory) => Object.assign(allMemory, memory), {});
+						.reduce((allMemoryMap, memory) => Object.assign(allMemoryMap, memory), {});
 					const allLoopInterationKeys = Object.values(this.flows)
-						.map(flow => flow.steps)
-						.reduce((allSteps, steps) => allSteps.concat(steps), [])
-						.filter(step => step.loop && step.loop.iterationMemoryKey)
-						.map(step => step.loop.iterationMemoryKey);
+						.map(flow => flow.actions)
+						.reduce((allActions, actions) => allActions.concat(actions), [])
+						.filter(action => action.loop && action.loop.iterationMemoryKey)
+						.map(action => action.loop.iterationMemoryKey);
 
 					return [ ...new Set([ ...allLoopInterationKeys, ...Object.keys(allMemory) ]) ].sort();
 				}
 			},
-			flow () { return this.$store.state.flows[this.$route.params.flowId] || { steps: []}; },
+			flow () { return this.$store.state.flows[this.$route.params.flowId] || { actions: [] }; },
 			...mapGetters([
 				`flows`,
 				`quoteSets`,
 			]),
 		},
-		beforeRouteLeave(to, from, next) {
-			if (this.saved
-				|| window.confirm("Do you really want to leave? You have unsaved changes!")) {
+		beforeRouteLeave (to, from, next) {
+			if (this.saved ||
+			window.confirm(`Do you really want to leave? You have unsaved changes!`)) {
 				next();
-			} else {
+			}
+			else {
 				next(false);
 			}
 		},
@@ -143,13 +137,16 @@
 
 						setLoadingFinished(this);
 
-						if (!resData || !resData.success) { return alert(`There was a problem loading the flows tab.`); }
+						if (!resData || !resData.success) {
+							alert(`There was a problem loading the flows tab.`);
+							return;
+						}
 
 						// Replace all of the flows.
 						this.$store.commit(`update-quote-sets`, { data: resData.quoteSets });
 						this.$store.commit(`update-flows`, { data: resData.flows });
 
-						this.$watch('flow', () => Vue.set(this, `saved`, false), { deep: true });
+						this.$watch(`flow`, () => Vue.set(this, `saved`, false), { deep: true });
 
 						// Trigger hash now that data has loaded in
 						if (location.hash) {
@@ -160,8 +157,8 @@
 			},
 
 			saveFlow (event) {
-				if (document.querySelectorAll(":invalid").length) {
-					alert("Cannot save! Some fields have not been set correctly. Please correct and try again.");
+				if (document.querySelectorAll(`:invalid`).length) {
+					alert(`Cannot save! Some fields have not been set correctly. Please correct and try again.`);
 					return;
 				}
 				this.$store.commit(`update-flow`, {
@@ -175,23 +172,21 @@
 					data => {
 						if (!data || !data.success) {
 							alert(`There was a problem saving the flow.`);
-						} else {
+						}
+						else {
 							Vue.set(this, `saved`, true);
 						}
-					},
+					}
 				);
 			},
 
-			addStep () {
+			addAction () {
 				const flow = this.flow;
 				const newId = new ObjectId().toString();
-				flow.steps.push({
+				flow.actions.push({
 					_id: newId,
 					shortId: shortId.generate(),
-					stepType: `message`,
-					prompt: {
-						selections: [],
-					},
+					type: `message`,
 					media: {},
 					load: {},
 					schedule: {},
@@ -204,12 +199,12 @@
 		},
 		watch: {
 
-	    $route: {
+			$route: {
 				handler: `fetchTabData`,
 				immediate: true,
 			},
 
-	  },
+		},
 	};
 
 </script>

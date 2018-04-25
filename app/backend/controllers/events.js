@@ -476,8 +476,7 @@ module.exports = class EventsController {
 	 */
 	async getDataForFlowsTab () {
 
-		const recFlows = await this.database.find(`Flow`, {}, { populate: `steps` });
-		const recQuoteSets = await this.database.find(`QuoteSet`, {}, {});
+		const recFlows = await this.database.find(`Flow`, {});
 
 		// Prepare flows.
 		const flows = recFlows.map(recFlow => {
@@ -486,7 +485,7 @@ module.exports = class EventsController {
 			return Object({
 				flowId: recFlow._id,
 				name: recFlow.name,
-				steps: recFlow.steps,
+				actions: recFlow.actions,
 				interruptionsWhenAgent: (interruptions && interruptions.whenAgent ? interruptions.whenAgent : `ask-user`),
 				interruptionsWhenSubject: (interruptions && interruptions.whenSubject ? interruptions.whenSubject : `ask-user`),
 			});
@@ -494,7 +493,6 @@ module.exports = class EventsController {
 
 		return {
 			flows: mapListToDictionary(flows, `flowId`),
-			quoteSets: mapListToDictionary(recQuoteSets, `_id`),
 		};
 
 	}
@@ -581,8 +579,8 @@ module.exports = class EventsController {
 	 * Returns the tab data for the flows tab.
 	 */
 	async flowsPullTabData (socket, data, reply) {
-		const { flows, quoteSets } = await this.getDataForFlowsTab(data);
-		return reply({ success: true, flows, quoteSets });
+		const { flows } = await this.getDataForFlowsTab(data);
+		return reply({ success: true, flows });
 	}
 
 	/*
