@@ -14,6 +14,9 @@
 				<router-link to="/stories"><span>Stories</span></router-link>
 			</div>
 			<div class="item">
+				<router-link to="/flows"><span>Flows</span></router-link>
+			</div>
+			<div class="item">
 				<router-link to="/settings"><span>Settings</span></router-link>
 			</div>
 		</nav>

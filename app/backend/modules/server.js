@@ -51,7 +51,7 @@ function setupWebSocketServer (app, database) {
 	const socketServer = socketio(webServer);
 	const ctrlEvents = new EventsController(database);
 
-	socketServer.on(`connection`, async socket => {
+	socketServer.on(`connection`, async socket => { // eslint-disable-line max-statements
 
 		socket.on(
 			`messaging/get-threads`,
@@ -99,6 +99,27 @@ function setupWebSocketServer (app, database) {
 			`settings/get-tab-data`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsGetTabData)
 		);
+		socket.on(
+			`flows/pull-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowsPullTabData)
+		);
+		socket.on(
+			`flows/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowInsertOrUpdate)
+		);
+		socket.on(
+			`flows/remove`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowRemove)
+		);
+		socket.on(
+			`flows/upload-image`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.uploadImage)
+		);
+		socket.on(
+			`flows/delete-image`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.deleteImage)
+		);
+
 		socket.on(
 			`settings/set-bot-enabled`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)

@@ -18,6 +18,12 @@ const SelectConversation = () =>
 const Stories = () =>
 	import(/* webpackChunkName: "stories" */ `../components/screens/Stories/Stories`);
 
+const Flows = () =>
+	import(/* webpackChunkName: "flows" */ `../components/screens/Flows/Flows`);
+
+const FlowSteps = () =>
+	import(/* webpackChunkName: "flows" */ `../components/screens/Flows/FlowSteps`);
+
 const Settings = () =>
 	import(/* webpackChunkName: "settings" */ `../components/screens/Settings/Settings`);
 
@@ -55,6 +61,15 @@ export default new VueRouter({
 			path: `/stories`,
 			name: `Stories`,
 			component: Stories,
+		},
+		{
+			path: `/flows`,
+			name: `Flows`,
+			component: Flows,
+		}, {
+			path: `/flows/:flowId`,
+			name: `FlowSteps`,
+			component: FlowSteps,
 		},
 		{
 			path: `/settings`,
