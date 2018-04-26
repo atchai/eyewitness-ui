@@ -4,7 +4,7 @@
 
 <template>
 
-	<li class="flow-step">
+	<li class="flow-action">
 		<div :id="action.shortId"><a :href="`#${action.shortId}`" class="uid">#{{action.shortId}}</a></div>
 
 		<div><label>Type: <select name="type" v-model="action.type" @change="changeActionType()" required>
@@ -12,29 +12,29 @@
 		</select></label></div>
 
 		<div class="conditional">
-			<label><input type="checkbox" :checked="action.conditional && action.conditional.operator" @change="toggleConditional()"/> Conditional </label>
-			<div v-if="action.conditional && action.conditional.operator">
+			<label><input type="checkbox" :checked="action.uiMeta.conditional && action.uiMeta.conditional.operator" @change="toggleConditional()"/> Conditional </label>
+			<div v-if="action.uiMeta.conditional && action.uiMeta.conditional.operator">
 				<label>
 					Only run this action if
-					<select :name="action.shortId + `_conditionalMatchType`" v-model="action.conditional.matchType" required>
+					<select :name="action.shortId + `_conditionalMatchType`" v-model="action.uiMeta.conditional.matchType" required>
 						<option value="memory-key">memory key:</option>
 						<option value="expression">expression is true:</option>
 					</select>
-					<input :name="action.shortId + `_conditionalMemoryKey`" v-model="action.conditional.memoryKey" size="30" type="text" :required="action.conditional.matchType === `memory-key`" v-show="action.conditional.matchType === `memory-key`" pattern="[A-Za-z0-9_/]+" list="memoryKeys" data-field="conditionalMemoryKey" @input="validate" title="Required - alphanumeric characters and underscores only" />
-					<input :name="action.shortId + `_conditionalExpression`" v-model="action.conditional.expression" size="70" type="text" :required="action.conditional.matchType === `expression`" v-show="action.conditional.matchType === `expression`" pattern=".+" @input="validate" />
+					<input :name="action.shortId + `_conditionalMemoryKey`" v-model="action.uiMeta.conditional.memoryKey" size="30" type="text" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`" pattern="[A-Za-z0-9_/]+" list="memoryKeys" data-field="conditionalMemoryKey" @input="validate" title="Required - alphanumeric characters and underscores only" />
+					<input :name="action.shortId + `_conditionalExpression`" v-model="action.uiMeta.conditional.expression" size="70" type="text" :required="action.uiMeta.conditional.matchType === `expression`" v-show="action.uiMeta.conditional.matchType === `expression`" pattern=".+" @input="validate" />
 					<p class="inline-error" v-if="validation.conditionalMemoryKey">{{validation.conditional}}</p>
 				</label>
-				<select :name="action.shortId + `_conditionalOperator`" v-model="action.conditional.operator" :required="action.conditional.matchType === `memory-key`" v-show="action.conditional.matchType === `memory-key`">
+				<select :name="action.shortId + `_conditionalOperator`" v-model="action.uiMeta.conditional.operator" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`">
 					<option v-for="(operatorString, operatorKey) in conditionalOperators" :value="operatorKey">{{operatorString}}</option>
 				</select>
-				<input :name="action.shortId + `_conditionalValue`" type="text" v-model="action.conditional.value" :required="showConditionalValueField(action)" v-show="showConditionalValueField(action)"/>
+				<input :name="action.shortId + `_conditionalValue`" type="text" v-model="action.uiMeta.conditional.value" :required="showConditionalValueField(action)" v-show="showConditionalValueField(action)"/>
 			</div>
 		</div>
 
-		<div class="step-type-specifics">
+		<div class="action-type-specifics">
 
-			<div v-if="action.type === 'message'">
-				<textarea class="message" v-model="action.message" required/></textarea>
+			<div v-if="action.type === 'send-message'">
+				<textarea class="message" v-model="action.message.text" required></textarea>
 				<details class="inline-help">
 					<summary>Available memory keys</summary>
 					<ul class="memory-keys">
@@ -70,14 +70,14 @@
 				<img class="media-preview" v-if="action.media.url && action.media.type.includes(`image`)" :src="action.media.url"/>
 			</div>
 
-			<div v-else-if="action.type === 'load'">
+			<div v-else-if="action.type === 'change-flow'">
 				<label>
 					<strong>Flow:</strong>
-					<select v-model="action.load._flow" required>
-						<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}}</option>
+					<select v-model="action.nextUri" required>
+						<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.uri}} - {{flowToLoad.name}}</option>
 					</select>
 				</label>
-				<select v-if="action.load._flow" v-model="action.load.step">
+				<!--<select v-if="action.load._flow" v-model="action.load.step">
 					<option v-for="actionToLoad in flows[action.load._flow].actions" :value="actionToLoad.shortId">#{{actionToLoad.shortId}} - {{actionToLoad.message || actionToLoad.prompt.text || actionToLoad.media.filename}}</option>
 				</select>
 				<br />
@@ -85,7 +85,7 @@
 				<label>
 					<input type="checkbox" v-model="action.load.returnAfter" :checked="action.load.returnAfter" />
 					Return here after the loaded flow has finished.
-				</label>
+				</label>-->
 			</div>
 
 			<div v-else-if="action.type === 'prompt'">
@@ -101,7 +101,7 @@
 								:promptQuestions="action.prompt.text"
 								:insertMemoryTemplate="insertMemoryTemplate"
 								:memoryKeys="memoryKeys"
-								:step="action"
+								:action="action"
 							/>
 						</tbody>
 					</table>
@@ -143,7 +143,7 @@
 						<div>
 							<h3>Memory</h3>
 
-							<FlowStepMemory
+							<FlowActionMemory
 								:validateMemory="validateMemory"
 								:addMemory="addMemory"
 								:removeMemory="removeMemory"
@@ -167,11 +167,11 @@
 			</div>
 
 			<div v-else-if="action.type === 'execute-hook'">
-				<strong>Hook name:</strong> <input class="hook-name" v-model="action.hook.name" /> <em>(must be exact, case sensitive)</em>
+				<strong>Hook name:</strong> <input class="hook-name" v-model="action.hook" /> <em>(must be exact, case sensitive)</em>
 			</div>
 
 			<div v-else-if="action.type === 'update-memory'">
-				<FlowStepMemory
+				<FlowActionMemory
 					:validateMemory="validateMemory"
 					:addMemory="addMemory"
 					:removeMemory="removeMemory"
@@ -209,7 +209,7 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import PromptQuestion from './PromptQuestion';
 	import Selection from './Selection';
-	import FlowStepMemory from './FlowStepMemory';
+	import FlowActionMemory from './FlowActionMemory';
 	import Vue from 'vue';
 
 	export default {
@@ -218,10 +218,10 @@
 			return {
 				validation: {},
 				types: {
-					message: `Message`,
+					'send-message': `Message`,
 					media: `Media`,
 					prompt: `Prompt`,
-					load: `Load Flow`,
+					'change-flow': `Change Flow`,
 					'execute-hook': `Execute hook`,
 					'update-memory': `Update memory`,
 				},
@@ -251,17 +251,19 @@
 				defaultRetryMessage: `Sorry {{firstName}}, I didn't understand...`, // TODO from database
 			};
 		},
-		components: { PromptQuestion, Selection, FlowStepMemory },
+		components: { PromptQuestion, Selection, FlowActionMemory },
 		methods: {
 			showConditionalValueField (action) {
-				return action.conditional.matchType === `memory-key` && [ `not-equals`, `equals`, `contains`, `starts-with`, `ends-with` ].includes(action.conditional.operator);
+				return action.uiMeta.conditional.matchType === `memory-key` &&
+					[ `not-equals`, `equals`, `contains`, `starts-with`, `ends-with` ].includes(action.uiMeta.conditional.operator);
 			},
 			removeFlowAction (index) {
 				this.flow.actions.splice(index, 1);
 			},
 			changeActionType () {
 				switch (this.action.type) {
-					case `message`:
+					case `send-message`:
+						Vue.set(this.action, `message`, this.action.message || {});
 						break;
 					case `media`:
 						Vue.set(this.action, `media`, this.action.media || {});
@@ -273,14 +275,12 @@
 						Vue.set(this.action.prompt, `text`, this.action.prompt.text ||
 							[{ conditional: ``, value: this.action.message }]);
 						break;
-					case `load`:
-						Vue.set(this.action, `load`, this.action.load || {});
-						Vue.set(this.action.load, `returnAfter`,
-							(typeof this.action.load.returnAfter === `undefined` ? true : this.action.load.returnAfter));
+					case `change-flow`:
+						// Vue.set(this.action, `load`, this.action.load || {});
+						// Vue.set(this.action.load, `returnAfter`,
+						// 	(typeof this.action.load.returnAfter === `undefined` ? true : this.action.load.returnAfter));
 						break;
 					case `execute-hook`:
-						Vue.set(this.action, `hook`, this.action.hook || {});
-						Vue.set(this.action.hook, `name`, this.action.hook.name || ``);
 						break;
 					case `update-memory`:
 						Vue.set(this.action, `memory`, this.action.memory || {});
@@ -290,13 +290,15 @@
 				}
 			},
 			toggleConditional () {
-				if (this.action.conditional && this.action.conditional.operator) {
+				if (this.action.uiMeta.conditional && this.action.uiMeta.conditional.operator) {
 					// remove conditional
-					Vue.delete(this.action, `conditional`);
+					Vue.delete(this.action.uiMeta, `conditional`);
 				}
 				else {
 					// add conditional
-					Vue.set(this.action, `conditional`, { matchType: `memory-key`, memoryKey: ``, operator: `set`, value: `` });
+					Vue.set(this.action, `uiMeta`, this.action.uiMeta || {});
+					Vue.set(this.action.uiMeta, `conditional`,
+						{ matchType: `memory-key`, memoryKey: ``, operator: `set`, value: `` });
 				}
 			},
 			validate (eventOrElement) {
@@ -475,12 +477,14 @@
 					return;
 				}
 				else if (file.size > (1024 * 1024 * 2) && file.type.includes(`image`)) { // 2 MB
-					if (!confirm(`Your image is ${Math.round(10 * file.size / (1024 * 1024)) / 10}MB, are you sure you want to upload such a large image?`)) {
+					if (!confirm(`Your image is ${Math.round(10 * file.size / (1024 * 1024)) / 10}MB,` +
+						` are you sure you want to upload such a large image?`)) {
 						return;
 					}
 				}
 				else if (file.size > (1024 * 1024 * 50)) {
-					if (!confirm(`Your file is ${Math.round(10 * file.size / (1024 * 1024)) / 10}MB, are you sure you want to upload such a large file?`)) {
+					if (!confirm(`Your file is ${Math.round(10 * file.size / (1024 * 1024)) / 10}MB, ` +
+						`are you sure you want to upload such a large file?`)) {
 						return;
 					}
 				}
@@ -513,7 +517,7 @@
 
 <style lang="scss" scoped>
 
-	.flow-step {
+	.flow-action {
 		margin: 2.00rem 0;
 
 		>input[type="text"] {
@@ -546,7 +550,7 @@
 		color: #000;
 	}
 
-	.step-type-specifics {
+	.action-type-specifics {
 		margin: 1rem;
 		margin-left: 2rem;
 		padding: 1rem;

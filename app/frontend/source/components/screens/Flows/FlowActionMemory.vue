@@ -1,5 +1,5 @@
 <!--
-	FLOWSTEP MEMORY
+	FLOW ACTION MEMORY
 -->
 
 <template>

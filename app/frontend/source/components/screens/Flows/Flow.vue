@@ -5,9 +5,13 @@
 <template>
 
 	<div :class="[{ unsaved: !saved }, `flow`]">
-		<label>Name: </label>
-		<input type="text" v-model="name" @input="updatedFlow($event)" size="30"/>
-		<p>{{numSteps}} steps
+		<label>Name:
+		<input type="text" v-model="name" @input="updatedFlow($event)" size="30"/></label><br/>
+
+		<label>URI (optional):
+		<input type="text" v-model="uri" @input="updatedFlow($event)" size="30"/></label>
+
+		<p>{{numActions}} actions
 			<router-link :to="`/flows/${flowId}`" v-show="saved">[Edit]</router-link>
 		</p>
 		<div class="actions">
@@ -28,18 +32,22 @@
 		props: {
 			flowId: String,
 			initialName: String,
-			numSteps: Number,
+			numActions: Number,
+			initialUri: {
+				type: String,
+				default: undefined,
+			},
 			unsaved: {
 				type: Boolean,
 				default: false,
 			},
 		},
 		data: function () {
-			return { name: this.initialName, saved: !this.unsaved };
+			return { name: this.initialName, uri: this.initialUri, saved: !this.unsaved };
 		},
 		methods: {
 			removeFlow () {
-				if (window.confirm(`Are you sure you want to delete ${this.name?'flow"' + this.name + '"':'this flow'}?`)) {
+				if (window.confirm(`Are you sure you want to delete ${this.name ? `flow"${this.name}"` : `this flow`}?`)) {
 					this.$store.commit(`remove-flow`, {
 						key: this.flowId,
 					});
@@ -49,16 +57,17 @@
 						{ flowId: this.flowId },
 						data => {
 							if (!data || !data.success) {
-								alert(`There was a problem removing the flow.`) ;
+								alert(`There was a problem removing the flow.`);
 							}
 						}
 					);
 				}
 			},
 
-			saveFlow (event) {
+			saveFlow () {
 
 				const name = this.name.trim();
+				const uri = this.uri.trim() || null;
 
 				// If there is no text lets remove the flow altogether.
 				if (!name) { return this.removeFlow(); }
@@ -69,13 +78,22 @@
 					dataValue: name,
 				});
 
+				if (uri) {
+					this.$store.commit(`update-flow`, {
+						key: this.flowId,
+						dataField: `uri`,
+						dataValue: uri,
+					});
+				}
+
 				getSocket().emit(
 					`flows/update`,
 					this.$store.state.flows[this.flowId],
 					data => {
 						if (!data || !data.success) {
-							alert(`There was a problem saving the flow.`) ;
-						} else {
+							alert(`There was a problem saving the flow.`);
+						}
+						else {
 							this.saved = true;
 						}
 					}
@@ -83,7 +101,7 @@
 
 			},
 
-			updatedFlow ($event) {
+			updatedFlow () {
 				Vue.set(this, `saved`, false);
 			},
 		},

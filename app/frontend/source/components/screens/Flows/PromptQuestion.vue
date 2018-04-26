@@ -13,11 +13,11 @@
 			<div class="question">
 				<strong><small>Question:</small></strong>
 				<div class="question-details">
-					<textarea v-model="promptQuestion.value" required/></textarea>
+					<textarea v-model="promptQuestion.value" required></textarea>
 					<details class="inline-help">
 						<summary>Available memory keys</summary>
 						<ul class="memory-keys">
-							<li v-for="memoryKey in memoryKeys" @click="insertMemoryTemplate(step, memoryKey, index)"><code>{{memoryKey}}</code></li>
+							<li v-for="memoryKey in memoryKeys" @click="insertMemoryTemplate(action, memoryKey, index)"><code>{{memoryKey}}</code></li>
 						</ul>
 					</details>
 				</div>
@@ -34,7 +34,7 @@
 <script>
 
 	export default {
-		props: [`promptQuestion`, `index`, `promptQuestions`, `insertMemoryTemplate`, `memoryKeys`, `step`],
+		props: [ `promptQuestion`, `index`, `promptQuestions`, `insertMemoryTemplate`, `memoryKeys`, `action` ],
 		data: function () {
 			return {};
 		},

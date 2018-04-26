@@ -51,6 +51,7 @@ export default new Vuex.Store({
 		'update-welcome-message': (state, payload) => updateStorePropertyItem(state, `welcomeMessages`, payload),
 		'update-welcome-messages': (state, payload) => updateStoreProperty(state, `welcomeMessages`, payload),
 		'remove-welcome-message': (state, payload) => removeStorePropertyItem(state, `welcomeMessages`, payload),
+
 		'update-flows': (state, payload) => updateStoreProperty(state, `flows`, payload),
 		'update-flow': (state, payload) => updateStorePropertyItem(state, `flows`, payload),
 		'add-flow': (state, payload) => addStorePropertyItem(state, `flows`, payload),

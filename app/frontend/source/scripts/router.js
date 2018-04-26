@@ -21,8 +21,8 @@ const Stories = () =>
 const Flows = () =>
 	import(/* webpackChunkName: "flows" */ `../components/screens/Flows/Flows`);
 
-const FlowSteps = () =>
-	import(/* webpackChunkName: "flows" */ `../components/screens/Flows/FlowSteps`);
+const FlowActions = () =>
+	import(/* webpackChunkName: "flows" */ `../components/screens/Flows/FlowActions`);
 
 const Settings = () =>
 	import(/* webpackChunkName: "settings" */ `../components/screens/Settings/Settings`);
@@ -68,8 +68,8 @@ export default new VueRouter({
 			component: Flows,
 		}, {
 			path: `/flows/:flowId`,
-			name: `FlowSteps`,
-			component: FlowSteps,
+			name: `FlowActions`,
+			component: FlowActions,
 		},
 		{
 			path: `/settings`,

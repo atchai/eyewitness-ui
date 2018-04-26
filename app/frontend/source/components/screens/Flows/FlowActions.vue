@@ -1,5 +1,5 @@
 <!--
-	SCREEN: FLOW STEPS
+	SCREEN: FLOW ACTIONS
 -->
 
 <template>
@@ -10,8 +10,10 @@
 			<ScreenHeader
 				:title="`Editing flow: ${flow.name}`"
 			/>
-			<label><strong>Name: </strong></label>
-			<input type="text" v-model="flow.name" size="30"/>
+			<label><strong>Name: </strong>
+			<input type="text" v-model="flow.name" size="30"/></label><br/>
+			<label><strong>URI (optional): </strong>
+				<input type="text" v-model="flow.uri" size="30"/></label>
 			<p>{{flow.actions.length}} actions</p>
 			<br />
 			<p><strong>Flow Interruptions:</strong></p>
@@ -38,8 +40,8 @@
 			</div>
 			<hr>
 
-			<transition-group  name="flow-step-list" tag="ol">
-				<FlowStep v-for="(action, index) in flow.actions" :key="action.shortId" :index="index" :action="action" :flow="flow" :flows="flows" :memoryKeys="memoryKeys"/>
+			<transition-group  name="flow-action-list" tag="ol">
+				<FlowAction v-for="(action, index) in flow.actions" :key="action.shortId" :index="index" :action="action" :flow="flow" :flows="flows" :memoryKeys="memoryKeys"/>
 			</transition-group>
 
 			<div class="actions">
@@ -47,11 +49,11 @@
 			</div>
 
 			<datalist id="memoryKeys">
-				<option v-for="memoryKey in memoryKeys" :value="memoryKey"/>
+				<option v-for="memoryKey in memoryKeys" :value="memoryKey"></option>
 			</datalist>
 
 			<datalist id="commonMimeTypes">
-				<option v-for="mimeType in commonMimeTypes" :value="mimeType"/>
+				<option v-for="mimeType in commonMimeTypes" :value="mimeType"></option>
 			</datalist>
 		</div>
 
@@ -72,7 +74,7 @@
 	import { mapGetters } from 'vuex';
 	import ScreenHeader from '../../common/ScreenHeader';
 	import ScreenLoader from '../../common/ScreenLoader';
-	import FlowStep from './FlowStep';
+	import FlowAction from './FlowAction';
 	import draggable from 'vuedraggable';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
@@ -88,7 +90,7 @@
 					`video/mpeg`, `video/webm`, `audio/mpeg3` ],
 			};
 		},
-		components: { ScreenHeader, ScreenLoader, FlowStep, draggable },
+		components: { ScreenHeader, ScreenLoader, FlowAction, draggable },
 		computed: {
 			memoryKeys () {
 				if (this.loadingState >= 0) {
@@ -102,19 +104,13 @@
 						.map(action => action.prompt.memory)
 						.filter(memory => typeof memory !== `undefined`)
 						.reduce((allMemoryMap, memory) => Object.assign(allMemoryMap, memory), {});
-					const allLoopInterationKeys = Object.values(this.flows)
-						.map(flow => flow.actions)
-						.reduce((allActions, actions) => allActions.concat(actions), [])
-						.filter(action => action.loop && action.loop.iterationMemoryKey)
-						.map(action => action.loop.iterationMemoryKey);
 
-					return [ ...new Set([ ...allLoopInterationKeys, ...Object.keys(allMemory) ]) ].sort();
+					return [ ...new Set([ ...Object.keys(allMemory) ]) ].sort();
 				}
 			},
 			flow () { return this.$store.state.flows[this.$route.params.flowId] || { actions: [] }; },
 			...mapGetters([
 				`flows`,
-				`quoteSets`,
 			]),
 		},
 		beforeRouteLeave (to, from, next) {
@@ -143,7 +139,6 @@
 						}
 
 						// Replace all of the flows.
-						this.$store.commit(`update-quote-sets`, { data: resData.quoteSets });
 						this.$store.commit(`update-flows`, { data: resData.flows });
 
 						this.$watch(`flow`, () => Vue.set(this, `saved`, false), { deep: true });
@@ -186,13 +181,11 @@
 				flow.actions.push({
 					_id: newId,
 					shortId: shortId.generate(),
-					type: `message`,
+					type: `send-message`,
+					message: {},
 					media: {},
 					load: {},
-					schedule: {},
-					quote: {
-						quoteSets: [],
-					},
+					uiMeta: {},
 				});
 			},
 
@@ -231,14 +224,14 @@
 	  transition: all 1s;
 	}
 
-	.flow-step-list-move {
+	.flow-action-list-move {
 	  transition: transform 1s;
 	}
 
-	.flow-step-list-enter-active, .flow-step-list-leave-active {
+	.flow-action-list-enter-active, .flow-action-list-leave-active {
 	  transition: all 0.5s;
 	}
-	.flow-step-list-enter, .flow-step-list-leave-to {
+	.flow-action-list-enter, .flow-action-list-leave-to {
 	  opacity: 0;
 	}
 

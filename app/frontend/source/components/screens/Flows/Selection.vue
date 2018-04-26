@@ -14,14 +14,14 @@
 		<td>
 			<select v-model="selection.action.type" required>
 				<option v-for="(actionTypeName, actionTypeKey) in actionTypes" :value="actionTypeKey">{{actionTypeName}}</option>
-			</select></label>
+			</select>
 			<select v-if="selection.action.type === `load` || selection.action.type === `load-return`" v-model="selection.action._flow" required>
 				<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}}</option>
 			</select>
 			<template v-if="selectedFlowToLoad">
 				<select v-show="selection.action.type === `load` || selection.action.type === `load-return`" v-model="selection.action.step">
 					<option></option>
-					<option v-for="stepToLoad in selectedFlowToLoad.steps" :value="stepToLoad.shortId">#{{stepToLoad.shortId}} - {{stepToLoad.message || stepToLoad.prompt.text || (stepToLoad.media && stepToLoad.media.filename)}}</option>
+					<option v-for="actionToLoad in selectedFlowToLoad.actions" :value="actionToLoad.shortId">#{{actionToLoad.shortId}} - {{actionToLoad.message || actionToLoad.prompt.text || (actionToLoad.media && actionToLoad.media.filename)}}</option>
 				</select>
 			</template>
 		</td>
@@ -36,27 +36,27 @@
 <script>
 
 	export default {
-		props: [`selection`, `index`, `selections`, `flows`],
+		props: [ `selection`, `index`, `selections`, `flows` ],
 		data: function () {
 			return {
 				actionTypes: {
-					continue: "Continue",
-					skip: "Skip next step",
-					stop: "Stop",
-					load: "Load",
-					'load-return': "Load, then return",
+					continue: `Continue`,
+					skip: `Skip next action`,
+					stop: `Stop`,
+					load: `Load`,
+					'load-return': `Load, then return`,
 				},
 			};
 		},
 		computed: {
-			selectedFlowToLoad: function() {
+			selectedFlowToLoad: function () {
 				return this.flows[this.selection.action._flow];
 			},
-			selectedStepToLoad: function() {
-				return typeof this.selectedFlowToLoad === "undefined"
+			selectedStepToLoad: function () {
+				return typeof this.selectedFlowToLoad === `undefined`
 					? null
-					: this.selectedFlowToLoad.steps.find(step => step.shortId === this.selection.action.step);
-			}
+					: this.selectedFlowToLoad.actions.find(action => action.shortId === this.selection.action.step);
+			},
 		},
 		methods: {
 			removeSelection (index) {

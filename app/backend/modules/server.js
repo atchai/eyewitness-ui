@@ -18,6 +18,7 @@ const exphbs = require(`express-handlebars`);
 const socketio = require(`socket.io`);
 const HomeController = require(`../controllers/home`);
 const EventsController = require(`../controllers/events`);
+const FlowsController = require(`../controllers/flows`);
 const WebhooksController = require(`../controllers/webhooks`);
 const middleware = require(`./middleware`);
 const { handleSocketEvent } = require(`./utilities`);
@@ -50,6 +51,7 @@ function setupWebSocketServer (app, database) {
 	const webServer = new http.Server(app);
 	const socketServer = socketio(webServer);
 	const ctrlEvents = new EventsController(database);
+	const flowsController = new FlowsController(database);
 
 	socketServer.on(`connection`, async socket => { // eslint-disable-line max-statements
 
@@ -101,23 +103,23 @@ function setupWebSocketServer (app, database) {
 		);
 		socket.on(
 			`flows/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowsPullTabData)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowsPullTabData)
 		);
 		socket.on(
 			`flows/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowInsertOrUpdate)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowInsertOrUpdate)
 		);
 		socket.on(
 			`flows/remove`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.flowRemove)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowRemove)
 		);
 		socket.on(
 			`flows/upload-image`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.uploadImage)
+			handleSocketEvent.bind(flowsController, socket, flowsController.uploadImage)
 		);
 		socket.on(
 			`flows/delete-image`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.deleteImage)
+			handleSocketEvent.bind(flowsController, socket, flowsController.deleteImage)
 		);
 
 		socket.on(
