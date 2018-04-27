@@ -10,10 +10,13 @@
 			<ScreenHeader
 				:title="`Editing flow: ${flow.name}`"
 			/>
+
 			<label><strong>Name: </strong>
-			<input type="text" v-model="flow.name" size="30"/></label><br/>
-			<label><strong>URI (optional): </strong>
-				<input type="text" v-model="flow.uri" size="30"/></label>
+				<input type="text" v-model="flow.name" required data-field="name" pattern="[\w\/ ]+" size="30" title="Required, alphanumeric characters and spaces only"/>
+			</label><br/>
+
+			<div>URI: <span class="uri">{{flow.uri}}</span></div>
+
 			<p>{{flow.actions.length}} actions</p>
 			<br />
 			<p><strong>Flow Interruptions:</strong></p>
@@ -88,6 +91,7 @@
 				saved: true,
 				commonMimeTypes: [ `image/jpeg`, `image/png`, `image/gif`, `image/gif`,
 					`video/mpeg`, `video/webm`, `audio/mpeg3` ],
+				validation: {},
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, FlowAction, draggable },
@@ -183,7 +187,6 @@
 					shortId: shortId.generate(),
 					type: `send-message`,
 					message: {},
-					media: {},
 					load: {},
 					uiMeta: {},
 				});
@@ -209,6 +212,14 @@
 			@include user-select-off();
 		}
 		@include scroll-vertical();
+	}
+
+	.uri {
+		font-family: monospace;
+		background-color: #ddd;
+		border-radius: 0.5em;
+		padding: 0.2em;
+		margin: 0.2em;
 	}
 
 	.flow-editor {

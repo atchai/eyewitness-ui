@@ -7,7 +7,7 @@
 	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<dialog id="export-flows">
 			<h1>Export flows</h1>
-			<button class="mini" @click="selectAllExport()">{{selectedExportFlows.length == flowsSet.length ? "Unselect" : "Select"}} all</button>
+			<button class="mini" @click="selectAllExport()">{{selectedExportFlows.length === flowsSet.length ? "Unselect" : "Select"}} all</button>
 			<ul class="export-flow-select">
 				<li v-for="flow in flowsSet"><label><input type="checkbox" v-model="selectedExportFlows" :value="flow.flowId" @click="selectExportFlow(flow.flowId)"/> {{flow.name}}</label></li>
 			</ul>
@@ -49,6 +49,12 @@
 		<ScreenHeader
 			title="Flows"
 		/>
+
+		<div>
+			<p v-if="startingFlow">Starting flow: {{startingFlow.name}}</p>
+			<p v-else>No starting flow has been set. Enter reference '/' to set the starting flow.</p>
+		</div>
+
 		<div class="flows">
 			<Flow
 				v-for="flow in flowsSet"
@@ -92,14 +98,18 @@
 			...mapGetters([
 				`flowsSet`, `flows`,
 			]),
+			startingFlow: function () {
+				const startingFlows = this.flowsSet.filter(flow => flow.uri === `dynamic:///`);
+				return startingFlows.length ? startingFlows[0] : null;
+			},
 		},
 		mounted: function () {
 			dialogPolyfill.registerDialog(document.getElementById(`import-flows`));
 			dialogPolyfill.registerDialog(document.getElementById(`export-flows`));
 		},
 		beforeRouteLeave (to, from, next) {
-			if (this.$children.filter(child => child.saved === false).length === 0
-				|| window.confirm(`Do you really want to leave? You have unsaved changes!`)) {
+			if (this.$children.filter(child => child.saved === false).length === 0 ||
+			window.confirm(`Do you really want to leave? You have unsaved changes!`)) {
 				next();
 			}
 			else {
@@ -123,7 +133,7 @@
 						}
 						else {
 							// Replace all of the flows.
-							this.$store.commit(`update-flows`, {data: resData.flows});
+							this.$store.commit(`update-flows`, { data: resData.flows });
 						}
 					}
 				);
@@ -161,16 +171,17 @@
 				document.getElementById(`import-flows`).close();
 			},
 
-			selectExportFlow (flowId) {
-				if (this.selectedExportFlows.includes(flowId)) {
+			selectExportFlow (exportFlowId) {
+				if (this.selectedExportFlows.includes(exportFlowId)) {
 					// unselect
 				}
 				else {
 					// select
-					const actions = this.flows[flowId].actions;
+					const actions = this.flows[exportFlowId].actions;
 					let referencedFlowIds = [];
 					// find all flows referenced by load actions
-					referencedFlowIds = referencedFlowIds.concat(actions.filter(action => action.type === `load`).map(action => action.load._flow));
+					referencedFlowIds = referencedFlowIds.concat(actions.filter(action => action.type === `load`)
+						.map(action => action.load._flow));
 					// find all flows referenced by prompts with load actions
 					referencedFlowIds = referencedFlowIds.concat(
 						actions.filter(action => action.type === `prompt`)
@@ -181,7 +192,7 @@
 					// remove any duplicates
 					referencedFlowIds = new Set(referencedFlowIds);
 					// remove current flow if present
-					referencedFlowIds.delete(flowId);
+					referencedFlowIds.delete(exportFlowId);
 					// remove any flows already selected
 					referencedFlowIds = Array.from(referencedFlowIds).filter(flowId => !this.selectedExportFlows.includes(flowId));
 
@@ -208,37 +219,35 @@
 				else {
 					// select all
 					this.flowsSet.forEach(flow => !this.selectedExportFlows.includes(flow.flowId) &&
-			 		this.selectedExportFlows.push(flow.flowId));
+					this.selectedExportFlows.push(flow.flowId));
 				}
 			},
 
 			// See https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_Unicode_Problem
 			b64EncodeUnicode (str) {
-		    // first we use encodeURIComponent to get percent-encoded UTF-8,
-		    // then we convert the percent encodings into raw bytes which
-		    // can be fed into btoa.
-		    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-		        (match, p1) => String.fromCharCode(`0x${p1}`)));
+				// first we use encodeURIComponent to get percent-encoded UTF-8,
+				// then we convert the percent encodings into raw bytes which
+				// can be fed into btoa.
+				return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+					(match, p1) => String.fromCharCode(`0x${p1}`)));
 			},
 
 			exportSelected () {
 				const selectedFlows = this.selectedExportFlows.map(flowId => this.flows[flowId]);
-				var link = document.createElement(`a`);
-			  link.download = `flow-export${new Date().toISOString().substr(0, 16)}.json`;
-			  link.href = `data:application/json;base64,${this.b64EncodeUnicode(JSON.stringify(selectedFlows))}`;
-			  console.log(link.href);
+				const link = document.createElement(`a`);
+				link.download = `flow-export${new Date().toISOString().substr(0, 16)}.json`;
+				link.href = `data:application/json;base64,${this.b64EncodeUnicode(JSON.stringify(selectedFlows))}`;
 				document.body.appendChild(link);
-			  link.click();
-			  document.body.removeChild(link);
+				link.click();
+				document.body.removeChild(link);
 			},
 
 			onFileChange () {
-		    const files = this.$refs.importFile.files;
+				const files = this.$refs.importFile.files;
 				this.importFile = files[0];
 				const reader = new FileReader();
-				reader.onload = (e) => {
-					const previewString = ``;
-					const flowsToImport = JSON.parse(e.target.result);
+				reader.onload = (loadEvent) => {
+					const flowsToImport = JSON.parse(loadEvent.target.result);
 					this.importPreview = flowsToImport.map(flow => ({
 						override: (this.flows[flow.flowId]) || this.flowsSet.find(existingFlow => existingFlow.name === flow.name),
 						flow,
@@ -249,12 +258,12 @@
 
 			importFlows () {
 				const reader = new FileReader();
-				reader.onload = (e) => {
-					const flowsToImport = JSON.parse(e.target.result);
-					flowsToImport.forEach(flow => {
-						flow.actions.forEach(action => delete action.__v);
-						const existingFlow = this.flowsSet.find(existingFlow => existingFlow.name === flow.name);
-						if (existingFlow && existingFlow.flowId !== flow.flowId) {
+				reader.onload = (loadEvent) => {
+					const flowsToImport = JSON.parse(loadEvent.target.result);
+					flowsToImport.forEach(importFlow => {
+						importFlow.actions.forEach(action => delete action.__v);
+						const existingFlow = this.flowsSet.find(flow => flow.name === importFlow.name);
+						if (existingFlow && existingFlow.flowId !== importFlow.flowId) {
 							// name matches but ID does not, so manually delete old flow
 							this.$store.commit(`remove-flow`, {
 								key: existingFlow.flowId,
@@ -270,23 +279,23 @@
 							);
 						}
 						this.$store.commit(`add-flow`, {
-							key: flow.flowId,
-							data: flow,
+							key: importFlow.flowId,
+							data: importFlow,
 						});
 						getSocket().emit(
 							`flows/update`,
-							this.flows[flow.flowId],
+							this.flows[importFlow.flowId],
 							data => {
 								if (!data || !data.success) {
-									alert(`There was a problem saving flow "${flow.name}".`);
+									alert(`There was a problem saving flow "${importFlow.name}".`);
 								}
 								else {
 									// console.log(`Imported flow ${flow.name}`);
 								}
 							}
 						);
-						document.getElementById(`import-flows`).close();
 					});
+					document.getElementById(`import-flows`).close();
 				};
 				reader.readAsText(this.importFile);
 			},
@@ -318,9 +327,9 @@
 	}
 
 	dialog {
-	  border: 1px solid rgba(0, 0, 0, 0.3);
-	  border-radius: 6px;
-	  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		border-radius: 6px;
+		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 		min-width: calc(50vw);
 
 		h1 {
@@ -346,7 +355,7 @@
 			height: calc(60vh);
 
 			.import-preview {
-			  padding-left: 2rem;
+				padding-left: 2rem;
 			}
 
 			input[type="file"] {

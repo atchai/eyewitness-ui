@@ -20,5 +20,8 @@
 	"facebookPageId": "amitygazette",
 	"hippocampServer": {
 		"baseUrl": "http://bot:5000"
+	},
+	"amazonS3": {
+		"keyPrefix": "development/demo/"
 	}
 }

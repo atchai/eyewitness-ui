@@ -7,7 +7,7 @@
 	<li class="flow-action">
 		<div :id="action.shortId"><a :href="`#${action.shortId}`" class="uid">#{{action.shortId}}</a></div>
 
-		<div><label>Type: <select name="type" v-model="action.type" @change="changeActionType()" required>
+		<div><label>Type: <select name="type" v-model="action.uiMeta.stepType" @change="changeActionType()" required>
 			<option v-for="(typeName, typeKey) in types" :key="typeKey" :value="typeKey">{{typeName}}</option>
 		</select></label></div>
 
@@ -22,7 +22,7 @@
 					</select>
 					<input :name="action.shortId + `_conditionalMemoryKey`" v-model="action.uiMeta.conditional.memoryKey" size="30" type="text" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`" pattern="[A-Za-z0-9_/]+" list="memoryKeys" data-field="conditionalMemoryKey" @input="validate" title="Required - alphanumeric characters and underscores only" />
 					<input :name="action.shortId + `_conditionalExpression`" v-model="action.uiMeta.conditional.expression" size="70" type="text" :required="action.uiMeta.conditional.matchType === `expression`" v-show="action.uiMeta.conditional.matchType === `expression`" pattern=".+" @input="validate" />
-					<p class="inline-error" v-if="validation.conditionalMemoryKey">{{validation.conditional}}</p>
+					<p class="inline-error" v-if="validation.conditionalMemoryKey">{{validation.conditionalMemoryKey}}</p>
 				</label>
 				<select :name="action.shortId + `_conditionalOperator`" v-model="action.uiMeta.conditional.operator" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`">
 					<option v-for="(operatorString, operatorKey) in conditionalOperators" :value="operatorKey">{{operatorString}}</option>
@@ -33,7 +33,7 @@
 
 		<div class="action-type-specifics">
 
-			<div v-if="action.type === 'send-message'">
+			<div v-if="action.uiMeta.stepType === 'send-message'">
 				<textarea class="message" v-model="action.message.text" required></textarea>
 				<details class="inline-help">
 					<summary>Available memory keys</summary>
@@ -43,7 +43,7 @@
 				</details>
 			</div>
 
-			<div v-else-if="action.type === 'media'">
+			<div v-else-if="action.uiMeta.stepType === 'media'">
 				<div class="file-upload" v-if="!action.media.url">
 					<label>Upload a media file: <input type="file" :id="`file-upload-${action.shortId}`"/></label>
 					<button class="mini" @click="uploadMedia($event, index)">Upload
@@ -70,7 +70,7 @@
 				<img class="media-preview" v-if="action.media.url && action.media.type.includes(`image`)" :src="action.media.url"/>
 			</div>
 
-			<div v-else-if="action.type === 'change-flow'">
+			<div v-else-if="action.uiMeta.stepType === 'change-flow'">
 				<label>
 					<strong>Flow:</strong>
 					<select v-model="action.nextUri" required>
@@ -88,7 +88,7 @@
 				</label>-->
 			</div>
 
-			<div v-else-if="action.type === 'prompt'">
+			<div v-else-if="action.uiMeta.stepType === 'prompt'">
 				<div class="questions">
 					<strong>Questions:</strong>
 					<table>
@@ -166,11 +166,11 @@
 				</div>
 			</div>
 
-			<div v-else-if="action.type === 'execute-hook'">
+			<div v-else-if="action.uiMeta.stepType === 'execute-hook'">
 				<strong>Hook name:</strong> <input class="hook-name" v-model="action.hook" /> <em>(must be exact, case sensitive)</em>
 			</div>
 
-			<div v-else-if="action.type === 'update-memory'">
+			<div v-else-if="action.uiMeta.stepType === 'update-memory'">
 				<FlowActionMemory
 					:validateMemory="validateMemory"
 					:addMemory="addMemory"
@@ -190,7 +190,7 @@
 			</div>
 
 			<div v-else>
-				Error: unhandled action type "{{action.type}}"
+				Error: unhandled action type "{{action.uiMeta.stepType}}"
 			</div>
 
 		</div>
@@ -261,12 +261,19 @@
 				this.flow.actions.splice(index, 1);
 			},
 			changeActionType () {
-				switch (this.action.type) {
+				Vue.set(this.action, `type`, this.action.uiMeta.stepType);
+				switch (this.action.uiMeta.stepType) {
 					case `send-message`:
 						Vue.set(this.action, `message`, this.action.message || {});
+						Vue.set(this.action, `message.text`, this.action.message || {});
+						Vue.delete(this.action.message, `attachments`);
 						break;
 					case `media`:
-						Vue.set(this.action, `media`, this.action.media || {});
+						// there is no `media` type in the Hippocamp model, it's just a variation on `send-message`
+						Vue.set(this.action, `type`, `send-message`);
+						Vue.set(this.action, `message`, this.action.message || {});
+						Vue.delete(this.action.message, `text`);
+						Vue.set(this.action.message, `attachments`, this.action.attachments || []);
 						break;
 					case `prompt`:
 						Vue.set(this.action, `prompt`, this.action.prompt || {});
@@ -286,7 +293,7 @@
 						Vue.set(this.action, `memory`, this.action.memory || {});
 						break;
 					default:
-						throw new Error(`Action type ${this.action.type} not handled`);
+						throw new Error(`Action type ${this.action.uiMeta.stepType} not handled`);
 				}
 			},
 			toggleConditional () {
@@ -302,7 +309,7 @@
 				}
 			},
 			validate (eventOrElement) {
-				const inputEl = event.target || eventOrElement;
+				const inputEl = eventOrElement.target || eventOrElement;
 				const field = inputEl.dataset.field;
 				if (!inputEl.validity.valid) {
 					Vue.set(this.validation, field, inputEl.title);
@@ -312,8 +319,7 @@
 				}
 			},
 			validateMemory (memoryIndex, eventOrElement) {
-				const inputEl = event.target || eventOrElement;
-				const field = inputEl.dataset.field;
+				const inputEl = eventOrElement.target || eventOrElement;
 				Vue.set(this.validation, `memory`, {});
 				if (!inputEl.validity.valid) {
 					Vue.set(this.validation.memory, `i${memoryIndex}`, inputEl.title);
@@ -444,7 +450,7 @@
 			insertMemoryTemplate (action, memoryKey, index) {
 				const templateToAppend = `{{{${memoryKey}}}}`;
 				switch (action.type) {
-					case `message`:
+					case `send-message`:
 						if (typeof action.message === `undefined`) { Vue.set(action, `message`, templateToAppend); }
 						else { action.message += templateToAppend; }
 						break;
@@ -587,7 +593,7 @@
 	}
 
 	.answer-details {
-		padding: 0rem;
+		padding: 0;
 
 		.retry-message {
 

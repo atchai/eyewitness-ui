@@ -6,10 +6,17 @@
 
 	<div :class="[{ unsaved: !saved }, `flow`]">
 		<label>Name:
-		<input type="text" v-model="name" @input="updatedFlow($event)" size="30"/></label><br/>
+		<input type="text" v-model="name" required @input="updatedFlow" data-field="name" pattern="[\w\/ ]+" size="30" title="Required, alphanumeric characters and spaces only"/>
+		</label><br/>
+		<p class="inline-error" v-if="validation.name">{{validation.name}}</p>
 
-		<label>URI (optional):
-		<input type="text" v-model="uri" @input="updatedFlow($event)" size="30"/></label>
+		<label>Reference (optional):
+		<input type="text" v-model="reference" @input="updatedReference" data-field="reference" pattern="[\w\/]*" size="30" title="Alphanumeric characters and '/' only."/>
+		</label>
+		<p class="inline-error" v-if="validation.reference">{{validation.reference}}</p>
+		<p class="inline-error" v-if="validation.uniqueReference">{{validation.uniqueReference}}</p>
+
+		<div>URI: <span class="uri">{{uri}}</span> <span class="badge" v-if="uri === `dynamic:///`">Starting Flow</span></div>
 
 		<p>{{numActions}} actions
 			<router-link :to="`/flows/${flowId}`" v-show="saved">[Edit]</router-link>
@@ -25,6 +32,7 @@
 
 <script>
 
+	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import Vue from 'vue';
 
@@ -43,7 +51,22 @@
 			},
 		},
 		data: function () {
-			return { name: this.initialName, uri: this.initialUri, saved: !this.unsaved };
+			const reference = (this.initialUri || ``).replace(`dynamic:///`, `/`);
+
+			return {
+				name: this.initialName,
+				reference,
+				saved: !this.unsaved,
+				validation: {},
+			};
+		},
+		computed: {
+			uri: function () {
+				return `dynamic://${this.reference.startsWith(`/`) ? `` : `/`}${this.reference || this.flowId}`;
+			},
+			...mapGetters([
+				`flowsSet`,
+			]),
 		},
 		methods: {
 			removeFlow () {
@@ -65,12 +88,19 @@
 			},
 
 			saveFlow () {
+				if (document.querySelectorAll(`:invalid`).length) {
+					alert(`Cannot save! Some fields have not been set correctly. Please correct and try again.`);
+					return;
+				}
 
 				const name = this.name.trim();
-				const uri = this.uri.trim() || null;
+				const uri = (this.uri && this.uri.trim()) || null;
 
 				// If there is no text lets remove the flow altogether.
-				if (!name) { return this.removeFlow(); }
+				if (!name) {
+					this.removeFlow();
+					return;
+				}
 
 				this.$store.commit(`update-flow`, {
 					key: this.flowId,
@@ -101,8 +131,30 @@
 
 			},
 
-			updatedFlow () {
+			validate (eventOrElement) {
+				const inputEl = eventOrElement.target || eventOrElement;
+				const field = inputEl.dataset.field;
+				if (!inputEl.validity.valid) {
+					Vue.set(this.validation, field, inputEl.title);
+				}
+				else {
+					Vue.delete(this.validation, field);
+				}
+			},
+
+			updatedReference (event) {
+				if (this.flowsSet.filter(flow => this.flowId !== flow.flowId && this.uri === flow.uri).length) {
+					Vue.set(this.validation, `uniqueReference`, `Reference must be unique`);
+				}
+				else {
+					Vue.delete(this.validation, `uniqueReference`);
+				}
+				this.updatedFlow(event);
+			},
+
+			updatedFlow (event) {
 				Vue.set(this, `saved`, false);
+				this.validate(event);
 			},
 		},
 	};
@@ -114,10 +166,23 @@
 .flow {
 	padding: 2.00rem 2.00rem;
 
+	.inline-error {
+		font-size: 0.8rem;
+		color: #f33;
+	}
+
 	>input[type="text"] {
 		line-height: 2rem;
 		padding-left: 1rem;
 		padding-right: 1rem;
+	}
+
+	.uri {
+		font-family: monospace;
+		background-color: #ddd;
+		border-radius: 0.5em;
+		padding: 0.2em;
+		margin: 0.2em;
 	}
 
 	>.actions {
@@ -127,6 +192,12 @@
 
 	&.unsaved {
 		background-color: #fed;
+	}
+
+	.badge {
+		background-color: #bdf;
+		border-radius: 0.5em;
+		padding: 0.5em;
 	}
 }
 
