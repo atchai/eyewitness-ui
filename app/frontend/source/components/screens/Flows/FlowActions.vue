@@ -17,7 +17,7 @@
 
 			<div>URI: <span class="uri">{{flow.uri}}</span></div>
 
-			<p>{{flow.actions.length}} actions</p>
+			<p>{{flow.actions.length}} actions<span v-if="flow.prompt">, 1 final prompt</span></p>
 			<br />
 			<p><strong>Flow Interruptions:</strong></p>
 			<p>
@@ -49,7 +49,10 @@
 
 			<div class="actions">
 				<button class="primary" @click="addAction">Add Action</button>
+				<button class="primary" v-bind:disabled="flow.prompt" @click="addPrompt">Add Final Prompt</button>
 			</div>
+
+			<FlowPrompt v-if="flow.prompt" :prompt="flow.prompt" :memoryKeys="memoryKeys" />
 
 			<datalist id="memoryKeys">
 				<option v-for="memoryKey in memoryKeys" :value="memoryKey"></option>
@@ -78,6 +81,7 @@
 	import ScreenHeader from '../../common/ScreenHeader';
 	import ScreenLoader from '../../common/ScreenLoader';
 	import FlowAction from './FlowAction';
+	import FlowPrompt from './FlowPrompt';
 	import draggable from 'vuedraggable';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
@@ -94,7 +98,7 @@
 				validation: {},
 			};
 		},
-		components: { ScreenHeader, ScreenLoader, FlowAction, draggable },
+		components: { ScreenHeader, ScreenLoader, FlowAction, FlowPrompt, draggable },
 		computed: {
 			memoryKeys () {
 				if (this.loadingState >= 0) {
@@ -102,10 +106,9 @@
 				}
 				else { // check every action of every flow for possible memory keys
 					const allMemory = Object.values(this.flows)
-						.map(flow => flow.actions)
-						.reduce((allActions, actions) => allActions.concat(actions), [])
-						.filter(action => action.type === `prompt`)
-						.map(action => action.prompt.memory)
+						.map(flow => flow.prompt)
+						.filter(prompt => prompt)
+						.map(prompt => prompt.memory)
 						.filter(memory => typeof memory !== `undefined`)
 						.reduce((allMemoryMap, memory) => Object.assign(allMemoryMap, memory), {});
 
@@ -187,9 +190,32 @@
 					shortId: shortId.generate(),
 					type: `send-message`,
 					message: {},
-					load: {},
-					uiMeta: {},
+					uiMeta: {
+						stepType: `send-message`,
+					},
 				});
+			},
+
+			addPrompt () {
+				const flow = this.flow;
+				const prompt = {
+					type: `basic`,
+					errorMessage: ``,
+					memory: {},
+					text: [{
+						value: ``,
+						uiMeta: {},
+					}],
+					options: [],
+					uiMeta: {
+						answerType: `open`,
+					},
+				};
+				Vue.set(flow, `prompt`, prompt);
+			},
+
+			removePrompt () {
+				Vue.delete(this.flow, `prompt`);
 			},
 
 		},
@@ -210,6 +236,7 @@
 	.screen {
 		.actions {
 			@include user-select-off();
+			margin-bottom: 1rem;
 		}
 		@include scroll-vertical();
 	}

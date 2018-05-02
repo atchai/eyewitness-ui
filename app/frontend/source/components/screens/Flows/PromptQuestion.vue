@@ -17,7 +17,7 @@
 					<details class="inline-help">
 						<summary>Available memory keys</summary>
 						<ul class="memory-keys">
-							<li v-for="memoryKey in memoryKeys" @click="insertMemoryTemplate(action, memoryKey, index)"><code>{{memoryKey}}</code></li>
+							<li v-for="memoryKey in memoryKeys" @click="insertMemoryTemplate(memoryKey, index)"><code>{{memoryKey}}</code></li>
 						</ul>
 					</details>
 				</div>
@@ -34,13 +34,17 @@
 <script>
 
 	export default {
-		props: [ `promptQuestion`, `index`, `promptQuestions`, `insertMemoryTemplate`, `memoryKeys`, `action` ],
+		props: [ `promptQuestion`, `index`, `promptQuestions`, `memoryKeys` ],
 		data: function () {
 			return {};
 		},
 		methods: {
 			removePromptQuestion (index) {
 				this.promptQuestions.splice(index, 1);
+			},
+			insertMemoryTemplate (memoryKey, index) {
+				const templateToAppend = `{{{${memoryKey}}}}`;
+				this.promptQuestions[index].value = (this.promptQuestions[index].value || ``) + templateToAppend;
 			},
 		},
 	};

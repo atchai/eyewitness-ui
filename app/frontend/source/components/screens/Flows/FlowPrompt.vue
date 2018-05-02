@@ -1,0 +1,181 @@
+<template>
+	<div class="prompt">
+		<div class="questions">
+			<strong>Questions:</strong>
+			<table>
+				<tbody>
+				<PromptQuestion
+					v-for="(promptQuestion, index) in prompt.text"
+					:key="index"
+					:promptQuestion="promptQuestion"
+					:index="index"
+					:promptQuestions="prompt.text"
+					:memoryKeys="memoryKeys"
+					:action="action"
+				/>
+				</tbody>
+			</table>
+			<button @click="addPromptQuestion()">Add question</button>
+		</div>
+
+		<div class="answer">
+			<strong>Answer:</strong>
+			<div class="answer-details">
+				<div>
+					<label>Type:
+						<select name="promptType" v-model="prompt.uiMeta.answerType" required>
+							<option v-for="(promptTypeName, promptTypeKey) in promptTypes" :value="promptTypeKey">{{promptTypeName}}</option>
+						</select>
+					</label>
+				</div>
+
+				<span v-if="prompt.uiMeta.answerType === 'open'">
+					<!-- no further options -->
+				</span>
+				<div v-else-if="prompt.uiMeta.answerType === 'open-selection' || prompt.uiMeta.answerType === 'strict-selection'">
+					<table>
+						<thead>
+						<tr> <th>Quick reply</th> <th>Action</th> <th></th></tr>
+						</thead>
+
+						<tbody>
+						<Selection v-for="(option, index) in prompt.options" :key="index" :index="index" :selections="prompt.options" :selection="option" :flows="flows"/>
+						</tbody>
+					</table>
+					<button @click="addOption()">Add quick reply</button>
+				</div>
+
+				<div class="retry-message">
+					Retry message:
+					<input type="text" v-model="prompt.errorMessage" size="80" :placeholder="defaultRetryMessage"/>
+				</div>
+				<div>
+					<h3>Memory</h3>
+		<!--
+					<FlowActionMemory
+						:validateMemory="validateMemory"
+						:addMemory="addMemory"
+						:removeMemory="removeMemory"
+						:memorySetInput="memorySetInput"
+						:memorySetValue="memorySetValue"
+						:memorySetReference="memorySetReference"
+						:memoryUnsetValue="memoryUnsetValue"
+						:updateMemoryKey="updateMemoryKey"
+						:validation="validation"
+						:transformTypes="transformTypes"
+						:index="index"
+						:memory="action.prompt.memory"
+						:selections="action.prompt.selections"
+						:memoryKeys="memoryKeys"
+						:isPromptMemory="true"
+					/>
+								-->
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	import { getSocket } from '../../../scripts/webSocketClient';
+	import PromptQuestion from './PromptQuestion';
+	import PromptOption from './PromptOption';
+	import FlowActionMemory from './FlowActionMemory';
+	import Vue from 'vue';
+
+	export default {
+		props: [ `prompt`, `memoryKeys` ],
+		data: function () {
+			return {
+				promptTypes: {
+					open: `Open`,
+					'open-selection': `Open Selection`,
+					'strict-selection': `Strict Selection`,
+				},
+				defaultRetryMessage: `Sorry {{firstName}}, I didn't understand...`, // TODO from database
+			};
+		},
+		components: { PromptQuestion, Selection: PromptOption, FlowActionMemory },
+		methods: {
+			addPromptQuestion () {
+				Vue.set(this.prompt, `text`, this.prompt.text || []);
+				this.prompt.text.push({
+					conditional: ``,
+					value: ``,
+				});
+			},
+			addOption () {
+				this.prompt.options.push({
+					label: `Yes`,
+					action: {
+						type: `continue`,
+					},
+				});
+			},
+		},
+	};
+</script>
+
+<style scoped>
+
+	.prompt {
+		margin: 1rem;
+		margin-left: 2rem;
+		padding: 1rem;
+		background-color: #eee;
+		border-radius: 0.5rem;
+	}
+
+	.question textarea {
+		width: 100%;
+	}
+
+	.questions {
+		margin-bottom: 2.00rem;
+	}
+
+	.questions table {
+		width: 100%;
+		border-collapse: collapse;
+		border: 1px solid black;
+		margin-top: 1.00rem;
+		margin-bottom: 1.00rem;
+	}
+
+	.question-details, .answer-details {
+		margin: 1rem;
+		padding: 1rem;
+		margin-left: 2rem;
+		background-color: #fff;
+		border-radius: 0.2rem;
+	}
+
+	.answer-details {
+		padding: 0;
+
+		.retry-message {
+
+		}
+
+		>div {
+			padding: 1rem;
+			border-bottom: 1px solid #eee;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+
+		table {
+			border-collapse: collapse;
+			border: 1px solid #333;
+			margin-bottom: 1rem;
+
+			th {
+				text-align: center;
+				border: 1px solid #333;
+			}
+		}
+	}
+
+</style>

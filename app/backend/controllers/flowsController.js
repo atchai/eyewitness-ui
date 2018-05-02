@@ -9,6 +9,7 @@ const shortId = require(`shortid`);
 const AWS = require(`aws-sdk/global`);
 // import individual service
 const S3 = require(`aws-sdk/clients/s3`);
+const RequestNinja = require(`request-ninja`);
 
 const config = require(`config-ninja`).use(`eyewitness-ui`);
 
@@ -18,6 +19,7 @@ module.exports = class FlowsController {
 
 	constructor (database) {
 		this.database = database;
+		this.flowUpdateUrl = `${config.hippocampServer.baseUrl}/api/flow/reload-dynamic`;
 	}
 
 	/*
@@ -74,18 +76,97 @@ module.exports = class FlowsController {
 		recFlow.name = name;
 		recFlow.uri = uri;
 
+		recFlow.prompt = null;
+
 		recFlow.interruptions = recFlow.interruptions || {};
 		if (interruptionsWhenAgent) { recFlow.interruptions.whenAgent = interruptionsWhenAgent; }
 		if (interruptionsWhenSubject) { recFlow.interruptions.whenSubject = interruptionsWhenSubject; }
 
 		if (Array.isArray(data.actions)) {
 			recFlow.actions = data.actions;
+			recFlow.actions.forEach(action => {
+				action.task = (action.task && action.task.taskId && action.task) || null;
+
+				action.conditional = action.uiMeta.conditional
+					? this.generateConditionalExpression(action.uiMeta.conditional) : null;
+			});
 		}
 
 		// Update the database.
 		await this.database.update(`Flow`, flowId, recFlow, { upsert: true });
 
+		await this.reloadFlow(flowId);
+
 		return reply({ success: true });
+
+	}
+
+	/*
+	 * Generates a javascript expression from conditional { matchType, memoryKey, operator, value }
+	 */
+	generateConditionalExpression (conditional) {
+
+		// Use the conditional exactly as typed if an expression was chosen.
+		if (conditional.matchType === `expression`) {
+			return conditional.expression;
+		}
+
+		// Preformatted conditional types.
+		const preparedKey = `<${conditional.memoryKey.replace(/\//g, `.`)}>`;
+		const preparedValue = (typeof conditional.value === `string`) ? `'${conditional.value.replace(/'/g, `\'`)}'` : ``;
+
+		switch (conditional.operator) {
+			case `set`:
+				return preparedKey;
+			case `not-set`:
+				return `!${preparedKey}`;
+			case `equals`:
+				return `${preparedKey} == ${preparedValue}`; // intentionally not using === for greater type flexibility
+			case `not-equals`:
+				return `${preparedKey} != ${preparedValue}`; // intentionally not using !== for greater type flexibility
+			case `contains`:
+				return `${preparedKey}.includes(${preparedValue})`;
+			case `starts-with`:
+				return `String(${preparedKey}).startsWith(${preparedValue})`;
+			case `ends-with`:
+				return `String(${preparedKey}).endsWith(${preparedValue})`;
+			default:
+				throw new Error(`Conditional operator "${conditional.operator}" is not supported.`);
+		}
+
+	}
+
+	/**
+	 * Tell the bot to reload a flow.
+	 *
+	 * @param {string|void} flowId ID of flow to reload.
+	 * @returns {Promise<void>} N/A
+	 */
+	async reloadFlow (flowId = undefined) {
+
+		// Send the message to Hippocamp which will disable the bot.
+		const req = new RequestNinja(this.flowUpdateUrl, {
+			timeout: (1000 * 3),
+			returnResponseObject: true,
+		});
+
+		const flowIds = [];
+		if (flowId) {
+			flowIds.push(flowId);
+		}
+		const res = await req.postJson({ flowIds });
+
+		if (res.statusCode !== 200) {
+			throw new Error(`Non 200 HTTP status code "${res.statusCode}" returned by Hippocamp.`);
+		}
+
+		if (!res.body || !res.body.success) {
+			throw new Error(`Hippocamp returned an error: "${res.body.error}".`);
+		}
+
+		if (res.body.failedFlowIds && res.body.failedFlowIds.length) {
+			throw new Error(`Hippocamp failed to load flows ${res.body.failedFlowIds}".`);
+		}
 
 	}
 
@@ -99,6 +180,8 @@ module.exports = class FlowsController {
 
 		// Update the database.
 		await this.database.delete(`Flow`, flowId);
+
+		await this.reloadFlow(); // reload all flows
 
 		return reply({ success: true });
 	}

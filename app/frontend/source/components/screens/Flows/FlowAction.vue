@@ -44,7 +44,7 @@
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'media'">
-				<div class="file-upload" v-if="!action.media.url">
+				<div class="file-upload" v-if="!action.message.attachments[0].remoteUrl">
 					<label>Upload a media file: <input type="file" :id="`file-upload-${action.shortId}`"/></label>
 					<button class="mini" @click="uploadMedia($event, index)">Upload
 						<div class="spinner">
@@ -59,15 +59,24 @@
 					<button class="mini" @click="deleteMedia(index)">Delete File</button>
 				</div>
 
-				<div><label>Media URL: <input type="url" v-model="action.media.url" size="50"/></label></div>
+				<div><label>Media URL: <input type="url" v-model="action.message.attachments[0].remoteUrl" size="50"/></label></div>
 				<div>
-					<label>Filename: <input type="text" v-model="action.media.filename"/></label>
+					<label>Filename: <input type="text" v-model="action.message.attachments[0].filename"/></label>
 					<span class="inline-help">It is best to include a file extension as it may help determine the file type.</span>
 				</div>
-				<div><label>MIME Type: <input type="text" v-model="action.media.type" list="commonMimeTypes"/></label>
+				<div><label>Type:
+					<select v-model="action.message.attachments[0].type">
+						<option value=""></option>
+						<option value="image">Image</option>
+						<option value="audio">Audio</option>
+						<option value="video">Video</option>
+						<option value="file">File</option>
+					</select></label>
+				</div>
+				<div><label>MIME Type: <input type="text" v-model="action.message.attachments[0].mimeType" list="commonMimeTypes"/></label>
 					<span class="inline-help">This may help determine the type of file being sent.</span>
 				</div>
-				<img class="media-preview" v-if="action.media.url && action.media.type.includes(`image`)" :src="action.media.url"/>
+				<img class="media-preview" v-if="action.message.attachments[0].remoteUrl && action.message.attachments[0].mimeType && action.message.attachments[0].mimeType.includes(`image`)" :src="action.message.attachments[0].remoteUrl"/>
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'change-flow'">
@@ -86,84 +95,6 @@
 					<input type="checkbox" v-model="action.load.returnAfter" :checked="action.load.returnAfter" />
 					Return here after the loaded flow has finished.
 				</label>-->
-			</div>
-
-			<div v-else-if="action.uiMeta.stepType === 'prompt'">
-				<div class="questions">
-					<strong>Questions:</strong>
-					<table>
-						<tbody>
-							<PromptQuestion
-								v-for="(promptQuestion, index) in action.prompt.text"
-								:key="index"
-								:promptQuestion="promptQuestion"
-								:index="index"
-								:promptQuestions="action.prompt.text"
-								:insertMemoryTemplate="insertMemoryTemplate"
-								:memoryKeys="memoryKeys"
-								:action="action"
-							/>
-						</tbody>
-					</table>
-					<button @click="addPromptQuestion(index)">Add question</button>
-				</div>
-
-				<div class="answer">
-					<strong>Answer:</strong>
-					<div class="answer-details">
-						<div>
-							<label>Type:
-								<select name="promptType" v-model="action.prompt.type" required>
-									<option v-for="(promptTypeName, promptTypeKey) in promptTypes" :value="promptTypeKey">{{promptTypeName}}</option>
-								</select>
-							</label>
-						</div>
-
-						<span v-if="action.prompt.type === 'open'">
-							<!-- nothing further options -->
-						</span>
-						<div v-else-if="action.prompt.type === 'open-selection' || action.prompt.type === 'strict-selection'">
-							<table>
-								<thead>
-									<tr> <th>Quick reply</th> <th>Action</th> <th></th></tr>
-								</thead>
-
-								<tbody>
-									<Selection v-for="(selection, index) in action.prompt.selections" :key="index" :index="index" :selections="action.prompt.selections" :selection="selection" :flows="flows"/>
-								</tbody>
-							</table>
-							<button @click="addSelection(index)">Add quick reply</button>
-						</div>
-
-						<div class="retry-message">
-							Retry message:
-							<input type="text" v-model="action.prompt.retryMessage" size="80" :placeholder="defaultRetryMessage"/>
-						</div>
-
-						<div>
-							<h3>Memory</h3>
-
-							<FlowActionMemory
-								:validateMemory="validateMemory"
-								:addMemory="addMemory"
-								:removeMemory="removeMemory"
-								:memorySetInput="memorySetInput"
-								:memorySetValue="memorySetValue"
-								:memorySetReference="memorySetReference"
-								:memoryUnsetValue="memoryUnsetValue"
-								:updateMemoryKey="updateMemoryKey"
-								:validation="validation"
-								:transformTypes="transformTypes"
-								:index="index"
-								:memory="action.prompt.memory"
-								:selections="action.prompt.selections"
-								:memoryKeys="memoryKeys"
-								:isPromptMemory="true"
-							/>
-						</div>
-
-					</div>
-				</div>
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'execute-hook'">
@@ -207,9 +138,6 @@
 
 <script>
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import PromptQuestion from './PromptQuestion';
-	import Selection from './Selection';
-	import FlowActionMemory from './FlowActionMemory';
 	import Vue from 'vue';
 
 	export default {
@@ -234,11 +162,6 @@
 					lowercase: `Lowercase`,
 					uppercase: `Uppercase`,
 				},
-				promptTypes: {
-					open: `Open`,
-					'open-selection': `Open Selection`,
-					'strict-selection': `Strict Selection`,
-				},
 				conditionalOperators: {
 					set: `has been set`,
 					'not-set': `has not been set`,
@@ -248,10 +171,8 @@
 					'starts-with': `starts with: `,
 					'ends-with': `ends with: `,
 				},
-				defaultRetryMessage: `Sorry {{firstName}}, I didn't understand...`, // TODO from database
 			};
 		},
-		components: { PromptQuestion, Selection, FlowActionMemory },
 		methods: {
 			showConditionalValueField (action) {
 				return action.uiMeta.conditional.matchType === `memory-key` &&
@@ -265,7 +186,7 @@
 				switch (this.action.uiMeta.stepType) {
 					case `send-message`:
 						Vue.set(this.action, `message`, this.action.message || {});
-						Vue.set(this.action, `message.text`, this.action.message || {});
+						Vue.set(this.action.message, `text`, this.action.message.text || ``);
 						Vue.delete(this.action.message, `attachments`);
 						break;
 					case `media`:
@@ -273,14 +194,7 @@
 						Vue.set(this.action, `type`, `send-message`);
 						Vue.set(this.action, `message`, this.action.message || {});
 						Vue.delete(this.action.message, `text`);
-						Vue.set(this.action.message, `attachments`, this.action.attachments || []);
-						break;
-					case `prompt`:
-						Vue.set(this.action, `prompt`, this.action.prompt || {});
-						Vue.set(this.action.prompt, `type`, this.action.prompt.type || `open`);
-						Vue.set(this.action.prompt, `selections`, this.action.prompt.selections || []);
-						Vue.set(this.action.prompt, `text`, this.action.prompt.text ||
-							[{ conditional: ``, value: this.action.message }]);
+						Vue.set(this.action.message, `attachments`, this.action.message.attachments || [ {} ]);
 						break;
 					case `change-flow`:
 						// Vue.set(this.action, `load`, this.action.load || {});
@@ -327,23 +241,6 @@
 				else {
 					Vue.delete(this.validation.memory, `i${memoryIndex}`);
 				}
-			},
-			addPromptQuestion (index) {
-				const flowAction = this.flow.actions[index];
-				flowAction.prompt.text = flowAction.prompt.text || [];
-				flowAction.prompt.text.push({
-					conditional: ``,
-					value: ``,
-				});
-			},
-			addSelection (index) {
-				const flowAction = this.flow.actions[index];
-				flowAction.prompt.selections.push({
-					label: `Yes`,
-					action: {
-						type: `continue`,
-					},
-				});
 			},
 
 			addMemory (index, isPromptMemory = false) {
@@ -447,15 +344,12 @@
 
 			},
 
-			insertMemoryTemplate (action, memoryKey, index) {
+			insertMemoryTemplate (action, memoryKey) {
 				const templateToAppend = `{{{${memoryKey}}}}`;
 				switch (action.type) {
 					case `send-message`:
 						if (typeof action.message === `undefined`) { Vue.set(action, `message`, templateToAppend); }
 						else { action.message += templateToAppend; }
-						break;
-					case `prompt`:
-						action.prompt.text[index].value = (action.prompt.text[index].value || ``) + templateToAppend;
 						break;
 					default: alert(`Cannot insert key into action of type ${action.type}`);
 				}
@@ -473,6 +367,20 @@
 				this.flow.actions.splice(index, 1);
 				// re-insert in lower position
 				this.flow.actions.splice(index + 1, 0, actionToMove);
+			},
+			mapMimeToAttachmentType (mimeType) {
+				if (mimeType.includes(`image`)) {
+					return `image`;
+				}
+				else if (mimeType.includes(`audio`)) {
+					return `audio`;
+				}
+				else if (mimeType.includes(`video`)) {
+					return `video`;
+				}
+				else {
+					return `file`;
+				}
 			},
 			uploadMedia (event, index) {
 				const action = this.flow.actions[index];
@@ -501,19 +409,20 @@
 				getSocket().emit(`flows/upload-image`,
 					{ name: file.name, type: file.type, filedata: file },
 					resData => {
-						Vue.set(action.media, `type`, file.type);
-						Vue.set(action.media, `filename`, file.name);
-						Vue.set(action.media, `url`, resData.url);
+						Vue.set(action.message.attachments[0], `type`, this.mapMimeToAttachmentType(file.type));
+						Vue.set(action.message.attachments[0], `mimeType`, file.type);
+						Vue.set(action.message.attachments[0], `filename`, file.name);
+						Vue.set(action.message.attachments[0], `remoteUrl`, resData.url);
 					});
 			},
 			deleteMedia (index) {
 				const action = this.flow.actions[index];
 				getSocket().emit(`flows/delete-image`,
-					{ url: action.media.url },
+					{ url: action.message.attachments[0].remoteUrl },
 					resData => {
-						Vue.delete(action.media, `type`);
-						Vue.delete(action.media, `filename`);
-						Vue.delete(action.media, `url`);
+						Vue.delete(action.message.attachments[0], `mimeType`);
+						Vue.delete(action.message.attachments[0], `filename`);
+						Vue.delete(action.message.attachments[0], `remoteUrl`);
 					});
 			},
 		},
@@ -564,60 +473,12 @@
 		border-radius: 0.5rem;
 	}
 
-	.message, .question textarea {
+	.message {
 		width: 100%;
 	}
 
 	select {
 		max-width: 20rem;
-	}
-
-	.questions {
-		margin-bottom: 2.00rem;
-	}
-
-	.questions table {
-		width: 100%;
-		border-collapse: collapse;
-		border: 1px solid black;
-		margin-top: 1.00rem;
-		margin-bottom: 1.00rem;
-	}
-
-	.question-details, .answer-details {
-		margin: 1rem;
-		padding: 1rem;
-		margin-left: 2rem;
-		background-color: #fff;
-		border-radius: 0.2rem;
-	}
-
-	.answer-details {
-		padding: 0;
-
-		.retry-message {
-
-		}
-
-		>div {
-			padding: 1rem;
-			border-bottom: 1px solid #eee;
-
-			&:last-child {
-				border-bottom: none;
-			}
-		}
-
-		table {
-			border-collapse: collapse;
-			border: 1px solid #333;
-			margin-bottom: 1rem;
-
-			th {
-				text-align: center;
-				border: 1px solid #333;
-			}
-		}
 	}
 
 	.inline-help {
