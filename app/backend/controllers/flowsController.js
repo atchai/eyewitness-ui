@@ -37,7 +37,11 @@ module.exports = class FlowsController {
 				flowId: recFlow._id,
 				name: recFlow.name,
 				uri: recFlow.uri,
+				type: recFlow.type,
+				nextUri: recFlow.nextUri,
+				uiMeta: recFlow.uiMeta,
 				actions: recFlow.actions,
+				prompt: recFlow.prompt,
 				interruptionsWhenAgent: (interruptions && interruptions.whenAgent ? interruptions.whenAgent : `ask-user`),
 				interruptionsWhenSubject: (interruptions && interruptions.whenSubject ? interruptions.whenSubject : `ask-user`),
 			});
@@ -77,6 +81,23 @@ module.exports = class FlowsController {
 		recFlow.uri = uri;
 
 		recFlow.prompt = (data.prompt && data.prompt.text && data.prompt.text.length) ? data.prompt : null;
+		if (recFlow.prompt) {
+			if (recFlow.prompt.uiMeta.answerType === `open`) {
+				recFlow.prompt.type = `basic`;
+				recFlow.prompt.options = null;
+			}
+			else if (recFlow.prompt.uiMeta.answerType === `strict-selection`) {
+				recFlow.prompt.type = `options`;
+				recFlow.prompt.options.forEach(option => {
+					option.matches = {
+						[option.label]: `string`,
+					};
+				});
+			}
+			else {
+				throw new Error(`Unsupported prompt answer type ${recFlow.prompt.uiMeta.answerType}`);
+			}
+		}
 
 		recFlow.interruptions = recFlow.interruptions || {};
 		if (interruptionsWhenAgent) { recFlow.interruptions.whenAgent = interruptionsWhenAgent; }

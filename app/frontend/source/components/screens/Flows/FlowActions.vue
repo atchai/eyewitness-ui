@@ -49,7 +49,10 @@
 
 			<div class="actions">
 				<button class="primary" @click="addAction">Add Action</button>
+			</div>
+			<div class="actions">
 				<button class="primary" v-bind:disabled="flow.prompt" @click="addPrompt">Add Final Prompt</button>
+				<button class="primary" v-bind:disabled="!flow.prompt" @click="removePrompt">Remove Prompt</button>
 			</div>
 
 			<FlowPrompt v-if="flow.prompt" :prompt="flow.prompt" :memoryKeys="memoryKeys" :flows="flows" />
@@ -235,7 +238,6 @@
 	.screen {
 		.actions {
 			@include user-select-off();
-			margin-bottom: 1rem;
 		}
 		@include scroll-vertical();
 	}

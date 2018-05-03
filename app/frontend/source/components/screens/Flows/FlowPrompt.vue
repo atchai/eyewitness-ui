@@ -1,5 +1,6 @@
 <template>
 	<div class="prompt">
+		<h3>Prompt</h3>
 		<div class="questions">
 			<strong>Questions:</strong>
 			<table>
@@ -77,10 +78,10 @@
 			return {
 				promptTypes: {
 					open: `Open`,
-					'open-selection': `Open Selection`,
+					// 'open-selection': `Open Selection`,
 					'strict-selection': `Strict Selection`,
 				},
-				defaultRetryMessage: `Sorry {{firstName}}, I didn't understand...`, // TODO from database
+				defaultRetryMessage: `Whoops! I didn't understand what you said.`,
 			};
 		},
 		components: { PromptQuestion, PromptOption, FlowMemory },
