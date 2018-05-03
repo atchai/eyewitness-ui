@@ -202,7 +202,7 @@ module.exports = class FlowsController {
 		// Update the database.
 		await this.database.delete(`Flow`, flowId);
 
-		await this.reloadFlow(); // reload all flows
+		await this.reloadFlow(flowId);
 
 		return reply({ success: true });
 	}
