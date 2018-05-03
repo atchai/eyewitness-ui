@@ -1,5 +1,5 @@
 <!--
-	SELECTION
+	Prompt Option
 -->
 
 <template>
@@ -7,26 +7,20 @@
 	<tr>
 		<td>
 			<strong><small>Label:</small></strong><br />
-			<input v-model="selection.label" type="text" required/><br /><br />
+			<input v-model="option.label" type="text" required/><br /><br />
 			<strong><small>Conditional expression:</small></strong><br />
-			<input v-model="selection.conditional" type="text"/>
+			<input v-model="option.conditional" type="text"/>
 		</td>
 		<td>
-			<select v-model="selection.action.type" required>
+			<select v-model="option.uiMeta.actionType" required>
 				<option v-for="(actionTypeName, actionTypeKey) in actionTypes" :value="actionTypeKey">{{actionTypeName}}</option>
 			</select>
-			<select v-if="selection.action.type === `load` || selection.action.type === `load-return`" v-model="selection.action._flow" required>
-				<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}}</option>
+			<select v-if="option.uiMeta.actionType === `load` || option.uiMeta.actionType === `load-return`" v-model="option.nextUri" required>
+				<option v-for="(flowToLoad, flowId) in flows" :value="flowToLoad.uri">{{flowToLoad.name}}</option>
 			</select>
-			<template v-if="selectedFlowToLoad">
-				<select v-show="selection.action.type === `load` || selection.action.type === `load-return`" v-model="selection.action.step">
-					<option></option>
-					<option v-for="actionToLoad in selectedFlowToLoad.actions" :value="actionToLoad.shortId">#{{actionToLoad.shortId}} - {{actionToLoad.message || actionToLoad.prompt.text || (actionToLoad.media && actionToLoad.media.filename)}}</option>
-				</select>
-			</template>
 		</td>
 		<td>
-			<button class="mini" @click="removeSelection(index)">Remove</button>
+			<button class="mini" @click="removeOption(index)">Remove</button>
 		</td>
 	</tr>
 
@@ -36,31 +30,21 @@
 <script>
 
 	export default {
-		props: [ `selection`, `index`, `selections`, `flows` ],
+		props: [ `option`, `index`, `options`, `flows` ],
 		data: function () {
 			return {
 				actionTypes: {
-					continue: `Continue`,
-					skip: `Skip next action`,
+					// continue: `Continue`,
+					// skip: `Skip next action`,
 					stop: `Stop`,
 					load: `Load`,
-					'load-return': `Load, then return`,
+					// 'load-return': `Load, then return`,
 				},
 			};
 		},
-		computed: {
-			selectedFlowToLoad: function () {
-				return this.flows[this.selection.action._flow];
-			},
-			selectedStepToLoad: function () {
-				return typeof this.selectedFlowToLoad === `undefined`
-					? null
-					: this.selectedFlowToLoad.actions.find(action => action.shortId === this.selection.action.step);
-			},
-		},
 		methods: {
-			removeSelection (index) {
-				this.selections.splice(index, 1);
+			removeOption (index) {
+				this.options.splice(index, 1);
 			},
 		},
 	};

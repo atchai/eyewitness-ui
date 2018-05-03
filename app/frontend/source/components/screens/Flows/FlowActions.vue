@@ -52,7 +52,7 @@
 				<button class="primary" v-bind:disabled="flow.prompt" @click="addPrompt">Add Final Prompt</button>
 			</div>
 
-			<FlowPrompt v-if="flow.prompt" :prompt="flow.prompt" :memoryKeys="memoryKeys" />
+			<FlowPrompt v-if="flow.prompt" :prompt="flow.prompt" :memoryKeys="memoryKeys" :flows="flows" />
 
 			<datalist id="memoryKeys">
 				<option v-for="memoryKey in memoryKeys" :value="memoryKey"></option>
@@ -95,7 +95,6 @@
 				saved: true,
 				commonMimeTypes: [ `image/jpeg`, `image/png`, `image/gif`, `image/gif`,
 					`video/mpeg`, `video/webm`, `audio/mpeg3` ],
-				validation: {},
 			};
 		},
 		components: { ScreenHeader, ScreenLoader, FlowAction, FlowPrompt, draggable },

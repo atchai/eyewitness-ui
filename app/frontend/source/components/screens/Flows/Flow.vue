@@ -35,6 +35,7 @@
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import Vue from 'vue';
+	import ValidationMixin from './validationMixin';
 
 	export default {
 		props: {
@@ -57,7 +58,6 @@
 				name: this.initialName,
 				reference,
 				saved: !this.unsaved,
-				validation: {},
 			};
 		},
 		computed: {
@@ -68,6 +68,7 @@
 				`flowsSet`,
 			]),
 		},
+		mixins: [ ValidationMixin ],
 		methods: {
 			removeFlow () {
 				if (window.confirm(`Are you sure you want to delete ${this.name ? `flow"${this.name}"` : `this flow`}?`)) {
@@ -129,17 +130,6 @@
 					}
 				);
 
-			},
-
-			validate (eventOrElement) {
-				const inputEl = eventOrElement.target || eventOrElement;
-				const field = inputEl.dataset.field;
-				if (!inputEl.validity.valid) {
-					Vue.set(this.validation, field, inputEl.title);
-				}
-				else {
-					Vue.delete(this.validation, field);
-				}
 			},
 
 			updatedReference (event) {

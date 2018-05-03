@@ -76,7 +76,7 @@ module.exports = class FlowsController {
 		recFlow.name = name;
 		recFlow.uri = uri;
 
-		recFlow.prompt = null;
+		recFlow.prompt = (data.prompt && data.prompt.text && data.prompt.text.length) ? data.prompt : null;
 
 		recFlow.interruptions = recFlow.interruptions || {};
 		if (interruptionsWhenAgent) { recFlow.interruptions.whenAgent = interruptionsWhenAgent; }

@@ -11,7 +11,6 @@
 					:index="index"
 					:promptQuestions="prompt.text"
 					:memoryKeys="memoryKeys"
-					:action="action"
 				/>
 				</tbody>
 			</table>
@@ -39,7 +38,7 @@
 						</thead>
 
 						<tbody>
-						<Selection v-for="(option, index) in prompt.options" :key="index" :index="index" :selections="prompt.options" :selection="option" :flows="flows"/>
+						<PromptOption v-for="(option, index) in prompt.options" :key="index" :index="index" :options="prompt.options" :option="option" :flows="flows"/>
 						</tbody>
 					</table>
 					<button @click="addOption()">Add quick reply</button>
@@ -51,25 +50,14 @@
 				</div>
 				<div>
 					<h3>Memory</h3>
-		<!--
-					<FlowActionMemory
-						:validateMemory="validateMemory"
-						:addMemory="addMemory"
-						:removeMemory="removeMemory"
-						:memorySetInput="memorySetInput"
-						:memorySetValue="memorySetValue"
-						:memorySetReference="memorySetReference"
-						:memoryUnsetValue="memoryUnsetValue"
-						:updateMemoryKey="updateMemoryKey"
+					<FlowMemory
 						:validation="validation"
-						:transformTypes="transformTypes"
-						:index="index"
-						:memory="action.prompt.memory"
-						:selections="action.prompt.selections"
+						:memory="prompt.memory"
+						:memoryParent="prompt"
+						:options="prompt.options"
 						:memoryKeys="memoryKeys"
 						:isPromptMemory="true"
 					/>
-								-->
 				</div>
 			</div>
 		</div>
@@ -77,14 +65,14 @@
 </template>
 
 <script>
-	import { getSocket } from '../../../scripts/webSocketClient';
 	import PromptQuestion from './PromptQuestion';
 	import PromptOption from './PromptOption';
-	import FlowActionMemory from './FlowActionMemory';
+	import FlowMemory from './FlowMemory';
+	import ValidationMixin from './validationMixin';
 	import Vue from 'vue';
 
 	export default {
-		props: [ `prompt`, `memoryKeys` ],
+		props: [ `prompt`, `memoryKeys`, `flows` ],
 		data: function () {
 			return {
 				promptTypes: {
@@ -95,7 +83,8 @@
 				defaultRetryMessage: `Sorry {{firstName}}, I didn't understand...`, // TODO from database
 			};
 		},
-		components: { PromptQuestion, Selection: PromptOption, FlowActionMemory },
+		components: { PromptQuestion, PromptOption, FlowMemory },
+		mixins: [ ValidationMixin ],
 		methods: {
 			addPromptQuestion () {
 				Vue.set(this.prompt, `text`, this.prompt.text || []);
@@ -107,8 +96,8 @@
 			addOption () {
 				this.prompt.options.push({
 					label: `Yes`,
-					action: {
-						type: `continue`,
+					uiMeta: {
+						actionType: `continue`,
 					},
 				});
 			},
@@ -116,7 +105,7 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 	.prompt {
 		margin: 1rem;

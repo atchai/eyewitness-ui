@@ -102,19 +102,10 @@
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'update-memory'">
-				<FlowActionMemory
-					:validateMemory="validateMemory"
-					:addMemory="addMemory"
-					:removeMemory="removeMemory"
-					:memorySetInput="memorySetInput"
-					:memorySetValue="memorySetValue"
-					:memorySetReference="memorySetReference"
-					:memoryUnsetValue="memoryUnsetValue"
-					:updateMemoryKey="updateMemoryKey"
+				<FlowMemory
 					:validation="validation"
-					:transformTypes="transformTypes"
-					:index="index"
 					:memory="action.memory"
+					:memoryParent="action"
 					:memoryKeys="memoryKeys"
 					:isPromptMemory="false"
 				/>
@@ -139,12 +130,13 @@
 <script>
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import Vue from 'vue';
+	import ValidationMixin from './validationMixin';
+	import FlowMemory from './FlowMemory';
 
 	export default {
 		props: [ `action`, `flows`, `flow`, `index`, `memoryKeys` ],
 		data: function () {
 			return {
-				validation: {},
 				types: {
 					'send-message': `Message`,
 					media: `Media`,
@@ -152,15 +144,6 @@
 					'change-flow': `Change Flow`,
 					'execute-hook': `Execute hook`,
 					'update-memory': `Update memory`,
-				},
-				transformTypes: {
-					preserve: `None`,
-					boolean: `Boolean (true/false)`,
-					time: `Time (converts to 24 hour clock)`,
-					integer: `Integer (whole number)`,
-					float: `Float (decimal number)`,
-					lowercase: `Lowercase`,
-					uppercase: `Uppercase`,
 				},
 				conditionalOperators: {
 					set: `has been set`,
@@ -173,6 +156,8 @@
 				},
 			};
 		},
+		components: { FlowMemory },
+		mixins: [ ValidationMixin ],
 		methods: {
 			showConditionalValueField (action) {
 				return action.uiMeta.conditional.matchType === `memory-key` &&
@@ -221,127 +206,6 @@
 					Vue.set(this.action.uiMeta, `conditional`,
 						{ matchType: `memory-key`, memoryKey: ``, operator: `set`, value: `` });
 				}
-			},
-			validate (eventOrElement) {
-				const inputEl = eventOrElement.target || eventOrElement;
-				const field = inputEl.dataset.field;
-				if (!inputEl.validity.valid) {
-					Vue.set(this.validation, field, inputEl.title);
-				}
-				else {
-					Vue.delete(this.validation, field);
-				}
-			},
-			validateMemory (memoryIndex, eventOrElement) {
-				const inputEl = eventOrElement.target || eventOrElement;
-				Vue.set(this.validation, `memory`, {});
-				if (!inputEl.validity.valid) {
-					Vue.set(this.validation.memory, `i${memoryIndex}`, inputEl.title);
-				}
-				else {
-					Vue.delete(this.validation.memory, `i${memoryIndex}`);
-				}
-			},
-
-			addMemory (index, isPromptMemory = false) {
-
-				const flowAction = this.flow.actions[index];
-				const memoryKey = `renameThisKey!`;
-				const memoryData = {
-					operation: `set`,
-					regexp: `(.+)`,
-					transform: `preserve`,
-					reference: ``,
-				};
-
-				if (isPromptMemory) {
-					if (typeof flowAction.prompt.memory === `undefined`) {
-						Vue.set(flowAction.prompt, `memory`, {});
-					}
-
-					Vue.set(flowAction.prompt.memory, memoryKey, memoryData);
-				}
-
-				else {
-					if (typeof flowAction.memory === `undefined`) {
-						Vue.set(flowAction, `memory`, {});
-					}
-
-					Vue.set(flowAction.memory, memoryKey, memoryData);
-				}
-
-			},
-
-			removeMemory (memoryKey, index, isPromptMemory = false) {
-
-				const flowAction = this.flow.actions[index];
-
-				if (isPromptMemory) {
-					Vue.delete(flowAction.prompt.memory, memoryKey);
-				}
-
-				else {
-					Vue.delete(flowAction.memory, memoryKey);
-				}
-
-			},
-
-			memorySetInput (memoryProperties, isPromptMemory = false) {
-
-				Vue.set(memoryProperties, `operation`, `set`);
-
-				Vue.delete(memoryProperties, `value`);
-				Vue.delete(memoryProperties, `reference`);
-				Vue.set(memoryProperties, `regexp`, `(.+)`);
-
-			},
-
-			memorySetValue (memoryProperties, isPromptMemory = false) {
-
-				Vue.set(memoryProperties, `operation`, `set`);
-
-				Vue.delete(memoryProperties, `regexp`);
-				Vue.delete(memoryProperties, `reference`);
-				Vue.set(memoryProperties, `value`, `true`);
-
-			},
-
-			memorySetReference (memoryProperties, isPromptMemory = false) {
-
-				Vue.set(memoryProperties, `operation`, `set`);
-
-				Vue.delete(memoryProperties, `regexp`);
-				Vue.delete(memoryProperties, `value`);
-				Vue.set(memoryProperties, `reference`, ``);
-
-			},
-
-			memoryUnsetValue (memoryProperties, isPromptMemory = false) {
-
-				Vue.set(memoryProperties, `operation`, `unset`);
-
-				Vue.delete(memoryProperties, `regexp`);
-				Vue.delete(memoryProperties, `value`);
-				Vue.delete(memoryProperties, `reference`);
-
-			},
-
-			updateMemoryKey (memoryProperties, newMemoryKey, event, isPromptMemory = false) {
-
-				const oldMemoryKey = event.target.dataset.oldKey;
-
-				if (isPromptMemory) {
-					// Vue data binding does not work for objects: add new key and remove old one.
-					Vue.set(this.action.prompt.memory, newMemoryKey, memoryProperties);
-					Vue.delete(this.action.prompt.memory, oldMemoryKey);
-				}
-
-				else {
-					// Vue data binding does not work for objects: add new key and remove old one.
-					Vue.set(this.action.memory, newMemoryKey, memoryProperties);
-					Vue.delete(this.action.memory, oldMemoryKey);
-				}
-
 			},
 
 			insertMemoryTemplate (action, memoryKey) {
