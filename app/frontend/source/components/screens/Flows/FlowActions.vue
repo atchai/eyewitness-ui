@@ -12,7 +12,7 @@
 			/>
 
 			<label><strong>Name: </strong>
-				<input type="text" v-model="flow.name" required data-field="name" pattern="[\w\/ ]+" size="30" title="Required, alphanumeric characters and spaces only"/>
+				<input type="text" v-model="flow.name" required data-field="name" pattern="[\w\/ :-]+" size="30" title="Required, alphanumeric characters, spaces, '-', and ':' only"/>
 			</label><br/>
 
 			<div>URI: <span class="uri">{{flow.uri}}</span></div>
@@ -238,6 +238,7 @@
 	.screen {
 		.actions {
 			@include user-select-off();
+			margin-top: 0.3rem;
 		}
 		@include scroll-vertical();
 	}

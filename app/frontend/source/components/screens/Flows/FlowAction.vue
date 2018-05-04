@@ -34,7 +34,7 @@
 		<div class="action-type-specifics">
 
 			<div v-if="action.uiMeta.stepType === 'send-message'">
-				<textarea class="message" v-model="action.message.text" required></textarea>
+				<textarea class="message" v-model="action.message.text" ref="message" required></textarea>
 				<details class="inline-help">
 					<summary>Available memory keys</summary>
 					<ul class="memory-keys">
@@ -83,7 +83,7 @@
 				<label>
 					<strong>Flow:</strong>
 					<select v-model="action.nextUri" required>
-						<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.uri}} - {{flowToLoad.name}}</option>
+						<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
 					</select>
 				</label>
 				<!--<select v-if="action.load._flow" v-model="action.load.step">
@@ -140,7 +140,6 @@
 				types: {
 					'send-message': `Message`,
 					media: `Media`,
-					prompt: `Prompt`,
 					'change-flow': `Change Flow`,
 					'execute-hook': `Execute hook`,
 					'update-memory': `Update memory`,
@@ -158,6 +157,9 @@
 		},
 		components: { FlowMemory },
 		mixins: [ ValidationMixin ],
+		mounted: function () {
+			this.$refs.message.focus();
+		},
 		methods: {
 			showConditionalValueField (action) {
 				return action.uiMeta.conditional.matchType === `memory-key` &&

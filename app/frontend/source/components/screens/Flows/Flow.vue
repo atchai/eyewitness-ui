@@ -5,22 +5,24 @@
 <template>
 
 	<div :class="[{ unsaved: !saved }, `flow`]">
-		<label>Name:
-		<input type="text" v-model="name" required @input="updatedFlow" data-field="name" pattern="[\w\/ ]+" size="30" title="Required, alphanumeric characters and spaces only"/>
-		</label><br/>
-		<p class="inline-error" v-if="validation.name">{{validation.name}}</p>
+		<div>
+			<label>Name:
+			<input type="text" v-model="name" required @input="updatedFlow" data-field="name" pattern="[\w\/ :-]+" size="30" title="Required, alphanumeric characters, spaces, '-', and ':' only"/>
+			</label><br/>
+			<p class="inline-error" v-if="validation.name">{{validation.name}}</p>
 
-		<label>Reference (optional):
-		<input type="text" v-model="reference" @input="updatedReference" data-field="reference" pattern="[\w\/]*" size="30" title="Alphanumeric characters and '/' only."/>
-		</label>
-		<p class="inline-error" v-if="validation.reference">{{validation.reference}}</p>
-		<p class="inline-error" v-if="validation.uniqueReference">{{validation.uniqueReference}}</p>
+			<label>Reference (optional):
+			<input type="text" v-model="reference" @input="updatedReference" data-field="reference" pattern="[\w\/-]*" size="30" title="Alphanumeric characters, '-' and '/' only."/>
+			</label>
+			<p class="inline-error" v-if="validation.reference">{{validation.reference}}</p>
+			<p class="inline-error" v-if="validation.uniqueReference">{{validation.uniqueReference}}</p>
 
-		<div>URI: <span class="uri">{{uri}}</span> <span class="badge" v-if="uri === `dynamic:///`">Starting Flow</span></div>
+			<div>URI: <span class="uri">{{uri}}</span> <span class="badge" v-if="uri === `dynamic:///`">Starting Flow</span></div>
 
-		<p>{{numActions}} actions
-			<router-link :to="`/flows/${flowId}`" v-show="saved">[Edit]</router-link>
-		</p>
+			<p>{{numActions}} actions
+				<router-link :to="`/flows/${flowId}`" v-show="saved">[Edit]</router-link>
+			</p>
+		</div>
 		<div class="actions">
 			<button @click="removeFlow()">Delete</button>
 			<button class="primary" @click="saveFlow()" :disabled="saved">Save</button>
@@ -155,6 +157,8 @@
 
 .flow {
 	padding: 2.00rem 2.00rem;
+	display: flex;
+	flex: 1;
 
 	.inline-error {
 		font-size: 0.8rem;
@@ -175,9 +179,20 @@
 		margin: 0.2em;
 	}
 
-	>.actions {
-		margin-top: 1.00rem;
-		text-align: right;
+	>div {
+		flex: 3;
+		width: 100%;
+
+		&.actions {
+			margin-right: 1.00rem;
+			margin-left: 1.00rem;
+			text-align: right;
+			flex: 1;
+		}
+
+		.steps {
+			text-align: center;
+		}
 	}
 
 	&.unsaved {

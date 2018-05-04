@@ -62,6 +62,15 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="nextFlow">
+			<label>
+				<strong>Next Flow (optional):</strong>
+				<select v-model="prompt.nextUri">
+					<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
+				</select>
+			</label>
+		</div>
 	</div>
 </template>
 
@@ -78,7 +87,7 @@
 			return {
 				promptTypes: {
 					open: `Open`,
-					// 'open-selection': `Open Selection`,
+					'open-selection': `Open Selection`,
 					'strict-selection': `Strict Selection`,
 				},
 				defaultRetryMessage: `Whoops! I didn't understand what you said.`,

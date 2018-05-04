@@ -126,7 +126,7 @@
 					operation: `set`,
 					regexp: `(.+)`,
 					transform: `preserve`,
-					reference: ``,
+					reference: null,
 				};
 
 				if (typeof memoryParent.memory === `undefined`) {
@@ -137,9 +137,9 @@
 
 				const memoryIndex = Object.keys(memoryParent.memory).length - 1;
 				setTimeout(() => {
-					this.validateMemory(memoryIndex, this.$refs.memoryKeys[memoryIndex]);
+					// this.validateMemory(memoryIndex, this.$refs.memoryKeys[memoryIndex]);
 					this.$refs.memoryKeys[memoryIndex].focus();
-				}, 500);
+				}, 200);
 
 			},
 			removeMemory (memoryKey, memory) {
@@ -148,7 +148,6 @@
 			updateMemoryKey (memoryProperties, newMemoryKey, event, memoryParent) {
 
 				const oldMemoryKey = event.target.dataset.oldKey;
-				console.log(`${oldMemoryKey} -> ${newMemoryKey}`);
 
 				// Vue data binding does not work for objects: add new key and remove old one.
 				Vue.set(memoryParent.memory, newMemoryKey, memoryProperties);

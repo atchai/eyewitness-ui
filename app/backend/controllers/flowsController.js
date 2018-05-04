@@ -62,6 +62,7 @@ module.exports = class FlowsController {
 		const flowId = String(data.flowId);
 		const name = String(data.name);
 		const uri = String(data.uri);
+		const nextUri = String(data.nextUri);
 		const interruptionsWhenAgent = String(data.interruptionsWhenAgent);
 		const interruptionsWhenSubject = String(data.interruptionsWhenSubject);
 
@@ -79,6 +80,7 @@ module.exports = class FlowsController {
 		// Update the record.
 		recFlow.name = name;
 		recFlow.uri = uri;
+		recFlow.nextUri = nextUri || null;
 
 		recFlow.prompt = (data.prompt && data.prompt.text && data.prompt.text.length) ? data.prompt : null;
 		if (recFlow.prompt) {
@@ -88,6 +90,14 @@ module.exports = class FlowsController {
 			}
 			else if (recFlow.prompt.uiMeta.answerType === `strict-selection`) {
 				recFlow.prompt.type = `options`;
+				recFlow.prompt.options.forEach(option => {
+					option.matches = {
+						[option.label]: `string`,
+					};
+				});
+			}
+			else if (recFlow.prompt.uiMeta.answerType === `open-selection`) {
+				recFlow.prompt.type = `basic`;
 				recFlow.prompt.options.forEach(option => {
 					option.matches = {
 						[option.label]: `string`,
