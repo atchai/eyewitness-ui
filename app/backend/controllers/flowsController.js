@@ -38,7 +38,7 @@ module.exports = class FlowsController {
 				name: recFlow.name,
 				uri: recFlow.uri,
 				type: recFlow.type,
-				nextUri: recFlow.nextUri,
+				nextUri: recFlow.nextUri === `null` ? null : recFlow.nextUri,
 				uiMeta: recFlow.uiMeta,
 				actions: recFlow.actions,
 				prompt: recFlow.prompt,

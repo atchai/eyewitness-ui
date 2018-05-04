@@ -177,33 +177,51 @@
 				}
 				else {
 					// select
-					const actions = this.flows[exportFlowId].actions;
-					let referencedFlowIds = [];
-					// find all flows referenced by load actions
-					referencedFlowIds = referencedFlowIds.concat(actions.filter(action => action.type === `load`)
-						.map(action => action.load._flow));
-					// find all flows referenced by prompts with load actions
-					referencedFlowIds = referencedFlowIds.concat(
-						actions.filter(action => action.type === `prompt`)
-							.map(action => action.prompt.selections)
-							.reduce((allSelections, selections) => allSelections.concat(selections), [])
-							.filter(selection => selection.action._flow)
-							.map(selection => selection.action._flow));
-					// remove any duplicates
-					referencedFlowIds = new Set(referencedFlowIds);
-					// remove current flow if present
-					referencedFlowIds.delete(exportFlowId);
-					// remove any flows already selected
-					referencedFlowIds = Array.from(referencedFlowIds).filter(flowId => !this.selectedExportFlows.includes(flowId));
+					let referencedFlowUris = [];
+					if (this.flows[exportFlowId].nextUri) {
+						referencedFlowUris.push(this.flows[exportFlowId].nextUri);
+					}
 
-					if (referencedFlowIds.length) {
-						let selectOthersMessage = `${referencedFlowIds.length} other flows are referenced from this flow:\n\n - `;
-						selectOthersMessage += referencedFlowIds.map(flowId => this.flows[flowId].name).join(`\n - `);
+					// find all flows referenced by load actions
+					const actions = this.flows[exportFlowId].actions;
+					referencedFlowUris = referencedFlowUris.concat(
+						actions.filter(action => action.nextUri).map(action => action.nextUri));
+
+					// find all flows referenced by prompts with load actions or a nextUri
+					const prompt = this.flows[exportFlowId].prompt;
+					if (prompt) {
+						referencedFlowUris = referencedFlowUris.concat(
+							prompt.options
+								.filter(option => option.nextUri)
+								.map(option => option.nextUri));
+						if (prompt.nextUri) {
+							referencedFlowUris.push(prompt.nextUri);
+						}
+					}
+
+					// remove any duplicates
+					referencedFlowUris = new Set(referencedFlowUris);
+					// remove current flow if present
+					referencedFlowUris.delete(this.flows[exportFlowId].uri);
+					// remove any flows already selected
+					referencedFlowUris = Array.from(referencedFlowUris)
+						.filter(flowUri => {
+							const referencedFlow = Object.values(this.flows).filter(flow => flow.uri === flowUri).pop();
+							return !this.selectedExportFlows.includes(referencedFlow.flowId);
+						});
+
+					if (referencedFlowUris.length) {
+						let selectOthersMessage = `${referencedFlowUris.length} other flows are referenced from this flow:\n\n - `;
+						selectOthersMessage += referencedFlowUris.map(flowUri => {
+							const referencedFlow = Object.values(this.flows).filter(flow => flow.uri === flowUri).pop();
+							return referencedFlow.name;
+						}).join(`\n - `);
 						selectOthersMessage += `\n\nSelect those also?`;
 						if (confirm(selectOthersMessage)) {
-							referencedFlowIds.forEach(flowId => {
-								this.selectedExportFlows.push(flowId);
-								this.selectExportFlow(flowId);
+							referencedFlowUris.forEach(flowUri => {
+								const referencedFlow = Object.values(this.flows).filter(flow => flow.uri === flowUri).pop();
+								this.selectedExportFlows.push(referencedFlow.flowId);
+								this.selectExportFlow(referencedFlow.flowId);
 							});
 						}
 					}
