@@ -107,6 +107,7 @@
 				Vue.delete(memoryProperties, `regexp`);
 				Vue.delete(memoryProperties, `value`);
 				Vue.set(memoryProperties, `reference`, ``);
+				Vue.set(memoryProperties, `required`, false);
 
 			},
 

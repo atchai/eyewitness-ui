@@ -158,7 +158,9 @@
 		components: { FlowMemory },
 		mixins: [ ValidationMixin ],
 		mounted: function () {
-			this.$refs.message.focus();
+			if (this.$refs.message) {
+				this.$refs.message.focus();
+			}
 		},
 		methods: {
 			showConditionalValueField (action) {

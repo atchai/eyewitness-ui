@@ -209,10 +209,14 @@ module.exports = class FlowsController {
 		// Make sure the client passed in safe values.
 		const flowId = String(data.flowId);
 
-		// Update the database.
-		await this.database.delete(`Flow`, flowId);
+		const recFlow = await this.database.get(`Flow`, { _id: flowId });
 
-		await this.reloadFlow(flowId);
+		if (recFlow) {
+			// Update the database.
+			await this.database.delete(`Flow`, flowId);
+
+			await this.reloadFlow(flowId);
+		}
 
 		return reply({ success: true });
 	}
