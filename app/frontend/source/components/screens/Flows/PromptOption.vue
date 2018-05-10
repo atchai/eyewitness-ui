@@ -16,7 +16,7 @@
 				<option v-for="(actionTypeName, actionTypeKey) in actionTypes" :value="actionTypeKey">{{actionTypeName}}</option>
 			</select>
 			<select v-if="option.uiMeta.actionType === `load` || option.uiMeta.actionType === `load-return`" v-model="option.nextUri" required>
-				<option v-for="(flowToLoad, flowId) in flows" :value="flowToLoad.uri">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
+				<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
 			</select>
 		</td>
 		<td>

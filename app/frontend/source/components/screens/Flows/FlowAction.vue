@@ -83,7 +83,7 @@
 				<label>
 					<strong>Flow:</strong>
 					<select v-model="action.nextUri" required>
-						<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
+						<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
 					</select>
 				</label>
 				<!--<select v-if="action.load._flow" v-model="action.load.step">

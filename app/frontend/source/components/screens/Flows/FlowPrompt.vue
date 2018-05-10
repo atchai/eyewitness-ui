@@ -67,7 +67,7 @@
 			<label>
 				<strong>Next Flow (optional):</strong>
 				<select v-model="prompt.nextUri">
-					<option v-for="(flowToLoad, flowId) in flows" v-if="flowToLoad.uri" :value="flowToLoad.uri">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
+					<option v-for="(flowToLoad, flowId) in flows" :value="flowId">{{flowToLoad.name}} - {{flowToLoad.uri}}</option>
 				</select>
 			</label>
 		</div>
