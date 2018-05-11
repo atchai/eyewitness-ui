@@ -10,5 +10,8 @@
 	"facebookPageId": "battabox",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-battabox.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "production/battabox/"
 	}
 }

@@ -15,6 +15,8 @@ const config = require(`config-ninja`).use(`eyewitness-ui`);
 
 const { mapListToDictionary } = require(`../modules/utilities`);
 
+AWS.config.update(config.amazonS3);
+
 module.exports = class FlowsController {
 
 	constructor (database) {

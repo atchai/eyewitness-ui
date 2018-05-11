@@ -10,5 +10,8 @@
 	"facebookPageId": "TheStarKenya",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-thestar.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "production/thestar/"
 	}
 }

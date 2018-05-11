@@ -9,5 +9,8 @@
 	},
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-sabc-staging.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "staging/sabc/"
 	}
 }

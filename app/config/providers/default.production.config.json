@@ -10,5 +10,8 @@
 	"facebookPageId": "<FB_PAGE_ID>",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot.<DOMAIN_NAME>"
+	},
+	"amazonS3": {
+		"keyPrefix": "<ENVIRONMENT>/<PROVIDER_ID>/"
 	}
 }
