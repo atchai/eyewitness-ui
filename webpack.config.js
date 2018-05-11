@@ -14,7 +14,7 @@ const env = process.env.NODE_ENV || `development`;
 const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
 const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(__dirname, `app`, `config`), {
-	localConfig: (localConfigName ? [ localConfigName ] : []),
+	localConfig: (loadProviderConfig ? [ localConfigName ] : [ `local` ]),
 	requireLocalConfig: loadProviderConfig,
 });
 
