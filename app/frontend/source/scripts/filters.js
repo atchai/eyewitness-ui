@@ -26,7 +26,7 @@ Vue.filter(`formatDateAsRelative`, (value) => {
  */
 Vue.filter(`enquiryType`, (value) => {
 	switch (value) {
-		case `submit a story`: return `-story-`;
+		case `submit a story`: case `submit a tip`: return `-story-`;
 		case `advertise`: return `-advertise-`;
 		case `other`: return `-other-`;
 		default: return ``;
