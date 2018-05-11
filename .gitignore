@@ -11,3 +11,4 @@ app/frontend/build/styles/*
 app/frontend/build/views/*
 !app/frontend/build/views/.gitkeep
 .idea
+app/config/local.config.json
