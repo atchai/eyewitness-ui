@@ -10,5 +10,8 @@
 	"facebookPageId": "SABCNewsOnline",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-sabc.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "production/sabc/"
 	}
 }

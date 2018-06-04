@@ -9,5 +9,8 @@
 	},
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-thestar-staging.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "staging/thestar/"
 	}
 }

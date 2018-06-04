@@ -38,5 +38,12 @@
 	"hippocampServer": {
 		"baseUrl": null,
 		"accessToken": "BO4AHX72iCGqQIbdbu62q08PQHOCmHoRPlkxkv4Y"
+	},
+	"amazonS3": {
+		"accessKeyId": "AKIAI7WVYMNHKZMWEBLQ",
+		"secretAccessKey": "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",
+		"region": "eu-west-1",
+		"bucketName": "eyewitness-attachments",
+		"keyPrefix": "production/demo/"
 	}
 }

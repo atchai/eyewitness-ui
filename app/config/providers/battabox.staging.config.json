@@ -9,5 +9,8 @@
 	},
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-battabox-staging.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "staging/battabox/"
 	}
 }

@@ -10,5 +10,8 @@
 	"facebookPageId": "266846387180351",
 	"hippocampServer": {
 		"baseUrl": "https://eyewitness-bot-demo.atchai.com"
+	},
+	"amazonS3": {
+		"keyPrefix": "production/demo/"
 	}
 }

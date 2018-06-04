@@ -2,5 +2,8 @@
 	"build": {
 		"webpackStats": "verbose",
 		"sourceMapMode": "cheap-module-eval-source-map"
+	},
+	"amazonS3": {
+		"keyPrefix": "staging/demo/"
 	}
 }

@@ -75,17 +75,18 @@ textarea {
  */
 
 button {
-	height: 3.00rem;
-	line-height: 3.00rem;
-	width: 11.00rem;
+	height: 2.50rem;
+	line-height: 2.50rem;
 	border-radius: 0.20rem;
+	padding: 0;
+	padding-left: 0.50rem;
+	padding-right: 0.50rem;
 	background: #B0B0B0;
 	color: white;
 	text-align: center;
-	font-size: 1.20rem;
+	font-size: 1.00rem;
 	border: 0;
-	padding: 0;
-	margin: 0 1.00rem;
+	margin: 0 0.50rem;
 	outline: 0;
 	cursor: pointer;
 	@include user-select-off();
@@ -96,6 +97,13 @@ button {
 		line-height: normal;
 		padding: 0.50rem 0.50rem;
 		border-radius: 0.50rem;
+	}
+
+	&.mini {
+		font-size: 0.80rem;
+		line-height: 0.50rem;
+		height: 2.00rem;
+		min-width: 6.00rem;
 	}
 
 	&.primary {
@@ -124,7 +132,40 @@ button {
 	&:last-child {
 		margin-right: 0;
 	}
+
+	&:disabled {
+		background-color: #ddd;
+	}
 }
+
+/*
+ * Saving.
+ */
+ .unsaved-warning {
+	 font-weight: bold;
+	 position: fixed;
+	 bottom: 0;
+	 left: 0;
+	 right: 1rem;
+	 background-color: #fed;
+	 padding: 0;
+	 padding-left: 2rem;
+	 padding-right: 1rem;
+	 display: flex;
+
+	 p {
+		 flex: 11;
+		 margin: 0.6rem;
+	 }
+
+	 .actions {
+		 flex: 1;
+		 margin-left: 0.5rem;
+		 margin-right: 0.5rem;
+		 margin-top: 0.3rem;
+		 margin-bottom: 0.3rem;
+	 }
+ }
 
 /*
  * Loader.
