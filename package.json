@@ -1,6 +1,6 @@
 {
  "name": "eyewitness-ui",
- "version": "2.0.0",
+ "version": "2.0.1",
  "private": true,
  "description": "User interface to allow admins to interact with their Eyewitness bot.",
  "main": "app/backend/main.js",
