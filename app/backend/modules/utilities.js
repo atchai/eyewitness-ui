@@ -23,7 +23,9 @@ function mapListToDictionary (list, keyField) {
 /*
  * Calls the given handler method to process the incoming socket event, and catches any resulting errors.
  */
-async function handleSocketEvent (socket, handler, data, reply) {
+async function handleSocketEvent (socket, handler, _otherProperties, data, reply) {
+
+	const otherProperties = _otherProperties || {};
 
 	try {
 
@@ -32,12 +34,12 @@ async function handleSocketEvent (socket, handler, data, reply) {
 		}
 
 		// Call the handler function and pass down the scope of its controller.
-		await handler.call(this, socket, data, reply);
+		await handler.call(this, socket, data, reply, otherProperties);
 
 	}
 	catch (err) {
 		console.error(`Socket Handler Error:\n`, err.stack); // eslint-disable-line no-console
-		return reply({ success: false, error: err.message });
+		reply({ success: false, error: err.message });
 	}
 
 }
