@@ -29,7 +29,69 @@
 			</div>
 		</div>
 
-		<div id="message-list" class="messages" v-scroll="onScroll">
+		<nav class="user-tab-bar">
+			<ul>
+				<li class="tab-item"><a :class="{ active: userTab === `messages` }" @click="showUserMessages()"><span>Messages</span></a></li>
+				<li class="tab-item"><a :class="{ active: userTab === `settings` }" @click="showUserSettings()"><span>Settings</span></a></li>
+			</ul>
+		</nav>
+
+		<div class="user-settings" v-show="userTab === `settings`">
+			<h3>Scheduled flows</h3>
+			<p v-show="Object.keys(scheduledFlows).length === 0">No flows have been scheduled.</p>
+			<table v-show="Object.keys(scheduledFlows).length">
+				<thead>
+					<tr>
+						<th>Flow</th>
+						<th>Runs every</th>
+						<th>Run time</th>
+						<th>Next run</th>
+						<th>Ignore days</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="scheduledFlow in scheduledFlows" :class="{ unsaved: scheduledFlow.unsaved }">
+						<td>
+							<label>Flow: <select v-model="scheduledFlow.flow._id" @change="changedScheduledFlow(scheduledFlow)">
+								<option v-for="(flowToSchedule, flowId) in schedulableFlows" :value="flowId">{{flowToSchedule.name}}</option>
+							</select></label>
+						</td>
+						<td><input type="text" v-model="scheduledFlow.runEvery" size="8" @input="changedScheduledFlow(scheduledFlow)"/></td>
+						<td><input type="text" v-model="scheduledFlow.runTime" placeholder="HH:MM" size="5" @input="changedScheduledFlow(scheduledFlow)"/></td>
+						<td><input type="text" v-model="scheduledFlow.nextRunDate" size="11" @input="changedScheduledFlow(scheduledFlow)"/></td>
+						<td>
+							<div v-for="(isoDay, dayName) in days" :key="dayName"><label>
+								<input type="checkbox" @change="toggleIgnoreDay(isoDay, scheduledFlow)"
+								 :checked="scheduledFlow.ignoreDays.includes(isoDay)"
+								 :value="isoDay" /> {{dayName}} </label></div>
+						</td>
+						<td class="save-info">
+							<p v-if="scheduledFlow.unsaved">There are unsaved changes</p>
+							<button class="mini primary" :disabled="!scheduledFlow.unsaved" @click="saveScheduledFlow(scheduledFlow)">Save</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h3>Memory</h3>
+			<table>
+				<thead>
+					<tr>
+						<th>Key</th>
+						<th>Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(memoryValue, memoryKey) in userMemory">
+						<td>{{memoryKey}}</td>
+						<td>{{memoryValue}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="message-list" class="messages" v-scroll="onScroll" v-show="userTab === `messages`">
 			<div class="top-ruler">
 				<div class="rule"></div>
 				<div class="label">
@@ -80,6 +142,7 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 	import Message from './Message';
+	import Vue from 'vue';
 
 	export default {
 		props: [`botEnabled`],
@@ -90,6 +153,19 @@
 				lastScrollTop: 0,
 				loadedAllMessages: false,
 				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
+				scheduledFlows: [],
+				schedulableFlows: {},
+				userMemory: {},
+				userTab: `messages`,
+				days: {
+					'Monday': 1,
+					'Tuesday': 2,
+					'Wednesday': 3,
+					'Thursday': 4,
+					'Friday': 5,
+					'Saturday': 6,
+					'Sunday': 7,
+				},
 			};
 		},
 		components: { Message },
@@ -118,6 +194,17 @@
 
 		},
 		methods: {
+
+			fetchUserSettings () {
+				getSocket().emit(
+					`messaging/pull-user-settings`,
+					{ userId: this.$route.params.itemId },
+					resData => {
+						this.$data.scheduledFlows = resData.scheduledFlows;
+						this.$data.userMemory = resData.userMemory;
+						this.$data.schedulableFlows = resData.flows;
+					});
+			},
 
 			fetchComponentData (loadOlderMessages = false) {
 
@@ -169,6 +256,40 @@
 
 				});
 
+			},
+
+			saveScheduledFlow (scheduledFlow) {
+				getSocket().emit(
+					`schedules/update`,
+					{ scheduled: scheduledFlow },
+					data => {
+						if (!data || !data.success) {
+							alert(`There was a problem updating the scheduled flow.`)
+						} else {
+							Vue.delete(scheduledFlow, `unsaved`);
+						}
+					});
+			},
+
+			changedScheduledFlow (scheduledFlow) {
+				Vue.set(scheduledFlow, `unsaved`, true);
+			},
+
+			toggleIgnoreDay (isoDayString, scheduledFlow) {
+				let ignoreDays = scheduledFlow.ignoreDays;
+				if (!Array.isArray(ignoreDays)) {
+					Vue.set(scheduledFlow, `ignoreDays`, []);
+					ignoreDays = scheduledFlow.ignoreDays;
+				}
+				const isoDay = Number(isoDayString);
+				if (ignoreDays.includes(isoDay)) {
+					ignoreDays.splice(ignoreDays.indexOf(isoDay), 1); // remove
+				}
+				else {
+					ignoreDays.push(isoDay); // add
+				}
+				// now mark scheduled flow as updated
+				this.changedScheduledFlow(scheduledFlow);
 			},
 
 			setBotEnabledState (itemId, oldState) {
@@ -325,12 +446,29 @@
 
 			},
 
+			showUserSettings () {
+				this.$data.userTab = "settings";
+			},
+
+			showUserMessages () {
+				this.$data.userTab = "messages";
+			},
+
+		},
+		beforeRouteLeave(to, from, next) {
+			if (Object.values(this.scheduledFlows).filter(c => c.unsaved).length === 0
+				|| window.confirm(`Do you really want to leave? You have unsaved changes!`)) {
+				next();
+			} else {
+				next(false);
+			}
 		},
 		watch: {
 
 			$route: {
 				handler: function () {
 					this.fetchComponentData(false);
+					this.fetchUserSettings();
 					this.$nextTick(this.selectTextInput);
 				},
 				immediate: true,
@@ -371,6 +509,48 @@
 		flex-direction: column;
 		flex: 1;
 		min-width: 0;
+
+		>nav.user-tab-bar {
+			flex-shrink: 0;
+			height: 2.5rem;
+			background: $panel-background-color;
+			border-bottom: 2px solid $panel-border-color;
+			@include user-select-off();
+
+			ul {
+				display: flex;
+				flex: 1;
+				margin: 0;
+			}
+
+			.tab-item {
+				display: flex;
+				flex: 1;
+				height: 2.5rem;
+				text-align: center;
+				border-right: 1px solid $panel-border-color;
+
+				a {
+					display: flex;
+					flex: 1;
+					text-align: center;
+					text-decoration: none;
+					color: $panel-grey-text;
+					text-transform: none;
+					letter-spacing: 1px;
+					cursor: pointer;
+
+					&.active {
+						font-weight: bold;
+					}
+
+					>span {
+						margin: auto;
+					}
+				}
+			}
+
+		}
 
 		>.toolbar {
 			display: flex;
@@ -448,6 +628,37 @@
 						&.closed {
 							cursor: not-allowed;
 							filter: none !important;
+						}
+					}
+				}
+			}
+		}
+
+		>.user-settings {
+			background-color: #fafafa;
+			padding: 1rem;
+			flex: 1;
+			@include scroll-vertical();
+
+			table {
+				background-color: #fff;
+				border-collapse: collapse;
+				border: 1px solid #888;
+
+				tr {
+					&.unsaved {
+						background-color: #fed;
+					}
+
+					th, td {
+						border: 1px solid #bbb;
+						padding: 0.5rem;
+						text-align: center;
+
+						&.save-info {
+							font-weight: bold;
+							font-size: 0.8rem;
+							width: 8rem;
 						}
 					}
 				}
