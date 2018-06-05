@@ -22,9 +22,9 @@
 		</nav>
 
 		<aside>
-			<div class="item provider">
+			<!-- <div class="item provider">
 				<a href="/logout"><span>Logout</span></a>
-			</div>
+			</div> -->
 			<div class="item logo" :style="`background-image: url('${providerPhotoUrl}');`"></div>
 		</aside>
 
