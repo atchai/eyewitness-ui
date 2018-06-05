@@ -185,29 +185,6 @@ module.exports = class EventsController {
 	}
 
 	/*
-	 * Prepares welcome message data for the frontend and maps the list to a dictionary.
-	 */
-	async prepareWelcomeMessages (recWelcomeMessages) {
-
-		const welcomeMessages = [];
-
-		for (let index = 0; index < recWelcomeMessages.length; index++) {
-			const recWelcomeMessage = recWelcomeMessages[index];
-			const welcomeMessage = { welcomeMessageId: recWelcomeMessage._id.toString() };
-
-			// Full-fat welcome messages contain all properties.
-			welcomeMessage.isFullFat = true;
-			welcomeMessage.text = recWelcomeMessage.text;
-			welcomeMessage.weight = recWelcomeMessage.weight;
-
-			welcomeMessages.push(welcomeMessage);
-		}
-
-		return mapListToDictionary(welcomeMessages, `welcomeMessageId`);
-
-	}
-
-	/*
 	 * Returns multiple items from the given model.
 	 */
 	async getItems (modelName, sortField = null, sortDirection = null, conditions = {}, hardLimit = false) {
@@ -466,74 +443,114 @@ module.exports = class EventsController {
 	}
 
 	/*
-	 * Returns the data for the settings tab.
+	 * Returns the tab data for the settings tab.
 	 */
-	async settingsGetTabData (socket, data, reply) {
-
-		const records = await this.getItems(`WelcomeMessage`, `weight`, `asc`);
-		const welcomeMessages = await this.prepareWelcomeMessages(records);
-
-		return reply({ success: true, welcomeMessages });
-
+	async settingsPullTabData (socket, data, reply) {
+		const { flows, globalSettings, quoteSets } = await this.getDataForSettingsTab(data);
+		return reply({ success: true, flows, globalSettings, quoteSets });
 	}
 
 	/*
-	 * Allow the bot to be turned on/off for all users.
+	 * Updates the settings.
 	 */
-	async settingsSetBotEnabled (socket, data, reply) {
+	async settingsUpdate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const isBotEnabled = Boolean(data.enabled);
+		const _id = String(data._id);
+		const _defaultFlow = data._defaultFlow ? String(data._defaultFlow) : null;
+		const _stopFlow = data._stopFlow ? String(data._stopFlow) : null;
+		const _helpFlow = data._helpFlow ? String(data._helpFlow) : null;
+		const _feedbackFlow = data._feedbackFlow ? String(data._feedbackFlow) : null;
 
 		// Update the database.
-		const recSettings = await this.database.find(`Settings`, {})[0];
-		await this.database.update(`Settings`, recSettings, { isBotEnabled });
-
-		return reply({ success: true });
-
-	}
-
-	/*
-	 * Upserts a welcome message.
-	 */
-	async settingsWelcomeMessageUpdate (socket, data, reply) {
-
-		// Make sure the client passed in safe values.
-		const welcomeMessageId = String(data.welcomeMessageId);
-		const text = String(data.text);
-		const weight = Number(data.weight);
-
-		// Get the welcome message to update.
-		let recWelcomeMessage = await this.database.get(`WelcomeMessage`, { _id: welcomeMessageId });
-
-		// If no welcome message exists lets create a new one.
-		if (!recWelcomeMessage) {
-			recWelcomeMessage = {
-				_id: welcomeMessageId,
-			};
+		let recGlobalSettings = await this.database.get(`GlobalSettings`, { },	{ });
+		if (!recGlobalSettings) {
+			recGlobalSettings = { _id };
 		}
 
-		// Update the record.
-		recWelcomeMessage.text = text;
-		recWelcomeMessage.weight = weight;
-
-		// Update the database.
-		await this.database.update(`WelcomeMessage`, welcomeMessageId, recWelcomeMessage, { upsert: true });
+		await this.database.update(`GlobalSettings`, recGlobalSettings,
+			{ _defaultFlow, _stopFlow, _helpFlow, _feedbackFlow },
+			{ upsert: true });
 
 		return reply({ success: true });
 
 	}
 
 	/*
-	 * Upserts a welcome message.
+	 *
 	 */
-	async settingsWelcomeMessageRemove (socket, data, reply) {
+	flattenMap (map, prependString = ``) {
+
+		const prepend = prependString ? `${prependString}/` : ``;
+
+		return Object.keys(map).reduce((newMap, key) => {
+			const value = map[key];
+
+			if (typeof value === `object` && value !== null && typeof value._bsontype === `undefined`) {
+				Object.assign(newMap, this.flattenMap(value, `${prepend}${key}`));
+			}
+			else {
+				newMap[`${prepend}${key}`] = value;
+			}
+
+			return newMap;
+		}, {});
+
+	}
+
+	/*
+	 * Returns user settings: scheduled flows, memory, etc
+	 */
+	async pullUserSettings (socket, data, reply) {
+		const recScheduledTasks = await this.database.find(`Task`,
+			{ _user: data.userId }, {});
+
+		const recFlows = await this.database.find(`Flow`, { }, { });
+		const flows = mapListToDictionary(recFlows, `_id`);
+
+		const scheduledFlows = recScheduledTasks.map(recTask => Object({
+			taskId: recTask.hash,
+			flow: flows[recTask.actions[0].memory[`scheduled/_flow`].value] || {},
+			runEvery: recTask.runEvery,
+			runTime: recTask.runTime,
+			nextRunDate: moment(recTask.nextRunDate).format(`DD/MM/YYYY`),
+			ignoreDays: recTask.ignoreDays,
+		}));
+
+		const recUser = await this.database.get(`User`, { _id: data.userId });
+		const userMemory = this.flattenMap(recUser.appData);
+		// remove first name for privacy reasons
+		delete userMemory.firstName;
+		return reply({
+			success: true,
+			scheduledFlows: mapListToDictionary(scheduledFlows, `taskId`),
+			userMemory,
+			flows,
+		});
+	}
+
+	async scheduleUpdate (socket, data, reply) {
 
 		// Make sure the client passed in safe values.
-		const welcomeMessageId = String(data.welcomeMessageId);
+		const taskId = String(data.scheduled.taskId);
+		const flowId = String(data.scheduled.flow._id);
+		const runEvery = String(data.scheduled.runEvery);
+		const runTime = String(data.scheduled.runTime);
+		const nextRunDate = moment(`${data.scheduled.runTime} ${data.scheduled.nextRunDate}`, `HH:mm DD/MM/YYYY`);
+		const ignoreDays = data.scheduled.ignoreDays;
+
+		// Get the scheduled task to update.
+		const recScheduledTask = await this.database.get(`Task`, { hash: taskId });
+
+		// Update the record.
+		recScheduledTask.actions[0].memory[`scheduled/_flow`].value = flowId;
+		recScheduledTask.runEvery = runEvery;
+		recScheduledTask.runTime = runTime;
+		recScheduledTask.nextRunDate = nextRunDate.toDate();
+		recScheduledTask.ignoreDays = ignoreDays;
 
 		// Update the database.
-		await this.database.delete(`WelcomeMessage`, welcomeMessageId);
+		await this.database.update(`Task`, recScheduledTask._id, recScheduledTask, { upsert: true });
 
 		return reply({ success: true });
 

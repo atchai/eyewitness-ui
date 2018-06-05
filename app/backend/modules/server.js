@@ -83,6 +83,15 @@ function setupWebSocketServer (app, database) {
 			`messaging/thread/send-message`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSendMessage)
 		);
+		socket.on(
+			`messaging/pull-user-settings`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.pullUserSettings)
+		);
+
+		socket.on(
+			`schedules/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.scheduleUpdate)
+		);
 
 		socket.on(
 			`stories/get-tab-data`,
@@ -123,16 +132,12 @@ function setupWebSocketServer (app, database) {
 		);
 
 		socket.on(
-			`settings/set-bot-enabled`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsSetBotEnabled)
+			`settings/pull-tab-data`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData)
 		);
 		socket.on(
-			`settings/welcome-message/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsWelcomeMessageUpdate)
-		);
-		socket.on(
-			`settings/welcome-message/remove`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsWelcomeMessageRemove)
+			`settings/update`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsUpdate)
 		);
 
 	});
