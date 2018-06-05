@@ -113,7 +113,10 @@
 						this.$store.commit(`update-flows`, { data: resData.flows });
 						this.$store.commit(`update-global-settings`, { data: resData.globalSettings || { _id: new ObjectId().toString() } });
 
-						this.$watch('globalSettings', () => Vue.set(this, `saved`, false), { deep: true });
+						// Add the watcher on the next tick so we give the store chance to update without triggering immediately.
+						setTimeout(() => {
+							this.$watch('globalSettings', () => Vue.set(this, `saved`, false), { deep: true });
+						}, 0);
 					}
 				);
 			},
