@@ -57,87 +57,89 @@ function setupWebSocketServer (app, database) {
 
 		socket.on(
 			`messaging/get-threads`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreads)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingGetThreads, null)
 		);
 		socket.on(
 			`messaging/thread/get-info`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetInfo)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetInfo, null)
 		);
 		socket.on(
 			`messaging/thread/get-messages`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetMessages)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetMessages, null)
 		);
 		socket.on(
 			`messaging/thread/set-bot-enabled`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetBotEnabled)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetBotEnabled, null)
 		);
 		socket.on(
 			`messaging/thread/set-state`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetState)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetState, null)
 		);
 		socket.on(
 			`messaging/thread/set-admin-read-date`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetAdminReadDate)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetAdminReadDate, null)
 		);
 		socket.on(
 			`messaging/thread/send-message`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSendMessage)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSendMessage, null)
 		);
 		socket.on(
 			`messaging/pull-user-settings`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.pullUserSettings)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.pullUserSettings, null)
 		);
 
 		socket.on(
 			`schedules/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.scheduleUpdate)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.scheduleUpdate, null)
 		);
 
 		socket.on(
 			`stories/get-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesGetTabData)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesGetTabData, null)
 		);
 		socket.on(
 			`stories/set-story-priority`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPriority)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPriority, null)
 		);
 		socket.on(
 			`stories/set-story-published`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPublished)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.storiesSetStoryPublished, null)
 		);
 
 		socket.on(
 			`settings/get-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsGetTabData)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsGetTabData, null)
 		);
 		socket.on(
 			`flows/pull-tab-data`,
-			handleSocketEvent.bind(flowsController, socket, flowsController.flowsPullTabData)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowsPullTabData, null)
 		);
 		socket.on(
 			`flows/update`,
-			handleSocketEvent.bind(flowsController, socket, flowsController.flowInsertOrUpdate)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowInsertOrUpdate, null)
 		);
 		socket.on(
 			`flows/remove`,
-			handleSocketEvent.bind(flowsController, socket, flowsController.flowRemove)
+			handleSocketEvent.bind(flowsController, socket, flowsController.flowRemove, null)
 		);
 		socket.on(
 			`flows/upload-image`,
-			handleSocketEvent.bind(flowsController, socket, flowsController.uploadImage)
+			handleSocketEvent.bind(flowsController, socket, flowsController.uploadImage, null)
 		);
 		socket.on(
 			`flows/delete-image`,
-			handleSocketEvent.bind(flowsController, socket, flowsController.deleteImage)
+			handleSocketEvent.bind(flowsController, socket, flowsController.deleteImage, null)
 		);
 
 		socket.on(
 			`settings/pull-tab-data`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsPullTabData, {
+				flowsController,
+			})
 		);
 		socket.on(
 			`settings/update`,
-			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsUpdate)
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.settingsUpdate, null)
 		);
 
 	});

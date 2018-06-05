@@ -443,10 +443,25 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Amalgamates the data for the settings tab.
+	 */
+	async getDataForSettingsTab (data, flowsController) {
+		const { flows } = await flowsController.getDataForFlowsTab(data);
+
+		const recGlobalSettings = await this.database.get(`GlobalSettings`, {}, {});
+
+		return {
+			globalSettings: recGlobalSettings,
+			flows,
+		};
+	}
+
+	/*
 	 * Returns the tab data for the settings tab.
 	 */
-	async settingsPullTabData (socket, data, reply) {
-		const { flows, globalSettings, quoteSets } = await this.getDataForSettingsTab(data);
+	async settingsPullTabData (socket, data, reply, otherProperties) {
+		const { flowsController } = otherProperties;
+		const { flows, globalSettings, quoteSets } = await this.getDataForSettingsTab(data, flowsController);
 		return reply({ success: true, flows, globalSettings, quoteSets });
 	}
 
