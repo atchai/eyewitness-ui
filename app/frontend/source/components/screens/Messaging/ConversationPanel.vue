@@ -113,7 +113,7 @@
 			/>
 		</div>
 
-		<div class="composer">
+		<div class="composer" v-show="userTab === `messages`">
 			<div class="image-container" @click="selectTextInput">
 				<div class="image" :style="`background-image: url('${providerPhotoUrl}');`"></div>
 			</div>
