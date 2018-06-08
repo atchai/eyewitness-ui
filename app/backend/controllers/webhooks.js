@@ -61,6 +61,7 @@ module.exports = class WebhooksController {
 			},
 			memory: {
 				key: memory.key,
+				operation: memory.operation,
 				newValue: memory.newValue,
 			},
 		});
