@@ -215,6 +215,7 @@ function setupServerRoutes (app, socketServer) {
 
 	const ctrlWebhooks = new WebhooksController(socketServer);
 	app.post(`/webhooks/new-message`, ctrlWebhooks.newMessage.bind(ctrlWebhooks));
+	app.post(`/webhooks/memory-change`, ctrlWebhooks.memoryChange.bind(ctrlWebhooks));
 
 	const ctrlHome = new HomeController();
 	app.get(`*`, ctrlHome.renderHomePage.bind(ctrlHome));

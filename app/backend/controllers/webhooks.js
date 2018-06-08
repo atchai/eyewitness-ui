@@ -46,4 +46,29 @@ module.exports = class WebhooksController {
 
 	}
 
+	/*
+	 * Emits memory changes to the client.
+ 	 */
+	memoryChange (req, res) {
+
+		const userId = req.body.userId;
+		const memory = req.body.memory;
+
+		// Alert all clients to this incoming message.
+		this.socketServer.emit(`messaging/thread/memory-change`, {
+			thread: {
+				itemId: userId,
+			},
+			memory: {
+				key: memory.key,
+				newValue: memory.newValue,
+			},
+		});
+
+		return res.json({
+			success: true,
+		});
+
+	}
+
 };
