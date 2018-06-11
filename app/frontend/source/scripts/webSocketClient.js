@@ -147,8 +147,8 @@ function setupWebSocketClient (store, router) {
 
 	socket = socketClient.connect(process.env.SERVER_URI);
 
-	socket.on(`messaging/thread/new-message`, handleNewMessages.bind(null, store, router));
-	socket.on(`messaging/thread/memory-change`, handleMemoryChanges.bind(null, store, router));
+	socket.on(`messaging/thread/new-message`, data => handleNewMessages(store, router, data));
+	socket.on(`messaging/thread/memory-change`, data => handleMemoryChanges(store, router, data));
 
 	return socket;
 
