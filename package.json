@@ -113,7 +113,7 @@
   }
  },
  "engines": {
-  "node": ">=8"
+  "node": ">=10"
  },
  "browserslist": [
   "last 2 versions",
