@@ -87,10 +87,41 @@ function handleNewMessages (store, router, data) {
 
 }
 
+/*
+ * Handles memory changes pushed to the frontend from the backend.
+ */
+function handleMemoryChanges (store, router, data) {
 
-			sortDirection: `desc`,
+	const threadId = data.thread.itemId;
+
+	// If we have not spoken to this user before we must ask the backend for the full thread data.
+	const hasThread = ensureFullThread(store, threadId);
+	if (!hasThread) { return; }
+
+	const { key, operation, newValue } = data.memory;
+	const keyFormatted = key.replace(/^appData\./i, ``);
+
+	if (operation === `set`) {
+
+		const action = (store.getters.hasBotMemory(keyFormatted) ? `update-bot-memory` : `add-bot-memory`);
+
+		store.commit(action, {
+			key: keyFormatted,
+			data: newValue,
 		});
 
+	}
+	else {
+
+		store.commit(`remove-bot-memory`, {
+			key: keyFormatted,
+		});
+
+	}
+
+}
+
+/*
  * Connect to the server and setup event listeners.
  */
 function setupWebSocketClient (store, router) {

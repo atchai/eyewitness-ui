@@ -44,6 +44,8 @@ export default new Vuex.Store({
 		'remove-message': (state, payload) => removeStorePropertyItem(state, `messages`, payload),
 		'remove-all-messages': (state) => state.messages = {},
 
+		'add-bot-memory': (state, payload) => addStorePropertyItem(state, `botMemories`, payload),
+		'add-bot-memories': (state, payload) => addStorePropertyItems(state, `botMemories`, payload),
 		'update-bot-memory': (state, payload) => updateStorePropertyItem(state, `botMemories`, payload),
 		'update-bot-memories': (state, payload) => updateStoreProperty(state, `botMemories`, payload),
 		'remove-bot-memory': (state, payload) => removeStorePropertyItem(state, `botMemories`, payload),
@@ -65,6 +67,7 @@ export default new Vuex.Store({
 		hasThread: state => threadId => Boolean(state.threads[threadId]),
 		threadSet: state => Object.values(state.threads),
 		messageSet: state => Object.values(state.messages),
+		hasBotMemory: state => memoryKey => Boolean(state.botMemories[memoryKey]),
 		botMemoriesSet: state => Object.entries(state.botMemories), // Must include the key.
 		storySet: state => Object.values(state.stories),
 		flowsSet: state => Object.values(state.flows),
