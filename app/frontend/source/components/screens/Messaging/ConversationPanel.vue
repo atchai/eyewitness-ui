@@ -358,6 +358,15 @@
 					},
 				});
 
+				// Update the bot memory property.
+				const hasConversationStateProperty = this.$store.getters.hasBotMemory(`conversationState`);
+				const botMemoryAction = (hasConversationStateProperty ? `update-bot-memory` : `add-bot-memory`);
+
+				this.$store.commit(botMemoryAction, {
+					key: `conversationState`,
+					data: newState,
+				});
+
 				// Update the thread state.
 				getSocket().emit(
 					`messaging/thread/set-state`,
