@@ -229,8 +229,6 @@
 						breakPointMessageId = $messages[0].getAttribute(`data-item-id`);
 					}
 
-					console.log(`threadId`, threadId);
-
 					// Messages.
 					getSocket().emit(
 						`messaging/thread/get-messages`,
