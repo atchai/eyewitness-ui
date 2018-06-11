@@ -83,7 +83,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(memoryValue, memoryKey) in userMemory">
+					<tr v-for="([ memoryKey, memoryValue ]) in botMemoriesSet">
 						<td>{{memoryKey}}</td>
 						<td>{{memoryValue}}</td>
 					</tr>
@@ -154,7 +154,6 @@
 				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
 				scheduledFlows: [],
 				schedulableFlows: {},
-				userMemory: {},
 				userTab: `messages`,
 				days: {
 					'Monday': 1,
@@ -172,6 +171,7 @@
 
 			...mapGetters([
 				`messageSet`,
+				`botMemoriesSet`,
 			]),
 
 			thread () { return this.$store.state.threads[this.$route.params.itemId] || {}; },
@@ -195,14 +195,19 @@
 		methods: {
 
 			fetchUserSettings () {
+
+				const itemId = this.$route.params.itemId;
+
 				getSocket().emit(
 					`messaging/pull-user-settings`,
-					{ userId: this.$route.params.itemId },
+					{ userId: itemId },
 					resData => {
+
 						this.$data.scheduledFlows = resData.scheduledFlows;
-						this.$data.userMemory = resData.userMemory;
 						this.$data.schedulableFlows = resData.flows;
+
 					});
+
 			},
 
 			fetchComponentData (loadOlderMessages = false) {
@@ -214,6 +219,7 @@
 						return;
 					}
 
+					const threadId = this.$route.params.itemId;
 					let breakPointMessageId;
 
 					if (loadOlderMessages) {
@@ -223,9 +229,12 @@
 						breakPointMessageId = $messages[0].getAttribute(`data-item-id`);
 					}
 
+					console.log(`threadId`, threadId);
+
+					// Messages.
 					getSocket().emit(
 						`messaging/thread/get-messages`,
-						{ threadId: this.$route.params.itemId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
+						{ threadId, breakPointMessageId, pageInitialSize: APP_CONFIG.pageInitialSize },
 						resData => {
 
 							setLoadingFinished(this);
@@ -253,6 +262,26 @@
 							}
 
 							resolve();
+
+						}
+					);
+
+					// Bot memories.
+					getSocket().emit(
+						`messaging/thread/get-bot-memories`,
+						{ threadId },
+						resData => {
+
+							if (!resData || !resData.success) {
+								return;
+							}
+
+							this.$store.commit(`update-bot-memories`, {
+								// keyField: `key`,
+								data: resData.botMemories,
+								// sortField: `key`,
+								// sortDirection: `desc`,
+							});
 
 						}
 					);
@@ -503,6 +532,7 @@
 		},
 		beforeDestroy () {
 			this.$store.commit(`remove-all-messages`);
+			this.$store.commit(`remove-all-bot-memories`);
 		},
 	};
 
