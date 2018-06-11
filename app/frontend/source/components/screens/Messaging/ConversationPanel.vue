@@ -136,7 +136,6 @@
 
 <script>
 
-	import ObjectId from 'bson-objectid';
 	import moment from 'moment';
 	import { mapGetters } from 'vuex';
 	import { getSocket } from '../../../scripts/webSocketClient';
@@ -145,7 +144,7 @@
 	import Vue from 'vue';
 
 	export default {
-		props: [`botEnabled`],
+		props: [ `botEnabled` ],
 		data: function () {
 			return {
 				loadingState: 0,
@@ -210,7 +209,10 @@
 
 				return new Promise((resolve) => {
 
-					if (!setLoadingStarted(this, loadOlderMessages, true)) { return resolve(); }
+					if (!setLoadingStarted(this, loadOlderMessages, true)) {
+						resolve();
+						return;
+					}
 
 					let breakPointMessageId;
 
@@ -230,7 +232,8 @@
 
 							if (!resData || !resData.success) {
 								alert(`There was a problem loading the thread's messages.`);
-								return resolve();
+								resolve();
+								return;
 							}
 
 							// Replace all or update some of the messages.
@@ -249,7 +252,7 @@
 								this.markAsReadByAdmin();
 							}
 
-							return resolve();
+							resolve();
 
 						}
 					);
@@ -264,8 +267,9 @@
 					{ scheduled: scheduledFlow },
 					data => {
 						if (!data || !data.success) {
-							alert(`There was a problem updating the scheduled flow.`)
-						} else {
+							alert(`There was a problem updating the scheduled flow.`);
+						}
+						else {
 							Vue.delete(scheduledFlow, `unsaved`);
 						}
 					});
@@ -367,13 +371,12 @@
 				// Update the thread state in the UI.
 				this.$store.commit(`update-thread`, {
 					key: itemId,
-					dataFunction: thread => {
-						return {
+					dataFunction: thread =>
+						Object({
 							...thread,
 							conversationState: `open`,
 							botEnabled: false,
-						};
-					},
+						}),
 				});
 
 				// Send the message (also disables the bot and opens the conversation).
@@ -447,20 +450,23 @@
 			},
 
 			showUserSettings () {
-				this.$data.userTab = "settings";
+				this.$data.userTab = `settings`;
 			},
 
 			showUserMessages () {
-				this.$data.userTab = "messages";
+				this.$data.userTab = `messages`;
 			},
 
 		},
-		beforeRouteLeave(to, from, next) {
-			if (Object.values(this.scheduledFlows).filter(c => c.unsaved).length === 0
-				|| window.confirm(`Do you really want to leave? You have unsaved changes!`)) {
-				next();
-			} else {
-				next(false);
+		beforeRouteLeave (to, from, next) {
+			if (
+				Object.values(this.scheduledFlows).filter(flow => flow.unsaved).length === 0 ||
+				confirm(`Do you really want to leave? You have unsaved changes!`)
+			) {
+				return next();
+			}
+			else {
+				return next(false);
 			}
 		},
 		watch: {
@@ -492,7 +498,7 @@
 
 				},
 				immediate: true,
-			}
+			},
 
 		},
 		beforeDestroy () {
