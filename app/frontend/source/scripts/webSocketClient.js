@@ -134,7 +134,7 @@ async function handleMemoryChanges (store, router, data) {
 		store.commit(`update-thread`, {
 			key: threadId,
 			dataField: keyFormatted,
-			dataValue: newValue,
+			dataValue: (keyFormatted === `conversationState` && !newValue ? `closed` : newValue),
 		});
 	}
 
