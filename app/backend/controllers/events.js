@@ -511,28 +511,6 @@ module.exports = class EventsController {
 	}
 
 	/*
-	 *
-	 */
-	flattenMap (map, prependString = ``) {
-
-		const prepend = prependString ? `${prependString}/` : ``;
-
-		return Object.keys(map).reduce((newMap, key) => {
-			const value = map[key];
-
-			if (typeof value === `object` && value !== null && typeof value._bsontype === `undefined`) {
-				Object.assign(newMap, this.flattenMap(value, `${prepend}${key}`));
-			}
-			else {
-				newMap[`${prepend}${key}`] = value;
-			}
-
-			return newMap;
-		}, {});
-
-	}
-
-	/*
 	 * Returns user settings: scheduled flows, memory, etc
 	 */
 	async pullUserSettings (socket, data, reply) {
@@ -551,14 +529,9 @@ module.exports = class EventsController {
 			ignoreDays: recTask.ignoreDays,
 		}));
 
-		const recUser = await this.database.get(`User`, { _id: data.userId });
-		const userMemory = this.flattenMap(recUser.appData);
-		// remove first name for privacy reasons
-		delete userMemory.firstName;
 		return reply({
 			success: true,
 			scheduledFlows: mapListToDictionary(scheduledFlows, `taskId`),
-			userMemory,
 			flows,
 		});
 	}
