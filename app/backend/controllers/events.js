@@ -287,6 +287,25 @@ module.exports = class EventsController {
 	}
 
 	/*
+	 * Returns the list of bot memories for the given thread.
+	 */
+	async messagingThreadGetBotMemories (socket, data, reply) {
+
+		// Make sure the client passed in safe values.
+		const itemId = String(data.threadId);
+
+		// Prepare bot memories.
+		const recUser = await this.database.get(`User`, { _id: itemId });
+		const botMemories = { ...recUser.appData };
+
+		return reply({
+			success: true,
+			botMemories,
+		});
+
+	}
+
+	/*
 	 * Update the "bot.disabled" property on the user's document.
 	 */
 	async messagingThreadSetBotEnabled (socket, data, reply) {

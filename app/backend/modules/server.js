@@ -68,6 +68,10 @@ function setupWebSocketServer (app, database) {
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetMessages, null)
 		);
 		socket.on(
+			`messaging/thread/get-bot-memories`,
+			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadGetBotMemories, null)
+		);
+		socket.on(
 			`messaging/thread/set-bot-enabled`,
 			handleSocketEvent.bind(ctrlEvents, socket, ctrlEvents.messagingThreadSetBotEnabled, null)
 		);
