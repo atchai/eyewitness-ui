@@ -11,6 +11,12 @@
 				{{data.text}}
 			</div>
 
+			<div v-if="data.options && data.options.length" class="options">
+				<a v-for="option in data.options" :key="option.label" :href="`JavaScript:alert('This button does not work outside of the bot.')`" target="_blank">
+					{{ option.label }}
+				</a>
+			</div>
+
 			<div v-if="data.carousel" class="inner carousel">
 				<div class="inner">
 					<div v-for="element in data.carousel.elements" :key="element.label" class="item">
@@ -84,6 +90,35 @@
 			background: #EFEFEF;
 			max-width: 85%;
 			overflow: hidden;
+
+			>.options {
+				@include user-select-off();
+				display: flex;
+				background: white;
+				border: 1px solid $panel-border-color;
+
+				>a {
+					flex: 1;
+					border-right: 1px solid $panel-border-color;
+					height: 2.50rem;
+					line-height: 2.50rem;
+					text-align: center;
+					text-decoration: none;
+					white-space: nowrap;
+					color: $faded-color;
+					padding-left: 0.50rem;
+					padding-right: 0.50rem;
+					cursor: not-allowed;
+
+					&:last-child {
+						border-right: 0;
+					}
+
+					&:hover {
+						opacity: 1.00;
+					}
+				}
+			}
 
 			>.inner {
 				display: flex;
@@ -204,8 +239,10 @@
 				background: $blue-color;
 				color: $font-color-light;
 
-				a {
-					color: white !important;
+				:not(.options) {
+					a {
+						color: white !important;
+					}
 				}
 			}
 		}
