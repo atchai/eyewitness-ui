@@ -20,7 +20,7 @@
 							<div class="text">{{ element.text }}</div>
 						</div>
 						<div class="buttons">
-							<a v-for="button in element.buttons" :key="button.label" :href="`${button.payload}?notrack=1`" target="_blank">
+							<a v-for="button in element.buttons" :key="button.label" :href="button.type === `url` ? `${button.payload}?notrack=1` : `JavaScript:alert('This button does not work outside of the bot.')`" target="_blank">
 								{{ button.label }}
 							</a>
 						</div>
