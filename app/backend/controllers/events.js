@@ -296,7 +296,8 @@ module.exports = class EventsController {
 
 		// Prepare bot memories.
 		const recUser = await this.database.get(`User`, { _id: itemId });
-		const botMemories = { ...recUser.appData };
+		const appData = (recUser ? recUser.appData : null) || {};
+		const botMemories = { ...appData };
 
 		return reply({
 			success: true,
