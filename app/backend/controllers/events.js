@@ -36,7 +36,7 @@ module.exports = class EventsController {
 			sort: { sentAt: `desc` },
 		});
 
-		return parseLatestMessageInformation(recMessages[0]);
+		return (recMessages[0] ? parseLatestMessageInformation(recMessages[0]) : ``);
 
 	}
 
