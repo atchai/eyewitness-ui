@@ -29,7 +29,6 @@ RUN echo "Host *\n  IdentitiesOnly yes\n  StrictHostKeyChecking no\n  IdentityFi
 WORKDIR /src
 
 # Install our depedencies.
-COPY .npmrc /src/.npmrc
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
 COPY webpack.config.js /src/webpack.config.js
