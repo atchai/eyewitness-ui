@@ -8,14 +8,27 @@
 
 const path = require(`path`);
 const packageJson = require(`./package.json`);
-const providerId = process.env.PROVIDER_ID;
-const loadProviderConfig = Boolean(providerId);
-const env = process.env.NODE_ENV || `development`;
-const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
-const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(__dirname, `app`, `config`), {
-	localConfig: (loadProviderConfig ? [ localConfigName ] : [ `local` ]),
-	requireLocalConfig: loadProviderConfig,
+const config = require(`config-ninja`).init(`eyewitness-ui-config`, `../config`, {
+	environmentVariables: {
+		enableDotenv: (process.env.NODE_ENV === `development`),
+		dotenvPath: path.join(__dirname, `.env`),
+		mapping: {
+			DB_MONGO_CONNECTION_STR: `databases.mongo.connectionString`,
+			AUTH_COOKIE_SECRET: `authentication.cookie.secret`,
+			USER_PWD_BOT: `authentication.basicAuth.users.bot`,
+			USER_PWD_ADMIN: `authentication.basicAuth.users.admin`,
+			FB_PAGE_ID: `facebookPageId`,
+			UI_SERVER_URI: `server.externalUri`,
+			BOT_SERVER_URI: `hippocampServer.baseUrl`,
+			BOT_SERVER_ACCESS_TOKEN: `hippocampServer.accessToken`,
+			AWS_S3_ACCESS_KEY_ID: `amazonS3.accessKeyId`,
+			AWS_S3_SECRET_ACCESS_KEY: `amazonS3.secretAccessKey`,
+			AWS_S3_REGION: `amazonS3.region`,
+			AWS_S3_BUCKET: `amazonS3.bucketName`,
+			AWS_S3_KEY_PREFIX: `amazonS3.keyPrefix`,
+		},
+	},
 });
 
 const autoprefixer = require(`autoprefixer`);
