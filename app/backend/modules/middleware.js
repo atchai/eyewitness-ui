@@ -5,7 +5,7 @@
  */
 
 const packageJson = require(`../../../package.json`);
-const config = require(`config-ninja`).use(`eyewitness-ui`);
+const config = require(`config-ninja`).use(`eyewitness-ui-config`);
 
 /*
  * Respond with a HTTP 200 to any requests to the health check endpoint.

@@ -10,6 +10,6 @@
 		"compressJs": false
 	},
 	"amazonS3": {
-		"keyPrefix": "development/demo/"
+		"keyPrefix": "development/"
 	}
 }

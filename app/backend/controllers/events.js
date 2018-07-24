@@ -4,7 +4,7 @@
  * CONTROLLER: Events
  */
 
-const config = require(`config-ninja`).use(`eyewitness-ui`);
+const config = require(`config-ninja`).use(`eyewitness-ui-config`);
 
 const deepSort = require(`deep-sort`);
 const moment = require(`moment`);

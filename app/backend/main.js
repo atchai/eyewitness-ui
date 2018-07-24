@@ -8,17 +8,29 @@
 process.chdir(__dirname);
 
 const path = require(`path`);
-const providerId = process.env.PROVIDER_ID;
-const loadProviderConfig = Boolean(providerId);
-const env = process.env.NODE_ENV || `development`;
-const localConfigName = path.join(`providers`, `${providerId}.${env}`);
 
-const config = require(`config-ninja`).init(`eyewitness-ui`, path.join(`..`, `config`), {
-	localConfig: (loadProviderConfig ? [ localConfigName ] : [ `local` ]),
-	requireLocalConfig: loadProviderConfig,
+const config = require(`config-ninja`).init(`eyewitness-ui-config`, `./config`, {
+	environmentVariables: {
+		enableDotenv: (process.env.NODE_ENV === `development`),
+		dotenvPath: path.join(__dirname, `..`, `..`, `.env`),
+		mapping: {
+			DB_MONGO_CONNECTION_STR: `databases.mongo.connectionString`,
+			AUTH_COOKIE_SECRET: `authentication.cookie.secret`,
+			USER_PWD_BOT: `authentication.basicAuth.users.bot`,
+			USER_PWD_ADMIN: `authentication.basicAuth.users.admin`,
+			FB_PAGE_ID: `facebookPageId`,
+			UI_SERVER_URI: `server.externalUri`,
+			BOT_SERVER_URI: `hippocampServer.endpoint`,
+			BOT_SERVER_ACCESS_TOKEN: `hippocampServer.accessToken`,
+			AWS_S3_ACCESS_KEY_ID: `amazonS3.accessKeyId`,
+			AWS_S3_SECRET_ACCESS_KEY: `amazonS3.secretAccessKey`,
+			AWS_S3_REGION: `amazonS3.region`,
+			AWS_S3_BUCKET: `amazonS3.bucketName`,
+			AWS_S3_KEY_PREFIX: `amazonS3.keyPrefix`,
+		},
+	},
 });
 
-const { connectToEyewitnessDatabase } = require(`eyewitness`);
 const server = require(`./modules/server`);
 
 // If there is no listener for unhandled promise rejections then we add our own to output a stack trace and quit.

@@ -11,7 +11,7 @@ const AWS = require(`aws-sdk/global`);
 const S3 = require(`aws-sdk/clients/s3`);
 const RequestNinja = require(`request-ninja`);
 
-const config = require(`config-ninja`).use(`eyewitness-ui`);
+const config = require(`config-ninja`).use(`eyewitness-ui-config`);
 
 const { mapListToDictionary } = require(`../modules/utilities`);
 
@@ -282,4 +282,3 @@ module.exports = class FlowsController {
 	}
 
 };
-

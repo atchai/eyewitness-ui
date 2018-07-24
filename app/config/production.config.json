@@ -46,6 +46,6 @@
 		"secretAccessKey": null,
 		"region": null,
 		"bucketName": "eyewitness-attachments",
-		"keyPrefix": "production/demo/"
+		"keyPrefix": "production/"
 	}
 }

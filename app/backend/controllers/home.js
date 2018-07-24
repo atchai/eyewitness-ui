@@ -4,7 +4,7 @@
  * CONTROLLER: Home
  */
 
-const config = require(`config-ninja`).use(`eyewitness-ui`);
+const config = require(`config-ninja`).use(`eyewitness-ui-config`);
 
 module.exports = class HomeController {
 

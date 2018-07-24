@@ -5,7 +5,7 @@
  */
 
 const packageJson = require(`../../../package.json`);
-const config = require(`config-ninja`).use(`eyewitness-ui`);
+const config = require(`config-ninja`).use(`eyewitness-ui-config`);
 
 const path = require(`path`);
 const http = require(`http`);
