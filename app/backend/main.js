@@ -9,7 +9,7 @@ process.chdir(__dirname);
 
 const path = require(`path`);
 
-const config = require(`config-ninja`).init(`eyewitness-ui-config`, `./config`, {
+const config = require(`config-ninja`).init(`eyewitness-ui-config`, `../config`, {
 	environmentVariables: {
 		enableDotenv: (process.env.NODE_ENV === `development`),
 		dotenvPath: path.join(__dirname, `..`, `..`, `.env`),
@@ -31,6 +31,7 @@ const config = require(`config-ninja`).init(`eyewitness-ui-config`, `./config`, 
 	},
 });
 
+const { connectToEyewitnessDatabase } = require(`./modules/database`);
 const server = require(`./modules/server`);
 
 // If there is no listener for unhandled promise rejections then we add our own to output a stack trace and quit.
