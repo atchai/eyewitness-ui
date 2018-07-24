@@ -21,6 +21,7 @@ RUN echo Europe/London >/etc/timezone && dpkg-reconfigure -f noninteractive tzda
 WORKDIR /src
 
 # Install our depedencies.
+COPY lib /src/lib
 COPY package.json /src/package.json
 COPY package-lock.json /src/package-lock.json
 COPY webpack.config.js /src/webpack.config.js
