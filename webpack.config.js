@@ -9,7 +9,7 @@
 const path = require(`path`);
 const packageJson = require(`./package.json`);
 
-const config = require(`config-ninja`).init(`eyewitness-ui-config`, `../config`, {
+const config = require(`config-ninja`).init(`eyewitness-ui-config`, `./app/config`, {
 	environmentVariables: {
 		enableDotenv: (process.env.NODE_ENV === `development`),
 		dotenvPath: path.join(__dirname, `.env`),
