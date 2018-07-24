@@ -16,6 +16,7 @@ services:
       - TZ=Europe/London
     volumes:
       - ./app:/src/app
+      - ./lib:/src/lib
       - ./.env:/src/.env
       - ./webpack.config.js:/src/webpack.config.js
       - ./package.json:/src/package.json
