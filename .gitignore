@@ -1,7 +1,5 @@
 node_modules
 *.log
-ssl/*
-!ssl/.gitkeep
 app/frontend/build/scripts/*
 !app/frontend/build/scripts/.gitkeep
 app/frontend/build/static/*
@@ -11,4 +9,3 @@ app/frontend/build/styles/*
 app/frontend/build/views/*
 !app/frontend/build/views/.gitkeep
 .idea
-app/config/local.config.json
