@@ -10,4 +10,4 @@ app/frontend/build/views/*
 !app/frontend/build/views/.gitkeep
 .idea
 .env
-*.env
+.*.env
