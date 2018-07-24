@@ -1,7 +1,4 @@
 {
-	"server": {
-		"externalUri": "http://localhost:5002"
-	},
 	"build": {
 		"webpackStats": "verbose",
 		"sourceMapMode": "cheap-module-eval-source-map",
@@ -11,15 +8,6 @@
 		"compressHtml": false,
 		"compressCss": false,
 		"compressJs": false
-	},
-	"databases": {
-		"mongo": {
-			"connectionString": "mongodb://mongodb:27017/eyewitness"
-		}
-	},
-	"facebookPageId": "amitygazette",
-	"hippocampServer": {
-		"baseUrl": "http://bot:5000"
 	},
 	"amazonS3": {
 		"keyPrefix": "development/demo/"

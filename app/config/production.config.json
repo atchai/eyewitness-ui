@@ -1,19 +1,21 @@
 {
+	"databases": {
+		"mongo": {
+			"connectionString": null
+		}
+	},
 	"server": {
 		"port": 5002,
 		"externalUri": null
 	},
 	"authentication": {
 		"cookie": {
-			"secret": "oUnT9pYobMpiGVFjgcYWXwSGVeJlILt0miQLhjKa"
+			"secret": null
 		},
 		"basicAuth": {
 			"users": {
-				"bot": "HN1r9OVx5AO15TlbtpKq0e7oQWASiZ",
-				"atchai": "d18HO8SrMbabv5Qq3KXk",
-				"battabox": "9OVx5AO15TlbtpKq0e7o",
-				"sabc": "1iAEqHN1rQWASiZnwAyr",
-				"thestar": "9M1CRyuZ2un0CIPxZdsq"
+				"bot": null,
+				"admin": null
 			}
 		}
 	},
@@ -37,12 +39,12 @@
 	},
 	"hippocampServer": {
 		"baseUrl": null,
-		"accessToken": "BO4AHX72iCGqQIbdbu62q08PQHOCmHoRPlkxkv4Y"
+		"accessToken": null
 	},
 	"amazonS3": {
-		"accessKeyId": "AKIAI7WVYMNHKZMWEBLQ",
-		"secretAccessKey": "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",
-		"region": "eu-west-1",
+		"accessKeyId": null,
+		"secretAccessKey": null,
+		"region": null,
 		"bucketName": "eyewitness-attachments",
 		"keyPrefix": "production/demo/"
 	}
