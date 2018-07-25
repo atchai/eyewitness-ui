@@ -15,11 +15,17 @@
 					<p class="inline-error" v-if="validation.memory && validation.memory[`i`+memoryIndex]">{{validation.memory[`i`+memoryIndex]}}</p>
 				</dt>
 				<dd>
-					<div><label>Transform: <select v-model="memoryProperties.transform" required>
-						<option v-for="(transformTypeName, transformTypeKey) in transformTypes" :value="transformTypeKey">{{transformTypeName}}</option>
-				</select></label></div>
+					<div>
+						<label>
+							Transform:
+							<select v-model="memoryProperties.transform" required>
+								<option v-for="(transformTypeName, transformTypeKey) in transformTypes" :value="transformTypeKey">{{transformTypeName}}</option>
+							</select>
+						</label>
+					</div>
 
-					<div><label><input type="radio" @click="memorySetInput(memoryProperties)" :checked="memoryProperties.operation === `set` && memoryProperties.regexp != null"/> Save user input </label></div>
+					<div><label><input type="radio" @click="memorySetInput(memoryProperties)" :checked="memoryProperties.operation === `set` && memoryProperties.regexp != null"/> Save single user input</label></div>
+					<div><label><input type="radio" @click="memoryPushInput(memoryProperties)" :checked="memoryProperties.operation === `push` && memoryProperties.regexp != null"/> Save multiple user inputs</label></div>
 					<div v-show="memoryProperties.regexp != null" class="memory-details">
 						<div>
 							<label> Simple match:
@@ -83,6 +89,16 @@
 			memorySetInput (memoryProperties) {
 
 				Vue.set(memoryProperties, `operation`, `set`);
+
+				Vue.delete(memoryProperties, `value`);
+				Vue.delete(memoryProperties, `reference`);
+				Vue.set(memoryProperties, `regexp`, `(.+)`);
+
+			},
+
+			memoryPushInput (memoryProperties) {
+
+				Vue.set(memoryProperties, `operation`, `push`);
 
 				Vue.delete(memoryProperties, `value`);
 				Vue.delete(memoryProperties, `reference`);
