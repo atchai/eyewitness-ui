@@ -150,10 +150,12 @@
 							flex-direction: column;
 							flex: 0 0 auto;
 							width: 14.00rem;
+							min-width: 100%;
 							border: 1px solid $panel-border-color;
 							border-right: 0;
 							background: white;
 							font-size: 0.80em;
+							overflow: hidden;
 
 							&:first-child {
 								border-top-left-radius: inherit;
