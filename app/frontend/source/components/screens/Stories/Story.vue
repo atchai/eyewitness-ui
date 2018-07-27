@@ -33,7 +33,7 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 
 	export default {
-		props: [`itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority`],
+		props: [ `itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority` ],
 		methods: {
 
 			sendBreakingNewsAlert (itemId, oldPriority) {
