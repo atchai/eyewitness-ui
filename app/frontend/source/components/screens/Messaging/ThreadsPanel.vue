@@ -14,23 +14,25 @@
 				<span>Done</span>
 			</div>
 		</div>
-		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }" v-scroll="onScroll">
+		<div id="thread-list" :class="{ threads: true, loading: (loadingState > 0) }">
 			<ScreenLoader />
-			<transition-group name="thread" tag="div">
-				<Thread
-					v-for="thread in threadSet"
-					v-if="thread.conversationState === inbox"
-					:key="thread.itemId"
-					:itemId="thread.itemId"
-					:isFullFat="thread.isFullFat"
-					:userFullName="thread.userFullName"
-					:imageUrl="thread.profilePicUrl"
-					:date="thread.latestDate"
-					:message="thread.latestMessage"
-					:adminLastReadMessages="thread.adminLastReadMessages"
-					:enquiryType="thread.enquiryType"
-				/>
-			</transition-group>
+			<VirtualList :size="76" :remain="15" class="virtual-list">
+				<transition-group name="thread" tag="div">
+					<Thread
+						v-for="thread in threadSet"
+						v-if="thread.conversationState === inbox"
+						:key="thread.itemId"
+						:itemId="thread.itemId"
+						:isFullFat="thread.isFullFat"
+						:userFullName="thread.userFullName"
+						:imageUrl="thread.profilePicUrl"
+						:date="thread.latestDate"
+						:message="thread.latestMessage"
+						:adminLastReadMessages="thread.adminLastReadMessages"
+						:enquiryType="thread.enquiryType"
+					/>
+				</transition-group>
+			</VirtualList>
 		</div>
 	</div>
 
@@ -39,20 +41,17 @@
 <script>
 
 	import { mapGetters } from 'vuex';
+	import VirtualList from 'vue-virtual-scroll-list';
 	import ScreenLoader from '../../common/ScreenLoader';
 	import Thread from './Thread';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import { setLoadingStarted, setLoadingFinished, handleOnScroll } from '../../../scripts/utilities';
+	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
 	export default {
 		data: function () {
 			return {
 				loadingState: 0,
-				loadingRoute: ``,
-				lastScrollTop: 0,
-				lastLoadTimeout: null,
 				inbox: `open`,
-				essentialThreadFields: [`latestDate`, `conversationState`],
 			};
 		},
 		computed: {
@@ -60,7 +59,7 @@
 				`threadSet`,
 			]),
 		},
-		components: { ScreenLoader, Thread },
+		components: { ScreenLoader, Thread, VirtualList },
 		methods: {
 
 			fetchComponentData (itemIdsToFetch) {
@@ -73,7 +72,7 @@
 				// Start the request.
 				getSocket().emit(
 					`messaging/get-threads`,
-					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
+					{},
 					resData => {
 
 						setLoadingFinished(this);
@@ -88,8 +87,11 @@
 						}
 
 						// Replace all or update some of the threads.
-						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
-						this.$store.commit(`update-threads`, { replaceByKeyField, data: resData.threads });
+						this.$store.commit(`add-threads`, {
+							data: resData.threads,
+							sortField: `latestDate`,
+							sortDirection: `desc`,
+						});
 
 					}
 				);
@@ -102,28 +104,7 @@
 				this.inbox = newInbox;
 
 				// Scroll to top of list.
-				this.lastScrollTop = 0;
 				document.getElementById(`thread-list`).scrollTop = 0;
-				this.onScroll(null, { scrollTop: 0 });
-
-			},
-
-			async onScroll (event, { scrollTop }) {
-
-				const threads = this.$store.state.threads;
-				const selecedItemId = this.$route.params.itemId || null;
-				const keepItemsFat = (selecedItemId ? [ this.$route.params.itemId ] : null);
-
-				handleOnScroll(
-					this,
-					`thread-list`,
-					`thread`,
-					`update-thread`,
-					threads,
-					scrollTop,
-					this.essentialThreadFields,
-					keepItemsFat
-				);
 
 			},
 
@@ -186,12 +167,19 @@
 		}
 
 		>.threads {
+			display: flex;
 			position: relative;
 			flex: 1;
-			@include scroll-vertical();
 
 			&.loading > * {
 				filter: none !important;
+			}
+
+			.virtual-list {
+				flex: 1;
+				height: auto !important;
+				contain: content;
+				will-change: scroll-position;
 			}
 		}
 	}
