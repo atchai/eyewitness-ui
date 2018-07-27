@@ -13,6 +13,6 @@ module.exports = {
       "max": 1,
       "maxBOF": 2,
     }],
-    "node/no-unsupported-features": 0,
+    "node/no-unsupported-features/es-syntax": 0,
   },
 };
