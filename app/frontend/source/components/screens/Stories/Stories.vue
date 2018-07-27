@@ -4,23 +4,25 @@
 
 <template>
 
-	<div id="stories-tab-body" :class="{ screen: true, padding: true, 'scroll-vertical': true, loading: (loadingState > 0) }" v-scroll="onScroll">
+	<div id="stories-tab-body" :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<ScreenLoader />
 		<ScreenHeader
 			title="Stories"
 			description="Stories from your feed that are currently being displayed to your users."
 		/>
-		<Story
-			v-for="story in storySet"
-			:key="story.itemId"
-			:itemId="story.itemId"
-			:isFullFat="story.isFullFat"
-			:title="story.title"
-			:time="story.articleDate | formatDate('HH:MM')"
-			:date="story.articleDate | formatDate('DD/MM/YY')"
-			:published="story.published"
-			:priority="story.priority"
-		/>
+		<VirtualList :size="56" :remain="15" class="virtual-list">
+			<Story
+				v-for="story in storySet"
+				:key="story.itemId"
+				:itemId="story.itemId"
+				:isFullFat="story.isFullFat"
+				:title="story.title"
+				:time="story.articleDate | formatDate('HH:MM')"
+				:date="story.articleDate | formatDate('DD/MM/YY')"
+				:published="story.published"
+				:priority="story.priority"
+			/>
+		</VirtualList>
 	</div>
 
 </template>
@@ -28,26 +30,20 @@
 <script>
 
 	import { mapGetters } from 'vuex';
+	import VirtualList from 'vue-virtual-scroll-list';
 	import ScreenHeader from '../../common/ScreenHeader';
 	import ScreenLoader from '../../common/ScreenLoader';
 	import Story from './Story';
 	import { getSocket } from '../../../scripts/webSocketClient';
-	import {
-		setLoadingStarted,
-		setLoadingFinished,
-		handleOnScroll,
-	} from '../../../scripts/utilities';
+	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 
 	export default {
 		data: function () {
 			return {
 				loadingState: 0,
-				loadingRoute: ``,
-				lastScrollTop: 0,
-				lastLoadTimeout: null,
 			};
 		},
-		components: { ScreenHeader, ScreenLoader, Story },
+		components: { ScreenHeader, ScreenLoader, Story, VirtualList },
 		computed: {
 			...mapGetters([
 				`storySet`,
@@ -61,7 +57,7 @@
 
 				getSocket().emit(
 					`stories/get-tab-data`,
-					{ itemIdsToFetch, pageInitialSize: APP_CONFIG.pageInitialSize },
+					{},
 					resData => {
 
 						setLoadingFinished(this);
@@ -71,18 +67,16 @@
 							return;
 						}
 
-						// Replace all or update some of the stories.
-						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);
-						this.$store.commit(`update-stories`, { replaceByKeyField, data: resData.stories });
+						// Add all of the stories.
+						this.$store.commit(`add-stories`, {
+							data: resData.stories,
+							sortField: `articleDate`,
+							sortDirection: `desc`,
+						});
 
 					}
 				);
 
-			},
-
-			async onScroll (event, { scrollTop }) {
-				const stories = this.$store.state.stories;
-				handleOnScroll(this, `stories-tab-body`, `story`, `update-story`, stories, scrollTop);
 			},
 
 		},
@@ -99,5 +93,17 @@
 </script>
 
 <style lang="scss" scoped>
+
+	#stories-tab-body {
+		display: flex;
+		flex-direction: column;
+
+		.virtual-list {
+			flex: 1;
+			height: auto !important;
+			contain: content;
+			will-change: scroll-position;
+		}
+	}
 
 </style>
