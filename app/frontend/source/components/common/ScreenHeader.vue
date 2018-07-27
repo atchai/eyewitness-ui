@@ -22,6 +22,7 @@
 <style lang="scss" scoped>
 
 	.screen-header {
+		flex-shrink: 0;
 		margin-bottom: 3.00rem;
 		@include user-select-off();
 
