@@ -33,6 +33,7 @@ export default new Vuex.Store({
 	mutations: {
 
 		'add-thread': (state, payload) => addStorePropertyItem(state, `threads`, payload),
+		'add-threads': (state, payload) => addStorePropertyItems(state, `threads`, payload),
 		'update-thread': (state, payload) => updateStorePropertyItem(state, `threads`, payload),
 		'update-threads': (state, payload) => updateStoreProperty(state, `threads`, payload),
 		'remove-thread': (state, payload) => removeStorePropertyItem(state, `threads`, payload),
@@ -51,6 +52,7 @@ export default new Vuex.Store({
 		'remove-bot-memory': (state, payload) => removeStorePropertyItem(state, `botMemories`, payload),
 		'remove-all-bot-memories': (state) => state.botMemories = {},
 
+		'add-stories': (state, payload) => addStorePropertyItems(state, `stories`, payload),
 		'update-story': (state, payload) => updateStorePropertyItem(state, `stories`, payload),
 		'update-stories': (state, payload) => updateStoreProperty(state, `stories`, payload),
 		'remove-story': (state, payload) => removeStorePropertyItem(state, `stories`, payload),
