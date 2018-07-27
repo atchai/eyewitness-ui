@@ -5,24 +5,28 @@
 <template>
 
 	<div :data-item-id="itemId" :class="{ 'story': true, 'full-fat': isFullFat }">
-		<div v-if="isFullFat" class="cell title">
-			<div class="inner">{{ title }}</div>
-		</div>
+		<div class="inner">
 
-		<div v-if="isFullFat" class="cell date-time">
-			<div class="inner">{{ time }}, {{date}}</div>
-		</div>
-
-		<div v-if="isFullFat" class="cell actions">
-			<div class="inner">
-				<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': (priority || !published) }">
-					<span>Send Alert</span>
-				</a>
-				<a href="JavaScript:void(0);" @click="setArticlePublishedState(itemId, published)" :class="{ 'tag': true, 'published': true, 'on': published }">
-					<span v-if="published">Unpublish</span>
-					<span v-if="!published">Publish</span>
-				</a>
+			<div v-if="isFullFat" class="cell title">
+				<div class="inner">{{ title }}</div>
 			</div>
+
+			<div v-if="isFullFat" class="cell date-time">
+				<div class="inner">{{ time }}, {{date}}</div>
+			</div>
+
+			<div v-if="isFullFat" class="cell actions">
+				<div class="inner">
+					<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': (priority || !published) }">
+						<span>Send Alert</span>
+					</a>
+					<a href="JavaScript:void(0);" @click="setArticlePublishedState(itemId, published)" :class="{ 'tag': true, 'published': true, 'on': published }">
+						<span v-if="published">Unpublish</span>
+						<span v-if="!published">Publish</span>
+					</a>
+				</div>
+			</div>
+
 		</div>
 	</div>
 
@@ -92,80 +96,85 @@
 <style lang="scss" scoped>
 
 	.story {
-		display: flex;
-		align-items: stretch;
-		height: 3.50rem;
-		box-shadow: 1px 1px 5px $panel-shadow-color;
-		margin-bottom: 2.00rem;
-		opacity: 0.50;
+		padding: 1.00rem;
 
 		&.full-fat {
-			opacity: 1;
+			>.inner {
+				opacity: 1;
+			}
 		}
 
-		>.cell {
+		>.inner {
 			display: flex;
-			flex-direction: row;
-			align-items: center;
-			padding: 0 0.75rem;
+			align-items: stretch;
+			height: 3.50rem;
+			box-shadow: 1px 1px 5px $panel-shadow-color;
+			opacity: 0.50;
 
-			>.inner {
-				display: inline-block;
-				margin: auto;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
-			}
-
-			&.title {
-				flex: 1;
-				min-width: 0;
-				padding-right: 0;
+			>.cell {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding: 0 0.75rem;
 
 				>.inner {
-					margin-left: 0;
+					display: inline-block;
+					margin: auto;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
 				}
-			}
 
-			&.date-time {
-				flex-shrink: 0;
-				width: 9.50rem;
-				color: #9B9B9B;
-				border-right: 1px solid $panel-border-color;
+				&.title {
+					flex: 1;
+					min-width: 0;
+					padding-right: 0;
 
-				>.inner {
-					margin-right: 0;
+					>.inner {
+						margin-left: 0;
+					}
 				}
-			}
 
-			&.actions {
-				flex-shrink: 0;
-				width: 16.00rem;
-				@include user-select-off();
+				&.date-time {
+					flex-shrink: 0;
+					width: 9.50rem;
+					color: #9B9B9B;
+					border-right: 1px solid $panel-border-color;
 
-				>.inner {
-					margin-left: 0;
+					>.inner {
+						margin-right: 0;
+					}
+				}
 
-					a {
-						margin: 0 0.25rem;
-						color: white;
-						text-decoration: none;
+				&.actions {
+					flex-shrink: 0;
+					width: 16.00rem;
+					@include user-select-off();
 
-						&.tag.priority {
-							background: $blue-color;
+					>.inner {
+						margin-left: 0;
 
-							&.on {
-								background: $tag-off-background-color;
-								cursor: not-allowed;
-								opacity: 1.00 !important;
+						a {
+							margin: 0 0.25rem;
+							color: white;
+							text-decoration: none;
+
+							&.tag.priority {
+								background: $blue-color;
+
+								&.on {
+									background: $tag-off-background-color;
+									cursor: not-allowed;
+									opacity: 1.00 !important;
+								}
 							}
-						}
 
-						&.tag.published {
-							background: $tag-on-background-color;
+							&.tag.published {
+								background: $tag-on-background-color;
 
-							&.on {
-								background: $red-color;
+								&.on {
+									background: $red-color;
+								}
 							}
 						}
 					}
