@@ -82,7 +82,10 @@
 						if (this.inbox !== selectedInboxAtRequestStart) { return; }
 
 						// Handle errors.
-						if (!resData || !resData.success) { return alert(`There was a problem loading the threads.`); }
+						if (!resData || !resData.success) {
+							alert(`There was a problem loading the threads.`);
+							return;
+						}
 
 						// Replace all or update some of the threads.
 						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);

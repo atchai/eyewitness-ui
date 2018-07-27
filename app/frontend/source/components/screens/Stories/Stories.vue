@@ -66,7 +66,10 @@
 
 						setLoadingFinished(this);
 
-						if (!resData || !resData.success) { return alert(`There was a problem loading the stories tab.`); }
+						if (!resData || !resData.success) {
+							alert(`There was a problem loading the stories tab.`);
+							return;
+						}
 
 						// Replace all or update some of the stories.
 						const replaceByKeyField = (itemIdsToFetch && itemIdsToFetch.length ? `itemId` : null);

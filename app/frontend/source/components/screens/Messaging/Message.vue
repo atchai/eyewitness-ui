@@ -64,14 +64,14 @@
 <script>
 
 	export default {
-		props: [`itemId`, `direction`, `humanToHuman`, `sentAt`, `data`],
+		props: [ `itemId`, `direction`, `humanToHuman`, `sentAt`, `data` ],
 		methods: {
 
 			openAttachmentUrl () {
 				window.open(this.data.attachments[0].remoteUrl);
 			},
 
-		}
+		},
 	};
 
 </script>
