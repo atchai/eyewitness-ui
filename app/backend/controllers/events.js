@@ -56,7 +56,7 @@ module.exports = class EventsController {
 			};
 
 			// Full-fat threads contain all properties.
-			if (index < pageInitialSize) {
+			if (!pageInitialSize || index < pageInitialSize) {
 				const adminLastReadMessages = moment((recUser.appData && recUser.appData.adminLastReadMessages) || 0);
 				const firstName = recUser.profile.firstName || ``;
 				const lastName = recUser.profile.lastName || ``;
@@ -118,7 +118,7 @@ module.exports = class EventsController {
 			const message = { itemId: recMessage._id.toString() };
 
 			// Full-fat messages contain all properties.
-			if (index < pageInitialSize) {
+			if (!pageInitialSize || index < pageInitialSize) {
 				message.isFullFat = true;
 				message.direction = recMessage.direction;
 				message.sentAt = moment(recMessage.sentAt).toISOString();
@@ -158,7 +158,7 @@ module.exports = class EventsController {
 			const story = { itemId: recArticle._id.toString() };
 
 			// Full-fat stories contain all properties.
-			if (index < pageInitialSize) {
+			if (!pageInitialSize || index < pageInitialSize) {
 				story.isFullFat = true;
 				story.title = recArticle.title;
 				story.articleUrl = recArticle.articleUrl;
