@@ -17,7 +17,7 @@
 
 			<div v-if="isFullFat" class="cell actions">
 				<div class="inner">
-					<a href="JavaScript:void(0);" @click="sendBreakingNewsAlert(itemId, priority)" :class="{ 'tag': true, 'priority': true, 'on': (priority || !published) }">
+					<a href="JavaScript:void(0);" @click="showBreakingNewsDialog(itemId, title, priority, published)" :class="{ 'tag': true, 'priority': true, 'on': (priority || !published) }">
 						<span>Send Alert</span>
 					</a>
 					<a href="JavaScript:void(0);" @click="setArticlePublishedState(itemId, published)" :class="{ 'tag': true, 'published': true, 'on': published }">
@@ -37,38 +37,8 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 
 	export default {
-		props: [ `itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority` ],
+		props: [ `itemId`, `isFullFat`, `title`, `time`, `date`, `published`, `priority`, `showBreakingNewsDialog` ],
 		methods: {
-
-			sendBreakingNewsAlert (itemId, oldPriority) {
-
-				// Do nothing if the story is already marked priority.
-				if (oldPriority) {
-					alert(`Whoops! This story has already been sent out.`);
-					return;
-				}
-
-				// Don't do anything if the article isn't published.
-				if (!this.published) {
-					alert(`Whoops! You can't send out breaking news if the story isn't published.`);
-					return;
-				}
-
-				if (!confirm(`Are you sure you want to send this story out as breaking news?`)) { return; }
-
-				this.$store.commit(`update-story`, {
-					key: itemId,
-					dataField: `priority`,
-					dataValue: true,
-				});
-
-				getSocket().emit(
-					`stories/set-story-priority`,
-					{ itemId, priority: true },
-					data => (!data || !data.success ? alert(`There was a problem sending the breaking news alert.`) : void (0))
-				);
-
-			},
 
 			setArticlePublishedState (itemId, oldPublished) {
 

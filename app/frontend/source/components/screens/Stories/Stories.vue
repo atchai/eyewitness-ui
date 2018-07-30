@@ -5,6 +5,7 @@
 <template>
 
 	<div id="stories-tab-body" :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
+		<BreakingNewsDialog :itemId="breakingNewsItemId" :storyTitle="breakingNewsStoryTitle" />
 		<ScreenLoader />
 		<ScreenHeader
 			title="Stories"
@@ -21,6 +22,7 @@
 				:date="story.articleDate | formatDate('DD/MM/YY')"
 				:published="story.published"
 				:priority="story.priority"
+				:showBreakingNewsDialog="showBreakingNewsDialog"
 			/>
 		</VirtualList>
 	</div>
@@ -33,6 +35,7 @@
 	import VirtualList from 'vue-virtual-scroll-list';
 	import ScreenHeader from '../../common/ScreenHeader';
 	import ScreenLoader from '../../common/ScreenLoader';
+	import BreakingNewsDialog from './BreakingNewsDialog';
 	import Story from './Story';
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
@@ -41,9 +44,11 @@
 		data: function () {
 			return {
 				loadingState: 0,
+				breakingNewsItemId: null,
+				breakingNewsStoryTitle: null,
 			};
 		},
-		components: { ScreenHeader, ScreenLoader, Story, VirtualList },
+		components: { ScreenHeader, ScreenLoader, BreakingNewsDialog, Story, VirtualList },
 		computed: {
 			...mapGetters([
 				`storySet`,
@@ -76,6 +81,29 @@
 
 					}
 				);
+
+			},
+
+			showBreakingNewsDialog (itemId, storyTitle, oldPriority, published) {
+
+				// Do nothing if the story is already marked priority.
+				if (oldPriority) {
+					alert(`Whoops! This story has already been sent out.`);
+					return;
+				}
+
+				// Don't do anything if the article isn't published.
+				if (!published) {
+					alert(`Whoops! You can't send out breaking news if the story isn't published.`);
+					return;
+				}
+
+				// Show the dialog.
+				this.breakingNewsItemId = itemId;
+				this.breakingNewsStoryTitle = storyTitle;
+
+				const $el = document.getElementById(`send-breaking-news`);
+				$el.showModal();
 
 			},
 
