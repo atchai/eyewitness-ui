@@ -73,7 +73,6 @@
 
 </template>
 
-
 <script>
 	import ObjectId from 'bson-objectid';
 	import { mapGetters } from 'vuex';
@@ -83,6 +82,7 @@
 	import { getSocket } from '../../../scripts/webSocketClient';
 	import { setLoadingStarted, setLoadingFinished } from '../../../scripts/utilities';
 	import dialogPolyfill from 'dialog-polyfill';
+
 	export default {
 		data: function () {
 			return {
@@ -339,23 +339,11 @@
 		@include scroll-vertical();
 	}
 
-
 	.dialog_openers {
 		float: right;
 	}
 
-	dialog {
-		border: 1px solid rgba(0, 0, 0, 0.3);
-		border-radius: 6px;
-		box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-		min-width: calc(50vw);
-
-		h1 {
-			margin: 0;
-			border-bottom: 1px solid #bbb;
-			margin-bottom: 1rem;
-		}
-
+	#export-flows {
 		.export-flow-select {
 			list-style: none;
 		}
