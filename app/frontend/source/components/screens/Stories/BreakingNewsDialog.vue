@@ -41,7 +41,7 @@
 
 				getSocket().emit(
 					`stories/set-story-priority`,
-					{ itemId: this.itemId, message: this.breakingNewsText, priority: true },
+					{ itemId: this.itemId, messageText: this.breakingNewsText, priority: true },
 					data => (!data || !data.success ? alert(`There was a problem sending the breaking news alert.`) : void (0))
 				);
 

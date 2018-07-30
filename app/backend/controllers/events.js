@@ -437,10 +437,11 @@ module.exports = class EventsController {
 
 		// Make sure the client passed in safe values.
 		const itemId = String(data.itemId);
+		const breakingNewsMessageText = String(data.messageText);
 		const isPriority = Boolean(data.priority);
 
 		// Update the database.
-		await this.database.update(`Article`, itemId, { isPriority });
+		await this.database.update(`Article`, itemId, { breakingNewsMessageText, isPriority });
 
 		return reply({ success: true });
 
