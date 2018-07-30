@@ -10,7 +10,7 @@
 			<div class="bubble" :title="sentAt | formatDate('DD/MM/YYYY HH:mm')">
 
 				<div v-if="data.text && !(data.attachments && data.attachments.length)" class="inner text">
-					{{data.text}}
+					<div class="line" v-for="line in data.text.split(/\r\n|\r|\n/g)">{{line}}</div>
 				</div>
 
 				<div v-if="data.carousel" class="inner carousel">
@@ -111,8 +111,13 @@
 					}
 
 					&.text {
+						flex-direction: column;
 						padding: 0.50rem 0.75rem;
 						line-height: 1.25em;
+
+						>.line {
+							flex-shrink: 0;
+						}
 					}
 
 					&.carousel {
