@@ -17,13 +17,9 @@ When developing locally I like to use Docker (for environment encapsulation). I 
 
 ### Install
 
-1. Setup SSH keys registered with GitHub so that Docker will be able to fetch the `hippocamp` dependency from GitHub.
-These should be saved to `./ssl/id_eyewitness` and `./ssl/id_eyewitness.pub`.
-
 ### Run
 1. Start the [eyewitness bot](https://github.com/atchai/eyewitness) and dependencies.
 2. Open an additional terminal tab, navigate into the folder for this project, and run `docker-compose up ui`.
-
 
 ## Deploying Eyewitness
 See the [eyewitness](https://github.com/atchai/eyewitness) repo for instructions on how to deploy.
