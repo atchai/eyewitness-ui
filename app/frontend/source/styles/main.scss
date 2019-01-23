@@ -81,22 +81,23 @@ button {
 	padding: 0;
 	padding-left: 0.50rem;
 	padding-right: 0.50rem;
-	background: #B0B0B0;
-	color: white;
+	background: transparent;
+	color: #1174C3;
 	text-align: center;
-	font-size: 1.00rem;
-	border: 0;
+	border: 1px solid #1174C3;
+	border-radius: 20px;
 	margin: 0 0.50rem;
 	outline: 0;
 	cursor: pointer;
+	font-size: 15px;
+	transition: all ease-in-out 200ms;
 	@include user-select-off();
 
 	&.shrunk {
 		width: auto;
 		height: auto;
 		line-height: normal;
-		padding: 0.50rem 0.50rem;
-		border-radius: 0.50rem;
+		padding: 0.40rem 1.2rem;
 	}
 
 	&.mini {
@@ -107,8 +108,13 @@ button {
 	}
 
 	&.primary {
-		background: $accent-color;
+		background: $hippocamp-pink;
+		border-color: $hippocamp-pink;
 		color: $font-color-light;
+
+		&:hover {
+			background-color: darken($hippocamp-pink, 10%);
+		}
 	}
 
 	&.action {
@@ -117,12 +123,17 @@ button {
 	}
 
 	&.danger {
-		background: $red-color;
-		color: $font-color-light;
+		background: transparent;
+		border: 1px solid #D0021B;
+		color: #D0021B;
+
+		&:hover {
+			background-color: rgba(197, 2, 26, 0.07);
+		}
 	}
 
 	&:hover {
-		filter: brightness(95%);
+		background-color: #1174c312;
 	}
 
 	&:first-child {

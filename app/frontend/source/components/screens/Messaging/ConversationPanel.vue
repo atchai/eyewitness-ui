@@ -552,18 +552,23 @@
 		flex-direction: column;
 		flex: 1;
 		min-width: 0;
+		background-color: #eeeeee;
+		border: 1px solid #E7E7E7;
+		border-left: none;
 
 		>nav.user-tab-bar {
 			flex-shrink: 0;
 			height: 2.5rem;
-			background: $panel-background-color;
-			border-bottom: 2px solid $panel-border-color;
 			@include user-select-off();
 
 			ul {
 				display: flex;
 				flex: 1;
-				margin: 0;
+				padding: 0;
+				width: 300px;
+				background-color: #E62565;
+				margin: 10px 20px 0;
+				height: 40px;
 			}
 
 			.tab-item {
@@ -571,24 +576,34 @@
 				flex: 1;
 				height: 2.5rem;
 				text-align: center;
-				border-right: 1px solid $panel-border-color;
 
 				a {
 					display: flex;
 					flex: 1;
 					text-align: center;
 					text-decoration: none;
-					color: $panel-grey-text;
+					color: white;
 					text-transform: none;
 					letter-spacing: 1px;
 					cursor: pointer;
+					transition: all ease-in-out 200ms;
+
+					&:hover {
+						opacity: 1;
+						background: darken(#E62565, 10%);
+					}
 
 					&.active {
 						font-weight: bold;
+						background-color: white;
+						color: #6F6F6F;
+						z-index: 1;
 					}
 
 					>span {
 						margin: auto;
+						font-size: 15px;
+						letter-spacing: 0;
 					}
 				}
 			}
@@ -596,9 +611,10 @@
 
 		>.toolbar {
 			display: flex;
-			height: 5.00rem;
-			line-height: 5.00rem;
-			border-bottom: 1px solid $panel-border-color;
+			height: 60px;
+			line-height: 60px;
+			background-color: white;
+			border-bottom: 1px solid #E7E7E7;
 
 			>.image {
 				display: flex;
@@ -610,8 +626,8 @@
 				>.image-circle {
 					display: block;
 					margin: auto;
-					width: 3.00rem;
-					height: 3.00rem;
+					width: 2.7rem;
+					height: 2.7rem;
 					border-radius: 50%;
 					background-color: #9B9B9B;
 					background-size: cover;
@@ -625,13 +641,16 @@
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				overflow: hidden;
+				font-weight: 400;
+				font-size: 18px;
+				color: #232323;
 			}
 
 			>.enquiry-type {
 				flex-shrink: 0;
 				font-style: italic;
-				font-size: 1.30rem;
-				font-weight: bold;
+				font-size: 16px;
+				font-weight: 400;
 				white-space: nowrap;
 				color: $faded-color;
 				margin: 0 1.00rem;
@@ -677,15 +696,31 @@
 		}
 
 		>.user-settings {
-			background-color: #fafafa;
 			padding: 1rem;
 			flex: 1;
+			position: relative;
+			top: 10px;
+			margin: 0 20px 20px;
+			background-color: white;
 			@include scroll-vertical();
+
+			h3 {
+				margin: 16px 0 0;
+				font-size: 16px;
+				color: #232323;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 0;
+				color: #838383;
+			}
 
 			table {
 				background-color: #fff;
 				border-collapse: collapse;
 				border: 1px solid #888;
+				margin-top: 10px;
 
 				tr {
 					&.unsaved {
@@ -693,15 +728,20 @@
 					}
 
 					th, td {
-						border: 1px solid #bbb;
+						border: 1px solid #d9d9d9;
 						padding: 0.5rem;
 						text-align: center;
+						font-size: 14px;
 
 						&.save-info {
 							font-weight: bold;
 							font-size: 0.8rem;
 							width: 8rem;
 						}
+					}
+
+					td {
+						color: #838383;
 					}
 				}
 			}
@@ -711,6 +751,11 @@
 			position: relative;
 			flex: 1;
 			padding: 1.00rem;
+			overflow-y: auto;
+			margin: 0 20px;
+			background-color: white;
+			top: 10px;
+
 			@include scroll-vertical();
 
 			>.top-ruler {
@@ -739,7 +784,10 @@
 		>.composer {
 			display: flex;
 			height: 8.00rem;
-			border-top: 1px solid $panel-border-color;
+			border-top: 1px solid #E7E7E7;
+			z-index: 10;
+			margin: 0 20px 20px;
+			background-color: white;
 
 			>.image-container {
 				display: flex;

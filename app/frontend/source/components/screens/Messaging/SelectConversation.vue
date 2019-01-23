@@ -32,7 +32,9 @@
 			margin-top: 8.00rem;
 			margin-bottom: auto;
 			text-align: center;
-			font-size: 120%;
+			color: grey;
+			font-size: 18px;
+			font-weight: 300;
 		}
 	}
 

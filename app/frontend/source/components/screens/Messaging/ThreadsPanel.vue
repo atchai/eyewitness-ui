@@ -129,40 +129,48 @@
 		flex-shrink: 0;
 		width: 20.00rem;
 		background: $panel-background-color;
-		border-right: 1px solid $panel-border-color;
 		@include user-select-off();
 
 		>.inbox-chooser {
 			display: flex;
-			height: 5.00rem;
-			border-bottom: 1px solid $panel-border-color;
+			height: 40px;
 
 			>.box {
 				display: flex;
 				flex: 1;
 				cursor: pointer;
+				transition: all ease-in-out 200ms;
 
-				&.on {
-					background: $panel-border-color;
-					font-weight: bold;
+				&.closed, &.open {
+					border-bottom: 1px solid #E7E7E7;
+					background: #E62565;
+
+					>span {
+						color: white;
+					}
 				}
 
 				&:hover {
-					background: $panel-hover-color;
+					background: darken(#E62565, 10%);
 				}
+
+				&.on {
+					background: white;
+					font-weight: bold;
+					border: 1px solid #E7E7E7;
+					border-bottom: none;
+
+					>span {
+						color: $panel-grey-text;
+					}
+				}
+
 
 				>span {
 					margin: auto;
-					text-transform: uppercase;
-					color: $panel-grey-text;
+					font-size: 15px;
 				}
-			}
-
-			>.divider {
-				background: $panel-border-color;
-				width: 1px;
-				flex-shrink: 0;
-				flex-grow: 0;
+				
 			}
 		}
 
@@ -170,6 +178,9 @@
 			display: flex;
 			position: relative;
 			flex: 1;
+			background-color: white;
+			border: 1px solid #E7E7E7;
+			border-top: none;
 
 			&.loading > * {
 				filter: none !important;

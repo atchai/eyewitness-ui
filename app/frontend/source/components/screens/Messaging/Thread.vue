@@ -53,9 +53,9 @@
 		display: flex;
 		flex-direction: row;
 		height: 4.75rem;
-		padding: 0 0.50rem;
-		border-bottom: 1px solid $panel-border-color;
-		background: $panel-background-color;
+		padding: 6px 0.50rem;
+		border-bottom: 1px solid #E7E7E7;
+		background: white;
 		text-decoration: none;
 		color: inherit;
 		cursor: pointer;
@@ -65,12 +65,13 @@
 		}
 
 		&.router-link-active {
-			background: #D8D7D7;
+			background: rgba(216, 215, 215, 0.33);
 		}
 
 		&:hover {
-			background: $panel-hover-color;
+			background: rgba(232, 231, 231, 0.6);
 			opacity: 1.00;
+			transition: all 200ms ease-in-out;
 		}
 
 		&.unread {
