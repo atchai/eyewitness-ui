@@ -10,7 +10,6 @@
 			<!-- <div class="item provider">
 				<a href="/logout"><span>Logout</span></a>
 			</div> -->
-			<!-- <div class="item logo" :style="`background-image: url('${providerPhotoUrl}');`"></div> -->
 			<div class="item logo">
 				<p>hippocamp</p>
 			</div>
@@ -29,6 +28,7 @@
 			<div class="item">
 				<router-link to="/settings"><span>Settings</span></router-link>
 			</div>
+			<div class="item user-photo" :style="`background-image: url('${providerPhotoUrl}');`"></div>
 		</nav>
 
 	</header>
@@ -79,6 +79,14 @@
 					margin: auto;
 				}
 			}
+		}
+
+		.user-photo {
+			border-right: 0;
+			background-size: contain;
+			background-position: center;
+			background-repeat: no-repeat;
+			width: 38px;
 		}
 
 		>nav {
