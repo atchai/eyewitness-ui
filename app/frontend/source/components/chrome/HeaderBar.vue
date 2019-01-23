@@ -6,6 +6,16 @@
 
 	<header>
 
+		<aside>
+			<!-- <div class="item provider">
+				<a href="/logout"><span>Logout</span></a>
+			</div> -->
+			<!-- <div class="item logo" :style="`background-image: url('${providerPhotoUrl}');`"></div> -->
+			<div class="item logo">
+				<p>hippocamp</p>
+			</div>
+		</aside>
+
 		<nav>
 			<div class="item">
 				<router-link to="/messaging"><span>Conversations</span></router-link>
@@ -20,13 +30,6 @@
 				<router-link to="/settings"><span>Settings</span></router-link>
 			</div>
 		</nav>
-
-		<aside>
-			<!-- <div class="item provider">
-				<a href="/logout"><span>Logout</span></a>
-			</div> -->
-			<div class="item logo" :style="`background-image: url('${providerPhotoUrl}');`"></div>
-		</aside>
 
 	</header>
 
@@ -50,26 +53,26 @@
 		display: flex;
 		flex-shrink: 0;
 		height: 3.00rem;
-		background: $panel-background-color;
-		border-bottom: 2px solid $panel-border-color;
+		background: $panel-background-color-white;
+		border-bottom: 1px solid $panel-border-color-grey;
+		padding: 0 20px;
 		@include user-select-off();
 
 		.item {
 			display: flex;
-			flex: 1;
 			text-align: center;
-			border-right: 1px solid $panel-border-color;
+			margin: 0 14px;
 
 			a {
 				display: flex;
-				flex: 1;
 				text-decoration: none;
 				color: $panel-grey-text;
-				text-transform: uppercase;
-				letter-spacing: 1px;
+				font-size: 14px;
+				font-weight: 400;
 
 				&.router-link-active {
 					font-weight: bold;
+					border-bottom: 2px solid $hippocamp-pink;
 				}
 
 				>span {
@@ -81,6 +84,7 @@
 		>nav {
 			display: flex;
 			flex: 1;
+			justify-content: flex-end;
 		}
 
 		>aside {
@@ -93,11 +97,20 @@
 
 			>.logo {
 				flex: auto;
-				width: 3.00rem;
 				border-right: 0;
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
+
+				font-family: lato, arial;
+				font-weight: 200;
+				line-height: 46px;
+				font-size: 22px;
+				color: $hippocamp-pink;
+
+				p {
+					margin: 0;
+				}
 			}
 		}
 	}
