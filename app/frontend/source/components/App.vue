@@ -36,7 +36,7 @@
 			flex: 1;
 			min-height: 0;
 			width: 100%;
-			max-width: 960px;
+			max-width: 1024px;
 			margin: 20px auto;
 
 			.screen {

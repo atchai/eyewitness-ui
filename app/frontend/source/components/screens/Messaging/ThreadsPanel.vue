@@ -142,26 +142,26 @@
 				transition: all ease-in-out 200ms;
 
 				&.closed, &.open {
-					border-bottom: 1px solid #E7E7E7;
-					background: #E62565;
+					border: 1px solid #E7E7E7;
+					background: white;
 
 					>span {
-						color: white;
+						color: $panel-grey-text;
 					}
 				}
 
 				&:hover {
-					background: darken(#E62565, 10%);
+					background: darken(white, 5%);
 				}
 
 				&.on {
-					background: white;
+					background: #E62565;
 					font-weight: bold;
 					border: 1px solid #E7E7E7;
 					border-bottom: none;
 
 					>span {
-						color: $panel-grey-text;
+						color: white;
 					}
 				}
 

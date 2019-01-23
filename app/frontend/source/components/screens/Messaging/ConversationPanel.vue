@@ -567,7 +567,7 @@
 				padding: 0;
 				width: 300px;
 				background-color: #E62565;
-				margin: 10px 20px 0;
+				margin: 10px 10px 0;
 				height: 40px;
 			}
 
@@ -582,21 +582,23 @@
 					flex: 1;
 					text-align: center;
 					text-decoration: none;
-					color: white;
 					text-transform: none;
 					letter-spacing: 1px;
 					cursor: pointer;
 					transition: all ease-in-out 200ms;
+					border: 1px solid #E7E7E7;
+					background-color: white;
+					color: #6F6F6F;
 
 					&:hover {
 						opacity: 1;
-						background: darken(#E62565, 10%);
+						background: darken(white, 5%);
 					}
 
 					&.active {
 						font-weight: bold;
-						background-color: white;
-						color: #6F6F6F;
+						color: white;
+						background-color: #e62565;
 						z-index: 1;
 					}
 
@@ -700,7 +702,7 @@
 			flex: 1;
 			position: relative;
 			top: 10px;
-			margin: 0 20px 20px;
+			margin: 0 10px 20px;
 			background-color: white;
 			@include scroll-vertical();
 
@@ -752,7 +754,7 @@
 			flex: 1;
 			padding: 1.00rem;
 			overflow-y: auto;
-			margin: 0 20px;
+			margin: 0 10px;
 			background-color: white;
 			top: 10px;
 
@@ -786,7 +788,7 @@
 			height: 8.00rem;
 			border-top: 1px solid #E7E7E7;
 			z-index: 10;
-			margin: 0 20px 20px;
+			margin: 0 10px 10px;
 			background-color: white;
 
 			>.image-container {
