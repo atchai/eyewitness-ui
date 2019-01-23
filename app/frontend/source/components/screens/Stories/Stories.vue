@@ -131,6 +131,7 @@
 			height: auto !important;
 			contain: content;
 			will-change: scroll-position;
+			border: 1px solid #E7E7E7;
 		}
 	}
 

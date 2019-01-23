@@ -11,7 +11,7 @@
 				<a href="/logout"><span>Logout</span></a>
 			</div> -->
 			<div class="item logo">
-				<p>hippocamp</p>
+				<p>The Daily Planet</p>
 			</div>
 		</aside>
 
@@ -72,7 +72,7 @@
 
 				&.router-link-active {
 					font-weight: bold;
-					border-bottom: 2px solid $hippocamp-pink;
+					border-bottom: 2px solid $brand-main-color;
 				}
 
 				>span {
@@ -114,7 +114,10 @@
 				font-weight: 200;
 				line-height: 46px;
 				font-size: 22px;
-				color: $hippocamp-pink;
+				color: $brand-main-color;
+
+				font-size: 18px;
+				text-transform: uppercase;
 
 				p {
 					margin: 0;

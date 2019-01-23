@@ -155,7 +155,7 @@
 				}
 
 				&.on {
-					background: #E62565;
+					background: $brand-main-color;
 					font-weight: bold;
 					border: 1px solid #E7E7E7;
 					border-bottom: none;

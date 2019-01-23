@@ -81,10 +81,10 @@ button {
 	padding: 0;
 	padding-left: 0.50rem;
 	padding-right: 0.50rem;
-	background: transparent;
-	color: #1174C3;
+	background: $brand-main-color;
+	color: white;
 	text-align: center;
-	border: 1px solid #1174C3;
+	border: 1px solid $brand-main-color;
 	border-radius: 20px;
 	margin: 0 0.50rem;
 	outline: 0;
@@ -108,12 +108,12 @@ button {
 	}
 
 	&.primary {
-		background: $hippocamp-pink;
-		border-color: $hippocamp-pink;
-		color: $font-color-light;
+		background: transparent;
+		border: 1px solid $brand-main-color;
+		color: $brand-main-color;
 
 		&:hover {
-			background-color: darken($hippocamp-pink, 10%);
+			background-color: lighten($brand-main-color, 60%);
 		}
 	}
 
@@ -133,7 +133,7 @@ button {
 	}
 
 	&:hover {
-		background-color: #1174c312;
+		background-color: darken($brand-main-color, 10%);
 	}
 
 	&:first-child {

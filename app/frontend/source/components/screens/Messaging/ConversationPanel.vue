@@ -21,7 +21,7 @@
 					</button>
 				</div>
 				<div class="conversation-done">
-					<button :class="{ 'shrunk': true, 'primary': (thread.conversationState === `open`) }" @click="setThreadState(thread.itemId, thread.conversationState)">
+					<button :class="{ 'shrunk': true, 'primary': true }" @click="setThreadState(thread.itemId, thread.conversationState)">
 						<span v-if="thread.conversationState === `open`">Done</span>
 						<span v-if="thread.conversationState === `closed`">Open</span>
 					</button>
@@ -126,7 +126,7 @@
 				</textarea>
 			</div>
 			<div class="actions">
-				<button class="primary shrunk" @click="sendMessageViaSendButton(thread.itemId)">Send</button>
+				<button class="shrunk" @click="sendMessageViaSendButton(thread.itemId)">Send</button>
 			</div>
 		</div>
 
@@ -566,7 +566,7 @@
 				flex: 1;
 				padding: 0;
 				width: 300px;
-				background-color: #E62565;
+				background-color: $brand-main-color;
 				margin: 10px 10px 0;
 				height: 40px;
 			}
@@ -598,7 +598,7 @@
 					&.active {
 						font-weight: bold;
 						color: white;
-						background-color: #e62565;
+						background-color: $brand-main-color;
 						z-index: 1;
 					}
 
