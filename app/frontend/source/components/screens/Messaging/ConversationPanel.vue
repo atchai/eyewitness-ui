@@ -724,6 +724,10 @@
 				border: 1px solid #888;
 				margin-top: 10px;
 
+				th:last-child {
+					width: 100%;
+				}
+
 				tr {
 					&.unsaved {
 						background-color: #fed;
