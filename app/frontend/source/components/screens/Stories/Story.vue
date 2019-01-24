@@ -89,6 +89,7 @@
 			.info {
 				display: flex;
 				flex-direction: column;
+				max-width: 600px;
 			}
 
 			.cell {

@@ -6,26 +6,24 @@
 
 	<div :class="[{ unsaved: !saved }, `flow`]">
 		<div>
-			<label>Name:
-			<input type="text" v-model="name" required @input="updatedFlow" data-field="name" pattern="[\w\/ :-]+" size="30" title="Required, alphanumeric characters, spaces, '-', and ':' only"/>
-			</label><br/>
+			<label>Name:</label>
+			<input type="text" v-model="name" required @input="updatedFlow" data-field="name" pattern="[\w\/ :-]+" size="30" title="Required, alphanumeric characters, spaces, '-', and ':' only"/><br/>
 			<p class="inline-error" v-if="validation.name">{{validation.name}}</p>
 
-			<label>Reference (optional):
+			<label>Reference (optional):</label>
 			<input type="text" v-model="reference" @input="updatedReference" data-field="reference" pattern="[\w\/-]*" size="30" title="Alphanumeric characters, '-' and '/' only."/>
-			</label>
 			<p class="inline-error" v-if="validation.reference">{{validation.reference}}</p>
 			<p class="inline-error" v-if="validation.uniqueReference">{{validation.uniqueReference}}</p>
 
-			<div>URI: <span class="uri">{{uri}}</span> <span class="badge" v-if="uri === `dynamic:///`">Starting Flow</span></div>
+			<div><span class="label">URI:</span><span class="uri">{{uri}}</span> <span class="badge" v-if="uri === `dynamic:///`">Starting Flow</span></div>
 
 			<p>{{numActions}} actions
 				<router-link :to="`/flows/${flowId}`" v-show="saved">[Edit]</router-link>
 			</p>
 		</div>
 		<div class="actions">
-			<button @click="removeFlow()">Delete</button>
-			<button class="primary" @click="saveFlow()" :disabled="saved">Save</button>
+			<button class="shrunk danger" @click="removeFlow()">Delete</button>
+			<button class="shrunk primary" @click="saveFlow()" :disabled="saved">Save</button>
 		</div>
 	</div>
 
@@ -156,9 +154,29 @@
 <style lang="scss" scoped>
 
 .flow {
+
+	button:first-child {
+		margin: 0;
+	}
+
+	p:last-child {
+		margin-bottom: 0;
+		font-size: 14px;
+		color: #9e9e9e;
+	}
+
+	label, .label {
+		font-size: 15px;
+		color: #656565;
+		display: inline-block;
+		min-width: 200px;
+		margin-bottom: 16px;
+	}
+
 	padding: 2.00rem 2.00rem;
 	display: flex;
 	flex: 1;
+	border-bottom: 1px solid #E7E7E7;
 
 	.inline-error {
 		font-size: 0.8rem;
@@ -196,7 +214,7 @@
 	}
 
 	&.unsaved {
-		background-color: #fed;
+		background-color: #fff9f3;
 	}
 
 	.badge {

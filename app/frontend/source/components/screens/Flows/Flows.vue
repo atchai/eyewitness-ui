@@ -43,14 +43,15 @@
 
 		<ScreenLoader />
 		<div class="actions dialog_openers">
-			<button class="" @click="showExport()">Export Flows...</button>
-			<button class="" @click="showImport()">Import Flows...</button>
+			<button class="shrunk primary" @click="showExport()">Export Flows</button>
+			<button class="shrunk primary" @click="showImport()">Import Flows</button>
+			<button class="shrunk" @click="addFlow">Add Flow</button>
 		</div>
 		<ScreenHeader
 			title="Flows"
 		/>
 
-		<div>
+		<div class="subheader">
 			<p v-if="startingFlow">Starting flow: {{startingFlow.name}}</p>
 			<p v-else>No starting flow has been set. Enter reference '/' to set the starting flow.</p>
 		</div>
@@ -65,9 +66,6 @@
 				:unsaved="flow.unsaved"
 				:num-actions="flow.actions ? flow.actions.length : 0"
 			/>
-		</div>
-		<div class="actions">
-			<button class="primary" @click="addFlow">Add Flow</button>
 		</div>
 	</div>
 
@@ -333,10 +331,30 @@
 <style lang="scss" scoped>
 
 	.screen {
-		.actions {
-			@include user-select-off();
-		}
-		@include scroll-vertical();
+		// .actions {
+		// 	@include user-select-off();
+		// }
+		// @include scroll-vertical();
+	}
+
+	.screen-header {
+		margin-bottom: 0 !important;
+	}
+
+	.subheader p {
+		margin: 0;
+		font-size: 15px;
+		color: #9c9c9c;
+		font-weight: 400;
+		font-weight: 400;
+		margin-bottom: 2.5rem;
+	}
+
+	.flows {
+		background-color: white;
+		border: 1px solid #E7E7E7;
+		overflow-y: auto;
+		margin-bottom: 40px;
 	}
 
 	.dialog_openers {

@@ -11,8 +11,8 @@
 		<textarea v-model="breakingNewsText"></textarea>
 
 		<div class="actions">
-			<button class="" @click="closeDialog()">Cancel</button>
-			<button class="primary" @click="sendBreakingNewsAlert()" :disabled="breakingNewsText.length === 0">Send Alert</button>
+			<button class="primary" @click="closeDialog()">Cancel</button>
+			<button class="" @click="sendBreakingNewsAlert()" :disabled="breakingNewsText.length === 0">Send Alert</button>
 		</div>
 	</dialog>
 
@@ -70,16 +70,25 @@
 			white-space: nowrap;
 			font-weight: bold;
 			font-style: italic;
+			color: black;
+			font-size: 18px;
 		}
 
 		textarea {
-			width: 50.00rem;
-			min-width: 50.00rem;
-			max-width: 50.00rem;
+			width: 100%;
 			height: 6.00rem;
 			min-height: 6.00rem;
 			max-height: 15.00rem;
 			margin-bottom: 1.00rem;
+			margin-top: 1.00rem;
+
+			&:focus {
+				border: 1px solid #E7E7E7;
+			}
+		}
+
+		button:first-child {
+			margin: 0;
 		}
 	}
 
