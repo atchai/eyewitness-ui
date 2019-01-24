@@ -7,14 +7,14 @@
 	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<dialog id="export-flows">
 			<h1>Export flows</h1>
-			<button class="mini" @click="selectAllExport()">{{selectedExportFlows.length === flowsSet.length ? "Unselect" : "Select"}} all</button>
+			<button class="mini primary" @click="selectAllExport()">{{selectedExportFlows.length === flowsSet.length ? "Unselect" : "Select"}} all</button>
 			<ul class="export-flow-select">
 				<li v-for="flow in flowsSet"><label><input type="checkbox" v-model="selectedExportFlows" :value="flow.flowId" @click="selectExportFlow(flow.flowId)"/> {{flow.name}}</label></li>
 			</ul>
 
 			<div class="actions">
-				<button class="" @click="cancelExport()">Cancel</button>
-				<button class="primary" @click="exportSelected()" :disabled="selectedExportFlows.length === 0">Download Export File</button>
+				<button class="primary shrunk" @click="cancelExport()">Cancel</button>
+				<button class="shrunk" @click="exportSelected()" :disabled="selectedExportFlows.length === 0">Download Export File</button>
 			</div>
 		</dialog>
 
@@ -35,8 +35,8 @@
 			</div>
 
 			<div class="actions">
-				<button class="" @click="cancelImport()">Cancel</button>
-				<button class="primary" @click="importFlows()" :disabled="!importFile">Import</button>
+				<button class="primary shrunk" @click="cancelImport()">Cancel</button>
+				<button class="shrunk" @click="importFlows()" :disabled="!importFile">Import</button>
 
 			</div>
 		</dialog>
@@ -361,6 +361,7 @@
 		float: right;
 	}
 
+
 	#export-flows {
 		.export-flow-select {
 			list-style: none;
@@ -378,6 +379,7 @@
 		&#import-flows {
 			height: calc(60vh);
 
+
 			.import-preview {
 				padding-left: 2rem;
 			}
@@ -385,6 +387,13 @@
 			input[type="file"] {
 				margin-bottom: 2rem;
 			}
+		}
+	}
+
+	#import-flows {
+
+		.actions {
+			margin-top: 20px;
 		}
 	}
 

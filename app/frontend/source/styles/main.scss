@@ -152,20 +152,23 @@ button {
  * Saving.
  */
 .unsaved-warning {
-	font-weight: bold;
 	position: fixed;
-	bottom: 0;
+	top: 48px;	
 	left: 0;
 	right: 1rem;
-	background-color: #fed;
+	background-color: #fadadb;
 	padding: 0;
 	padding-left: 2rem;
 	padding-right: 1rem;
 	display: flex;
+	width: 100%;
+	font-size: 15px;
+	font-weight: 500;
+	height: 42px;
 
 	p {
 		flex: 11;
-		margin: 0.6rem;
+		margin: auto 0;
 	}
 
 	.actions {
