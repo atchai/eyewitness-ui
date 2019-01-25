@@ -56,6 +56,9 @@
 		background: $panel-background-color-white;
 		border-bottom: 1px solid $panel-border-color-grey;
 		padding: 0 20px;
+		position: fixed;
+		width: 100vw;
+		z-index: 100;
 		@include user-select-off();
 
 		.item {

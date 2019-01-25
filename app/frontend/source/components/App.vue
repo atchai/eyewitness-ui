@@ -37,7 +37,7 @@
 			min-height: 0;
 			width: 100%;
 			max-width: 1024px;
-			margin: 20px auto;
+			margin: 68px auto;
 
 			.screen {
 				position: relative;

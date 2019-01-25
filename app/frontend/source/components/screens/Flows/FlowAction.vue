@@ -5,29 +5,102 @@
 <template>
 
 	<li class="flow-action">
-		<div :id="action.shortId"><a :href="`#${action.shortId}`" class="uid">#{{action.shortId}}</a></div>
 
-		<div><label>Type: <select name="type" v-model="action.uiMeta.stepType" @change="changeActionType()" required>
-			<option v-for="(typeName, typeKey) in types" :key="typeKey" :value="typeKey">{{typeName}}</option>
-		</select></label></div>
+		<div class="field">
+			<label>Type:</label>
+			<select 
+				name="type" 
+				v-model="action.uiMeta.stepType" 
+				@change="changeActionType()" 
+				required>
+					<option 
+						v-for="(typeName, typeKey) in types" 
+						:key="typeKey" 
+						:value="typeKey">{{typeName}}
+					</option>
+			</select>
+		</div>
+
+		<div class="field">
+			<label>ID:</label>
+			<a 
+				:id="action.shortId"
+				:href="`#${action.shortId}`" 
+				class="uid">#{{action.shortId}}
+			</a>
+		</div>
 
 		<div class="conditional">
-			<label><input type="checkbox" :checked="action.uiMeta.conditional && action.uiMeta.conditional.operator" @change="toggleConditional()"/> Conditional </label>
-			<div v-if="action.uiMeta.conditional && action.uiMeta.conditional.operator">
-				<label>
-					Only run this action if
-					<select :name="action.shortId + `_conditionalMatchType`" v-model="action.uiMeta.conditional.matchType" required>
-						<option value="memory-key">memory key:</option>
-						<option value="expression">expression is true:</option>
-					</select>
-					<input :name="action.shortId + `_conditionalMemoryKey`" v-model="action.uiMeta.conditional.memoryKey" size="30" type="text" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`" pattern="[A-Za-z0-9_/]+" list="memoryKeys" data-field="conditionalMemoryKey" @input="validate" title="Required - alphanumeric characters and underscores only" />
-					<input :name="action.shortId + `_conditionalExpression`" v-model="action.uiMeta.conditional.expression" size="70" type="text" :required="action.uiMeta.conditional.matchType === `expression`" v-show="action.uiMeta.conditional.matchType === `expression`" pattern=".+" @input="validate" />
-					<p class="inline-error" v-if="validation.conditionalMemoryKey">{{validation.conditionalMemoryKey}}</p>
-				</label>
-				<select :name="action.shortId + `_conditionalOperator`" v-model="action.uiMeta.conditional.operator" :required="action.uiMeta.conditional.matchType === `memory-key`" v-show="action.uiMeta.conditional.matchType === `memory-key`">
-					<option v-for="(operatorString, operatorKey) in conditionalOperators" :value="operatorKey">{{operatorString}}</option>
-				</select>
-				<input :name="action.shortId + `_conditionalValue`" type="text" v-model="action.uiMeta.conditional.value" :required="showConditionalValueField(action)" v-show="showConditionalValueField(action)"/>
+			
+			<div class="checkbox-container">
+				<input 
+					type="checkbox" 
+					:checked="action.uiMeta.conditional && action.uiMeta.conditional.operator" 
+					@change="toggleConditional()"/>
+				<label> Conditional </label>
+			</div>
+			
+			<div class="checkbox-settings-container">	
+				<div v-if="action.uiMeta.conditional && action.uiMeta.conditional.operator">
+					<label> Only run this action if </label>
+					
+					<div class="options">
+						<select 
+							:name="action.shortId + `_conditionalMatchType`" 
+							v-model="action.uiMeta.conditional.matchType" 
+							required>
+								<option value="memory-key">memory key:</option>
+								<option value="expression">expression is true:</option>
+						</select>
+						
+						<input 
+							:name="action.shortId + `_conditionalMemoryKey`" 
+							v-model="action.uiMeta.conditional.memoryKey" 
+							size="30" 
+							type="text" 
+							:required="action.uiMeta.conditional.matchType === `memory-key`" 
+							v-show="action.uiMeta.conditional.matchType === `memory-key`" 
+							pattern="[A-Za-z0-9_/]+" 
+							list="memoryKeys" 
+							data-field="conditionalMemoryKey" 
+							@input="validate" 
+							title="Required - alphanumeric characters and underscores only" />
+						
+						<input 
+							:name="action.shortId + `_conditionalExpression`" 
+							v-model="action.uiMeta.conditional.expression" 
+							size="70" 
+							type="text" 
+							:required="action.uiMeta.conditional.matchType === `expression`" 
+							v-show="action.uiMeta.conditional.matchType === `expression`" 
+							pattern=".+" 
+							@input="validate" />
+
+						<p 
+							class="inline-error" 
+							v-if="validation.conditionalMemoryKey">{{validation.conditionalMemoryKey}}
+						</p>
+						
+						
+						<select 
+							:name="action.shortId + `_conditionalOperator`" 
+							v-model="action.uiMeta.conditional.operator" 
+							:required="action.uiMeta.conditional.matchType === `memory-key`" 
+							v-show="action.uiMeta.conditional.matchType === `memory-key`">
+								<option 
+									v-for="(operatorString, operatorKey) in conditionalOperators" 
+									:value="operatorKey">{{operatorString}}</option>
+						</select>
+						
+						
+						<input 
+							:name="action.shortId + `_conditionalValue`" 
+							type="text" 
+							v-model="action.uiMeta.conditional.value" 
+							:required="showConditionalValueField(action)"
+							v-show="showConditionalValueField(action)"/>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -98,7 +171,9 @@
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'execute-hook'">
-				<strong>Hook name:</strong> <input class="hook-name" v-model="action.hook" /> <em>(must be exact, case sensitive)</em>
+				<label>Hook name:</label> 
+				<input class="hook-name" v-model="action.hook" /> 
+				<p class="field-helper">(must be exact, case sensitive)</p>
 			</div>
 
 			<div v-else-if="action.uiMeta.stepType === 'update-memory'">
@@ -117,9 +192,9 @@
 
 		</div>
 		<div class="actions">
-			<button @click="moveUp(index)" :disabled="index === 0">Move up</button>
-			<button @click="moveDown(index)" :disabled="index === (flow.actions.length - 1)">Move down</button>
-			<button @click="removeFlowAction(index)">Delete</button>
+			<button class="shrunk" @click="moveUp(index)" :disabled="index === 0">Move up</button>
+			<button class="shrunk" @click="moveDown(index)" :disabled="index === (flow.actions.length - 1)">Move down</button>
+			<button class="shrunk danger" @click="removeFlowAction(index)">Delete</button>
 		</div>
 
 	</li>
@@ -301,7 +376,18 @@
 <style lang="scss" scoped>
 
 	.flow-action {
-		margin: 2.00rem 0;
+		background-color: white;
+		border: 1px solid #E7E7E7;
+		padding: 1rem 1.5rem 1.5rem;
+		margin-bottom: 1.5rem;
+		
+		label {
+			font-size: 15px;
+			color: #1a1a1a;
+			display: inline-block;
+			min-width: 200px;
+			margin-bottom: 16px
+		}
 
 		>input[type="text"] {
 			line-height: 2rem;
@@ -327,18 +413,29 @@
 		padding: 0.5em;
 		background-color: #eef;
 		border-radius: 1rem;
-		margin: 0.5em;
 		display: inline-block;
 		text-decoration: none;
 		color: #000;
 	}
 
 	.action-type-specifics {
-		margin: 1rem;
-		margin-left: 2rem;
 		padding: 1rem;
 		background-color: #eee;
 		border-radius: 0.5rem;
+
+		label {
+			font-size: 15px;
+			color: #1a1a1a;
+			display: inline-block;
+			min-width: 184px;
+		}
+
+		.field-helper {
+			display: inline-block;
+			margin: 0;
+			font-size: 14px;
+			opacity: 0.4;
+		}
 	}
 
 	.message {
@@ -389,10 +486,39 @@
 	.conditional {
 		background-color: #eee;
 		border-radius: 0.5rem;
-		padding: 1rem;
-		margin: 1rem;
+		padding: 0.5rem 1rem;
+		margin: 1rem 0;
 		display: inline-block;
+		width: 100%;
+
+		label {
+			margin: 0 0 0 6px;
+		}
+
+		input[type="checkbox"] {
+			position: relative;
+			top: -1.8px;
+		}
+
+		.checkbox-settings-container {
+			margin-top: 1rem;
+			
+			.options {
+				margin-left: 1rem;
+			}
+
+			label {
+				width: 100%;
+				padding-bottom: 0.5rem;
+			}
+
+			select, input {
+				margin-bottom: 0.5rem;
+				width: 300px;
+			}
+		}
 	}
+
 	button:disabled .spinner {
 		display: inline-block !important;
 	}

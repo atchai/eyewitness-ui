@@ -168,7 +168,6 @@
 			justify-content: flex-end;
 			@include user-select-off();
 		}
-		@include scroll-vertical();
 	}
 
 	.settings-edit {

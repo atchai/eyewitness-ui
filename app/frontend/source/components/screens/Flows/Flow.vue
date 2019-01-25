@@ -193,8 +193,7 @@
 		font-family: monospace;
 		background-color: #ddd;
 		border-radius: 0.5em;
-		padding: 0.2em;
-		margin: 0.2em;
+		padding: 0.3em 0.7em;
 	}
 
 	>div {
