@@ -7,14 +7,14 @@
 	<div :class="{ screen: true, padding: true, loading: (loadingState > 0) }">
 		<dialog id="export-flows">
 			<h1>Export flows</h1>
-			<button class="mini" @click="selectAllExport()">{{selectedExportFlows.length === flowsSet.length ? "Unselect" : "Select"}} all</button>
+			<button class="mini primary" @click="selectAllExport()">{{selectedExportFlows.length === flowsSet.length ? "Unselect" : "Select"}} all</button>
 			<ul class="export-flow-select">
 				<li v-for="flow in flowsSet"><label><input type="checkbox" v-model="selectedExportFlows" :value="flow.flowId" @click="selectExportFlow(flow.flowId)"/> {{flow.name}}</label></li>
 			</ul>
 
 			<div class="actions">
-				<button class="" @click="cancelExport()">Cancel</button>
-				<button class="primary" @click="exportSelected()" :disabled="selectedExportFlows.length === 0">Download Export File</button>
+				<button class="primary shrunk" @click="cancelExport()">Cancel</button>
+				<button class="shrunk" @click="exportSelected()" :disabled="selectedExportFlows.length === 0">Download Export File</button>
 			</div>
 		</dialog>
 
@@ -35,22 +35,23 @@
 			</div>
 
 			<div class="actions">
-				<button class="" @click="cancelImport()">Cancel</button>
-				<button class="primary" @click="importFlows()" :disabled="!importFile">Import</button>
+				<button class="primary shrunk" @click="cancelImport()">Cancel</button>
+				<button class="shrunk" @click="importFlows()" :disabled="!importFile">Import</button>
 
 			</div>
 		</dialog>
 
 		<ScreenLoader />
 		<div class="actions dialog_openers">
-			<button class="" @click="showExport()">Export Flows...</button>
-			<button class="" @click="showImport()">Import Flows...</button>
+			<button class="shrunk primary" @click="showExport()">Export Flows</button>
+			<button class="shrunk primary" @click="showImport()">Import Flows</button>
+			<button class="shrunk" @click="addFlow">Add Flow</button>
 		</div>
 		<ScreenHeader
 			title="Flows"
 		/>
 
-		<div>
+		<div class="subheader">
 			<p v-if="startingFlow">Starting flow: {{startingFlow.name}}</p>
 			<p v-else>No starting flow has been set. Enter reference '/' to set the starting flow.</p>
 		</div>
@@ -65,9 +66,6 @@
 				:unsaved="flow.unsaved"
 				:num-actions="flow.actions ? flow.actions.length : 0"
 			/>
-		</div>
-		<div class="actions">
-			<button class="primary" @click="addFlow">Add Flow</button>
 		</div>
 	</div>
 
@@ -333,15 +331,36 @@
 <style lang="scss" scoped>
 
 	.screen {
-		.actions {
-			@include user-select-off();
-		}
-		@include scroll-vertical();
+		// .actions {
+		// 	@include user-select-off();
+		// }
+		// @include scroll-vertical();
+	}
+
+	.screen-header {
+		margin-bottom: 0 !important;
+	}
+
+	.subheader p {
+		margin: 0;
+		font-size: 15px;
+		color: #9c9c9c;
+		font-weight: 400;
+		font-weight: 400;
+		margin-bottom: 2.5rem;
+	}
+
+	.flows {
+		background-color: white;
+		border: 1px solid #E7E7E7;
+		overflow-y: auto;
+		margin-bottom: 40px;
 	}
 
 	.dialog_openers {
 		float: right;
 	}
+
 
 	#export-flows {
 		.export-flow-select {
@@ -360,6 +379,7 @@
 		&#import-flows {
 			height: calc(60vh);
 
+
 			.import-preview {
 				padding-left: 2rem;
 			}
@@ -367,6 +387,13 @@
 			input[type="file"] {
 				margin-bottom: 2rem;
 			}
+		}
+	}
+
+	#import-flows {
+
+		.actions {
+			margin-top: 20px;
 		}
 	}
 

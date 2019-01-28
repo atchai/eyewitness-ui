@@ -24,7 +24,7 @@
 			</div>
 		</td>
 		<td class="right">
-			<button class="mini" @click="removePromptQuestion(index)">Remove</button>
+			<button class="mini danger" @click="removePromptQuestion(index)">Remove</button>
 		</td>
 	</tr>
 
@@ -57,14 +57,17 @@
 	}
 
 	tr {
+		vertical-align: top;
+
 		&:nth-child(even) {
 			background-color: white;
 		}
 
 		td {
-			border-left: 1px solid #333;
-			border-right: 1px solid #333;
-			padding: 0.5rem;
+			border: 1px solid rgba(255, 255, 255, 0);
+			border-bottom: 1px solid rgb(223, 223, 223);
+			padding: 1.5rem 1rem;
+			background-color: #eee;
 		}
 
 		td.left {
@@ -77,6 +80,7 @@
 
 		td.right {
 			width: 7.00rem;
+			vertical-align: middle;
 		}
 	}
 </style>

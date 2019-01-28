@@ -92,12 +92,12 @@
 			display: flex;
 			flex-direction: column;
 			align-items: flex-end;
+			max-width: 75%;
 
 			>.bubble {
 				display: inline-block;
 				border-radius: 1.25rem;
 				background: #EFEFEF;
-				max-width: 85%;
 				overflow: hidden;
 
 				>.inner {
@@ -134,7 +134,7 @@
 								display: flex;
 								flex-direction: column;
 								flex: 0 0 auto;
-								width: 14.00rem;
+								width: 100%;
 								min-width: 100%;
 								border: 1px solid $panel-border-color;
 								border-right: 0;

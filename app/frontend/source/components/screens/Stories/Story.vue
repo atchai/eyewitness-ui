@@ -6,13 +6,15 @@
 
 	<div :data-item-id="itemId" :class="{ 'story': true, 'full-fat': isFullFat }">
 		<div class="inner">
+			
+			<div class="info">
+				<div v-if="isFullFat" class="cell title">
+					<div class="inner">{{ title }}</div>
+				</div>
 
-			<div v-if="isFullFat" class="cell title">
-				<div class="inner">{{ title }}</div>
-			</div>
-
-			<div v-if="isFullFat" class="cell date-time">
-				<div class="inner">{{ time }}, {{date}}</div>
+				<div v-if="isFullFat" class="cell date-time">
+					<div class="inner">{{ time }}, {{date}}</div>
+				</div>
 			</div>
 
 			<div v-if="isFullFat" class="cell actions">
@@ -66,7 +68,7 @@
 <style lang="scss" scoped>
 
 	.story {
-		padding: 1.00rem;
+		background-color: white;
 
 		&.full-fat {
 			>.inner {
@@ -78,10 +80,19 @@
 			display: flex;
 			align-items: stretch;
 			height: 3.50rem;
-			box-shadow: 1px 1px 5px $panel-shadow-color;
+			border-bottom: 1px solid #E7E7E7;
 			opacity: 0.50;
+			align-items: center;
+			justify-content: space-between;
+			padding: 36px 10px;
 
-			>.cell {
+			.info {
+				display: flex;
+				flex-direction: column;
+				max-width: 600px;
+			}
+
+			.cell {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
@@ -89,16 +100,19 @@
 
 				>.inner {
 					display: inline-block;
-					margin: auto;
+					margin: 0;
 					white-space: nowrap;
 					text-overflow: ellipsis;
 					overflow: hidden;
 				}
 
 				&.title {
-					flex: 1;
 					min-width: 0;
 					padding-right: 0;
+					font-size: 15px;
+					color: #656565;
+					letter-spacing: 0;
+					text-align: left;
 
 					>.inner {
 						margin-left: 0;
@@ -107,9 +121,11 @@
 
 				&.date-time {
 					flex-shrink: 0;
-					width: 9.50rem;
-					color: #9B9B9B;
-					border-right: 1px solid $panel-border-color;
+					margin-top: 3px;
+					margin-right: 0;
+					opacity: 0.6;
+					font-size: 14px;
+					color: #656565;
 
 					>.inner {
 						margin-right: 0;
@@ -117,8 +133,6 @@
 				}
 
 				&.actions {
-					flex-shrink: 0;
-					width: 16.00rem;
 					@include user-select-off();
 
 					>.inner {
@@ -129,21 +143,66 @@
 							color: white;
 							text-decoration: none;
 
+							&.tag {
+								text-transform: capitalize;
+								min-width: 112px;
+								text-align: center;
+							}
+
 							&.tag.priority {
-								background: $blue-color;
+								background: transparent;
+								border: 1px solid $brand-main-color;
+								color: $brand-main-color;
+								width: auto;
+								height: auto;
+								line-height: normal;
+								padding: 0.40rem 1.2rem;
+								border-radius: 20px;
+								transition: all ease-in-out 200ms;
+
+								&:hover {
+									background-color: lighten($brand-main-color, 60%);
+									opacity: 1;
+								}
 
 								&.on {
-									background: $tag-off-background-color;
+									background: #E4E4E4;
 									cursor: not-allowed;
 									opacity: 1.00 !important;
+									border: none;
+									color: #9a9a9a;
+
+									&:hover {
+										background-color: #E4E4E4;
+									}
 								}
 							}
 
 							&.tag.published {
-								background: $tag-on-background-color;
+								background: transparent;
+								border: 1px solid #498F43;
+								color: #498F43;
+								width: auto;
+								height: auto;
+								line-height: normal;
+								padding: 0.40rem 1.2rem;
+								border-radius: 20px;
+								transition: all ease-in-out 200ms;
+
+								&:hover {
+									background-color: lighten(#498F43, 50%);
+									opacity: 1;
+								}
 
 								&.on {
-									background: $red-color;
+									background: transparent;
+									border-color: #D0021B;
+									color: #D0021B;
+
+									&:hover {
+										background-color: rgba(197, 2, 26, 0.07);
+										opacity: 1;
+									}
 								}
 							}
 						}

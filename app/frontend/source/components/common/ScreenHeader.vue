@@ -23,18 +23,21 @@
 
 	.screen-header {
 		flex-shrink: 0;
-		margin-bottom: 3.00rem;
+		margin-bottom: 2.5rem;
 		@include user-select-off();
 
 		h1 {
 			margin: 0;
-			font-size: 3.00rem;
-			font-weight: bold;
+			font-size: 28px;
+			font-weight: 500;
 		}
 
 		p {
 			font-size: 1.30rem;
 			margin: 0;
+			font-size: 15px;
+			color: #9c9c9c;
+			font-weight: 400;
 		}
 	}
 

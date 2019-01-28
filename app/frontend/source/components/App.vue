@@ -28,14 +28,16 @@
 	#app {
 		display: flex;
 		flex-direction: column;
-		max-width: 1200px;
 		height: 100%;
 		margin: 0 auto;
-		background: white;
+		background: $background-color;
 
 		main {
 			flex: 1;
 			min-height: 0;
+			width: 100%;
+			max-width: 1024px;
+			margin: 68px auto;
 
 			.screen {
 				position: relative;

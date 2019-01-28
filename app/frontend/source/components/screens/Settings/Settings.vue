@@ -11,54 +11,63 @@
 			<ScreenHeader
 				title="Settings"
 			/>
+			
+			<div class="container">
 
-			<h2>Flows for commands</h2>
+				<h2>Flows for commands</h2>
+				<p class="subheader">Configure commands to point to specific flows: </p>
 
-			<p>Configure commands to point to specific flows: </p>
-
-			<p><label><code>Get started</code>:
-				<select v-model="globalSettings._defaultFlow">
-					<option></option>
-					<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
-				</select></label></p>
-
-			<p><label><code>stop</code>:
-				<select v-model="globalSettings._stopFlow">
-					<option></option>
-					<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
-				</select></label>
-				<span class="inline-help">The stop command removes any scheduled flows for the user, before initiating the selected flow.</span>
-			</p>
-
-			<p><label><code>help</code>:
-				<select v-model="globalSettings._helpFlow">
-					<option></option>
-					<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
-				</select></label>
-			</p>
-
-			<p><label><code>feedback</code>:
-				<select v-model="globalSettings._feedbackFlow">
-					<option></option>
-					<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
-				</select></label>
-			</p>
-
-			<p>The following flows are not configurable:
-				<ul>
-					<li><code>Do [flow name]</code> and <code>View [flow name]</code> will both load a flow by name.</li>
-				</ul>
-			</p>
-
-			<div class="actions">
-				<button class="primary" @click="saveSettings()" :disabled="saved">Save</button>
-			</div>
-
-			<div class="unsaved-warning" v-if="!saved">
-				<p>There are unsaved changes!</p>
-				<div class="actions">
-					<button class="primary" @click="saveSettings($event)"  :disabled="saved">Save</button>
+				<div class="field">
+					<label><code>Get started</code>:</label>
+					<select v-model="globalSettings._defaultFlow">
+						<option></option>
+						<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
+					</select>
 				</div>
+
+				<div class="field">
+					<label><code>stop</code>:</label>
+					<select v-model="globalSettings._stopFlow">
+						<option></option>
+						<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
+					</select>
+					<span class="inline-help">The stop command removes any scheduled flows for the user, before initiating the selected flow.</span>
+				</div>
+
+				<div class="field">
+					<label><code>help</code>:</label>
+					<select v-model="globalSettings._helpFlow">
+						<option></option>
+						<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label><code>feedback</code>:</label>
+					<select v-model="globalSettings._feedbackFlow">
+						<option></option>
+						<option v-for="(flow, flowId) in flows" :value="flowId">{{flow.name}}</option>
+					</select>
+				</div>
+				
+				<div class="more-info">
+					<p>The following flows are not configurable:</p>
+					<ul>
+						<li><code>Do [flow name]</code> and <code>View [flow name]</code> will both load a flow by name.</li>
+					</ul>
+				</div>
+
+				<div class="actions">
+					<button class="" @click="saveSettings()" :disabled="saved">Save</button>
+				</div>
+
+				<div class="unsaved-warning" v-if="!saved">
+					<p>There are unsaved changes!</p>
+					<div class="actions">
+						<button class="shrunk" @click="saveSettings($event)"  :disabled="saved">Save</button>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -152,28 +161,64 @@
 
 <style lang="scss" scoped>
 
+
 	.screen {
 		.actions {
+			display: flex;
+			justify-content: flex-end;
 			@include user-select-off();
 		}
-		@include scroll-vertical();
 	}
 
 	.settings-edit {
 		padding-bottom: 3rem;
 
+		h2 {
+			margin: 0;
+			font-size: 18px;
+		}
+
+		.subheader {
+			font-size: 15px;
+			color: #9c9c9c;
+			font-weight: 400;
+			margin-bottom: 2.5rem;
+			margin-top: 0;
+		}
+
+	}
+
+	.container {
+		background-color: white;
+		border: 1px solid #E7E7E7;
+		padding: 14px 30px;
 	}
 
 	code {
 		background-color: #def;
 		border-radius: 1rem;
-		padding: 0.3rem;
+		padding: 0.3rem 0.6rem;
 		margin: 0.3rem;
 	}
+
+	.field {
+		margin-bottom: 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 60%;
+	}	
 
 	.inline-help {
 		font-size: 0.8rem;
 		color: #888;
+		position: absolute;
+		left: 60%;
+		width: 300px;
+	}
+
+	.more-info {
+		margin: 2.5rem 0;
 	}
 
 </style>

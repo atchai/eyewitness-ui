@@ -15,18 +15,19 @@
 				/>
 				</tbody>
 			</table>
-			<button @click="addPromptQuestion()">Add question</button>
+			<div class="actions">
+				<button @click="addPromptQuestion()">Add question</button>
+			</div>
 		</div>
 
 		<div class="answer">
 			<strong>Answer:</strong>
 			<div class="answer-details">
-				<div>
-					<label>Type:
-						<select name="promptType" v-model="prompt.uiMeta.answerType" required>
-							<option v-for="(promptTypeName, promptTypeKey) in promptTypes" :value="promptTypeKey">{{promptTypeName}}</option>
-						</select>
-					</label>
+				<div class="field">
+					<label>Type:</label>
+					<select name="promptType" v-model="prompt.uiMeta.answerType" required>
+						<option v-for="(promptTypeName, promptTypeKey) in promptTypes" :value="promptTypeKey">{{promptTypeName}}</option>
+					</select>
 				</div>
 
 				<span v-if="prompt.uiMeta.answerType === 'open'">
@@ -45,9 +46,13 @@
 					<button @click="addOption()">Add quick reply</button>
 				</div>
 
-				<div class="retry-message">
-					Retry message:
-					<input type="text" v-model="prompt.errorMessage" size="80" :placeholder="defaultRetryMessage"/>
+				<div class="field retry-message">
+					<label>Retry message:</label>
+					<input 
+						type="text" 
+						v-model="prompt.errorMessage" 
+						size="80" 
+						:placeholder="defaultRetryMessage"/>
 				</div>
 				<div>
 					<h3>Memory</h3>
@@ -122,8 +127,18 @@
 		margin: 1rem;
 		margin-left: 2rem;
 		padding: 1rem;
-		background-color: #eee;
-		border-radius: 0.5rem;
+		background-color: white;
+		border: 1px solid #E7E7E7;
+		border-radius: 0;
+
+		h3 {
+			margin-top: 0;
+			font-size: 24px;
+		}
+
+		.actions {
+			text-align: right;
+		}
 	}
 
 	.question textarea {
@@ -151,14 +166,25 @@
 	}
 
 	.answer-details {
-		padding: 0;
+		padding: 1rem 1rem;
+		background-color: #eee;
+		margin: 1rem 0 0 0;
 
 		.retry-message {
 
 		}
 
+		label {
+			display: inline-block;
+			min-width: 200px;
+			margin-bottom: 16px;
+		}
+
+		input {
+			max-width: calc(100% - 210px);
+		}
+
 		>div {
-			padding: 1rem;
 			border-bottom: 1px solid #eee;
 
 			&:last-child {
