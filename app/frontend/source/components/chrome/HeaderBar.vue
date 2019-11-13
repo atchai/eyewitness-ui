@@ -11,7 +11,7 @@
 				<a href="/logout"><span>Logout</span></a>
 			</div> -->
 			<div class="item logo">
-				<p>The Daily Planet</p>
+				<p>{{providerName}}</p>
 			</div>
 		</aside>
 
@@ -41,6 +41,7 @@
 		data: function () {
 			return {
 				providerPhotoUrl: APP_CONFIG.providerPhotoUrl,
+				providerName: APP_CONFIG.providerName,
 			};
 		},
 	};

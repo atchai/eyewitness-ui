@@ -20,6 +20,7 @@ module.exports = class HomeController {
 				pageBufferSize: config.pageBufferSize,
 				scrollThrottleThreshold: config.scrollThrottleThreshold,
 				providerPhotoUrl: `https://graph.facebook.com/${config.facebookPageId}/picture?type=large`,
+				providerName: config.providerName,
 			}),
 		});
 

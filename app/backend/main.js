@@ -27,6 +27,7 @@ const config = require(`config-ninja`).init(`eyewitness-ui-config`, `../config`,
 			AWS_S3_REGION: `amazonS3.region`,
 			AWS_S3_BUCKET: `amazonS3.bucketName`,
 			AWS_S3_KEY_PREFIX: `amazonS3.keyPrefix`,
+			PROVIDER_NAME: `providerName`,
 		},
 	},
 });

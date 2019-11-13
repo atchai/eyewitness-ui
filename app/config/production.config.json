@@ -22,6 +22,7 @@
 	"pageTitle": "Eyewitness UI",
 	"pageInitialSize": 20,
 	"pageBufferSize": 5,
+	"providerName": "Eyewitness",
 	"scrollThrottleThreshold": 200,
 	"facebookPageId": null,
 	"caching": {
