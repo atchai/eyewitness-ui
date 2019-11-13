@@ -8,11 +8,7 @@ networks:
 services:
 
   ui:
-    build:
-      context: .
-      dockerfile: Dockerfile.development
     environment:
-      - NODE_ENV=development
       - TZ=Europe/London
     volumes:
       - ./app:/src/app
@@ -21,8 +17,6 @@ services:
       - ./webpack.config.js:/src/webpack.config.js
       - ./package.json:/src/package.json
       - ./package-lock.json:/src/package-lock.json
-    ports:
-      - "5002:5002"
     networks:
       - eyewitness_eyewitness-network
     command: npm run start-development

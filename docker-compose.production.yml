@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  ui:
+    expose:
+      - "5002"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+
+  nginx_ui:
+    image: nginx:latest
+    networks:
+      - eyewitness_eyewitness-network
+    volumes:
+      - ./nginx/ui-production.conf:/etc/nginx/nginx.conf.template
+      - ./nginx/ui_logs:/var/log/nginx/
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - "5002:5008"
+    command: /bin/bash -c "envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"
