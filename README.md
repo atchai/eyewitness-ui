@@ -17,6 +17,8 @@ When developing locally I like to use Docker (for environment encapsulation). I 
 
 ### Install
 
+You first need to create a local `.env` file which will contain secrets and provider specific config. See `./app/main.js` for the full list of environment variables and the corresponding config names. See also `empty.env` - this provides a starting point for creating a .env file for a specific environment.
+
 ### Run
 1. Start the [eyewitness bot](https://github.com/atchai/eyewitness) and dependencies.
 2. Open an additional terminal tab, navigate into the folder for this project, and run `docker-compose up ui`.
